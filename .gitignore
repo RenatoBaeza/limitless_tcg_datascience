@@ -1,2 +1,9 @@
 *.csv
 *.xlsx
+
+# Raw API responses - regenerable, and large once MAX_PAGES grows
+cache/
+exports/
+
+__pycache__/
+.ipynb_checkpoints/
