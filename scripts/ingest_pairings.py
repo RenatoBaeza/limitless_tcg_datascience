@@ -118,31 +118,34 @@ def main() -> int:
                 time.sleep(RATE_LIMIT_INTERVAL)
 
             tid = tournament["id"]
+            # The whole tournament - fetch and both writes - is guarded, so one
+            # bad tournament costs a single row rather than the rest of the run.
+            # It keeps pairings_ingested_at null, so the next run retries it.
             try:
                 pairings = fetch_pairings(client, tid)
+
+                # The surrogate id collapses any repeated natural key, and
+                # PostgREST rejects a batch touching the same key twice.
+                rows = {r["id"]: r for r in (to_pairing_row(tid, p) for p in pairings)}
+                batch = list(rows.values())
+
+                for start in range(0, len(batch), CHUNK_SIZE):
+                    supabase.upsert(
+                        client, base, hdrs, TABLE, batch[start : start + CHUNK_SIZE]
+                    )
+
+                supabase.patch(
+                    client, base, hdrs, "tournaments",
+                    {"id": f"eq.{tid}"},
+                    {
+                        "pairings_ingested_at": datetime.now(timezone.utc).isoformat(),
+                        "pairings_count": len(batch),
+                    },
+                )
             except Exception as exc:  # keep going; the next run retries this one
                 failed += 1
                 print(f"  [{i}/{len(targets)}] {tid} FAILED: {exc}")
                 continue
-
-            # The surrogate id collapses any repeated natural key, and PostgREST
-            # rejects a batch touching the same primary key twice.
-            rows = {r["id"]: r for r in (to_pairing_row(tid, p) for p in pairings)}
-            batch = list(rows.values())
-
-            for start in range(0, len(batch), CHUNK_SIZE):
-                supabase.upsert(
-                    client, base, hdrs, TABLE, batch[start : start + CHUNK_SIZE]
-                )
-
-            supabase.patch(
-                client, base, hdrs, "tournaments",
-                {"id": f"eq.{tid}"},
-                {
-                    "pairings_ingested_at": datetime.now(timezone.utc).isoformat(),
-                    "pairings_count": len(batch),
-                },
-            )
 
             written += len(batch)
             if not batch:
@@ -161,7 +164,9 @@ def main() -> int:
         )
         print(f"tournaments still pending: {still_pending}")
 
-    return 1 if failed and not written else 0
+    # Occasional failures are expected and self-heal next run; a large share of
+    # them means something is actually wrong, so surface it as a job failure.
+    return 1 if failed > max(1, len(targets) // 10) else 0
 
 
 if __name__ == "__main__":

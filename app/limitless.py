@@ -60,7 +60,14 @@ def fetch_pairings(
     url = f"{BASE_URL}/tournaments/{tournament_id}/pairings"
 
     for attempt in range(max_retries + 1):
-        response = client.get(url)
+        try:
+            response = client.get(url)
+        except (httpx.TimeoutException, httpx.TransportError) as exc:
+            if attempt == max_retries:
+                raise
+            print(f"    {type(exc).__name__}, retrying")
+            time.sleep(2.0 * (2**attempt))
+            continue
 
         if response.status_code == 429:
             if attempt == max_retries:
