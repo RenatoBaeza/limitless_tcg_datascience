@@ -1,0 +1,45 @@
+name: Ingest Limitless tournaments
+
+on:
+  schedule:
+    # Every 6 hours, on the hour (UTC).
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Fetch and report only, write nothing"
+        type: boolean
+        default: false
+
+concurrency:
+  group: ingest-tournaments
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - run: uv sync --locked --no-dev
+
+      - name: Ingest tournaments
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PYTHONIOENCODING: utf-8
+        run: |
+          uv run python scripts/ingest_tournaments.py \
+            ${{ inputs.dry_run && '--dry-run' || '' }} \
+            | tee run.log
+          {
+            echo '### Limitless ingest'
+            echo '```'
+            cat run.log
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
