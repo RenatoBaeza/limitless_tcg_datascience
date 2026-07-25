@@ -6,4 +6,9 @@ cache/
 exports/
 
 __pycache__/
+*.py[cod]
+.venv/
+.env
+.pytest_cache/
 .ipynb_checkpoints/
+.ruff_cache/
