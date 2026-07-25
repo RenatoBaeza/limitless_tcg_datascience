@@ -80,6 +80,30 @@ primary key, so `pairings.id` is a sha1 of
 `tournament_id|phase|round|match|table_number|player1` — deterministic, which is
 what makes re-ingesting idempotent.
 
+## Standings ingest
+
+Final placements, records and deck archetypes per player.
+
+```bash
+uv run python scripts/ingest_standings.py --dry-run
+uv run python scripts/ingest_standings.py --max-requests 300
+uv run python scripts/ingest_standings.py --tournament <id>
+```
+
+Same driver as the pairings ingest (`app/ingest.py`): rate-limit paced, bounded
+per run, resumable via `tournaments.standings_ingested_at`.
+
+The API returns a full `decklist` per player - every card, count, set and
+number. It is **not** stored: it is roughly two orders of magnitude larger than
+the rest of the payload and nothing else here depends on it. `app/limitless.py`
+drops it in `to_standing_row`, so it never reaches the database.
+
+`deck` and `record` are flattened into `deck_id` / `deck_name` / `deck_icons`
+and `wins` / `losses` / `ties`. `deck` is occasionally an empty object, and
+`placing`, `country` and `drop` are all nullable, so every one is read
+defensively. The API's `placing` is stored as `placement`. Unlike pairings, `player` is unique within a tournament, so
+`(tournament_id, player)` is the primary key and no surrogate hash is needed.
+
 ## Scheduled job
 
 `.github/workflows/ingest-tournaments.yml` runs both ingests every 6 hours
@@ -93,18 +117,22 @@ app/
   main.py          # FastAPI app, health endpoint, router wiring
   models.py        # Pydantic schemas
   limitless.py     # play.limitlesstcg.com API client + row mapping
-  supabase.py      # PostgREST helpers shared by the ingest scripts
+  supabase.py      # PostgREST helpers, with retries
+  ingest.py        # shared per-tournament ingest loop
   routers/
     decks.py       # /decks endpoints (in-memory store)
 scripts/
   ingest_tournaments.py
   ingest_pairings.py
+  ingest_standings.py
 sql/
   001_tournaments.sql
   002_pairings.sql
+  003_standings.sql
 tests/
   test_main.py
   test_limitless.py
+  test_resilience.py
 ```
 
 The deck store in `app/routers/decks.py` is in-memory and resets on restart —

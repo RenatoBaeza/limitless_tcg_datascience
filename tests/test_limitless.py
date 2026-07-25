@@ -1,8 +1,19 @@
 """Transform tests, covering the payload shapes observed in the live API."""
 
-from app.limitless import pairing_id, to_pairing_row, to_row
+from app.limitless import pairing_id, to_pairing_row, to_row, to_standing_row
 
 TID = "69725552b1294bfab720364d"
+
+SAMPLE_STANDING = {
+    "name": "Historicdork224",
+    "country": "US",
+    "decklist": {"pokemon": [{"count": 3, "name": "Vulpix"}], "trainer": [], "energy": []},
+    "deck": {"id": "wailord-ex", "name": "Wailord", "icons": ["wailord"]},
+    "placing": 1,
+    "player": "historicdork224",
+    "record": {"wins": 3, "losses": 1, "ties": 0},
+    "drop": None,
+}
 
 
 def test_to_row_maps_organizer_id():
@@ -89,3 +100,45 @@ def test_table_zero_is_not_confused_with_missing_table():
     zero = pairing_id(TID, {"phase": 1, "round": 1, "table": 0, "player1": "a"})
     none = pairing_id(TID, {"phase": 1, "round": 1, "table": None, "player1": "a"})
     assert zero != none
+
+
+def test_standing_flattens_deck_and_record():
+    row = to_standing_row(TID, SAMPLE_STANDING)
+    assert row["player"] == "historicdork224"
+    assert row["deck_id"] == "wailord-ex"
+    assert row["deck_icons"] == ["wailord"]
+    assert (row["wins"], row["losses"], row["ties"]) == (3, 1, 0)
+    # The API's "placing" is stored as "placement".
+    assert row["placement"] == 1
+    assert "placing" not in row
+    assert row["drop_round"] is None
+
+
+def test_standing_drops_decklist():
+    """The decklist dwarfs the rest of the payload and is deliberately not stored."""
+    row = to_standing_row(TID, SAMPLE_STANDING)
+    assert "decklist" not in row
+    assert not any("decklist" in str(k) for k in row)
+
+
+def test_standing_survives_empty_deck():
+    """~0.4% of live entries carry `deck: {}` with no id/name/icons."""
+    row = to_standing_row(
+        TID,
+        {"player": "x", "name": "X", "country": None, "deck": {},
+         "placing": None, "record": {}, "drop": None},
+    )
+    assert row["deck_id"] is None
+    assert row["deck_icons"] is None
+    assert row["wins"] is None
+    assert row["placement"] is None
+
+
+def test_standing_keeps_drop_round():
+    row = to_standing_row(TID, {**SAMPLE_STANDING, "drop": 3})
+    assert row["drop_round"] == 3
+
+
+def test_standing_handles_missing_deck_and_record_keys():
+    row = to_standing_row(TID, {"player": "y"})
+    assert row["deck_id"] is None and row["wins"] is None and row["country"] is None

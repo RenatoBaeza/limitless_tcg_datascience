@@ -11,9 +11,9 @@ on:
         type: boolean
         default: false
       max_requests:
-        description: "Tournaments to pull pairings for this run"
+        description: "Tournaments per resource this run"
         type: string
-        default: "400"
+        default: "300"
 
 concurrency:
   group: ingest-tournaments
@@ -22,9 +22,9 @@ concurrency:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    # The pairings endpoint allows 50 requests / 5 min, so a 400-tournament
-    # batch paces out to roughly 45 minutes.
-    timeout-minutes: 90
+    # The API allows 50 requests / 5 min, shared across both per-tournament
+    # endpoints. 300 each paces out to roughly 30 minutes per step.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -45,8 +45,10 @@ jobs:
             ${{ inputs.dry_run && '--dry-run' || '' }} \
             | tee tournaments.log
 
-      # Runs after the tournament list is refreshed so pairings for events that
-      # just appeared are picked up in the same run.
+      # Both run after the tournament list is refreshed, so events that just
+      # appeared are picked up in the same run. They run sequentially rather
+      # than in parallel: each paces itself against a rate limit that is shared
+      # across the whole API, so overlapping them would trip it.
       - name: Ingest pairings
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -55,9 +57,21 @@ jobs:
           PYTHONUNBUFFERED: "1"
         run: |
           uv run python scripts/ingest_pairings.py \
-            --max-requests "${{ inputs.max_requests || '400' }}" \
+            --max-requests "${{ inputs.max_requests || '300' }}" \
             ${{ inputs.dry_run && '--dry-run' || '' }} \
             | tee pairings.log
+
+      - name: Ingest standings
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
+        run: |
+          uv run python scripts/ingest_standings.py \
+            --max-requests "${{ inputs.max_requests || '300' }}" \
+            ${{ inputs.dry_run && '--dry-run' || '' }} \
+            | tee standings.log
 
       - name: Summary
         if: always()
@@ -69,6 +83,10 @@ jobs:
             echo '```'
             echo '### Pairings'
             echo '```'
-            tail -40 pairings.log 2>/dev/null || echo '(step did not run)'
+            tail -20 pairings.log 2>/dev/null || echo '(step did not run)'
+            echo '```'
+            echo '### Standings'
+            echo '```'
+            tail -20 standings.log 2>/dev/null || echo '(step did not run)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

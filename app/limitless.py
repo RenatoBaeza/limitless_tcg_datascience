@@ -48,16 +48,18 @@ def to_row(tournament: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def fetch_pairings(
+def fetch_tournament_resource(
     client: httpx.Client,
     tournament_id: str,
+    resource: str,
     max_retries: int = 4,
 ) -> list[dict[str, Any]]:
-    """Fetch every pairing for one tournament, retrying through rate limits.
+    """Fetch a per-tournament sub-resource ("pairings", "standings").
 
-    Returns an empty list for tournaments the API has no pairings for (404).
+    Retries through rate limits and transient network faults. Returns an empty
+    list when the API has nothing for that tournament (404).
     """
-    url = f"{BASE_URL}/tournaments/{tournament_id}/pairings"
+    url = f"{BASE_URL}/tournaments/{tournament_id}/{resource}"
 
     for attempt in range(max_retries + 1):
         try:
@@ -86,6 +88,18 @@ def fetch_pairings(
         return payload if isinstance(payload, list) else []
 
     return []
+
+
+def fetch_pairings(
+    client: httpx.Client, tournament_id: str, max_retries: int = 4
+) -> list[dict[str, Any]]:
+    return fetch_tournament_resource(client, tournament_id, "pairings", max_retries)
+
+
+def fetch_standings(
+    client: httpx.Client, tournament_id: str, max_retries: int = 4
+) -> list[dict[str, Any]]:
+    return fetch_tournament_resource(client, tournament_id, "standings", max_retries)
 
 
 def pairing_id(tournament_id: str, pairing: dict[str, Any]) -> str:
@@ -123,4 +137,31 @@ def to_pairing_row(tournament_id: str, pairing: dict[str, Any]) -> dict[str, Any
         "player2": pairing.get("player2"),
         "winner": winner,
         "result_code": result_code,
+    }
+
+
+def to_standing_row(tournament_id: str, standing: dict[str, Any]) -> dict[str, Any]:
+    """Map an API standing onto the public.standings column names.
+
+    The `decklist` field is deliberately dropped: it dwarfs everything else in
+    the payload and nothing here depends on it. `deck` is flattened, and is
+    occasionally an empty dict, so every field it holds is read defensively.
+    """
+    deck = standing.get("deck") or {}
+    record = standing.get("record") or {}
+
+    return {
+        "tournament_id": tournament_id,
+        "player": standing["player"],
+        "name": standing.get("name"),
+        "country": standing.get("country"),
+        # The API calls this "placing".
+        "placement": standing.get("placing"),
+        "wins": record.get("wins"),
+        "losses": record.get("losses"),
+        "ties": record.get("ties"),
+        "drop_round": standing.get("drop"),
+        "deck_id": deck.get("id"),
+        "deck_name": deck.get("name"),
+        "deck_icons": deck.get("icons"),
     }
