@@ -10,6 +10,10 @@ on:
         description: "Fetch and report only, write nothing"
         type: boolean
         default: false
+      max_requests:
+        description: "Tournaments to pull pairings for this run"
+        type: string
+        default: "400"
 
 concurrency:
   group: ingest-tournaments
@@ -18,7 +22,9 @@ concurrency:
 jobs:
   ingest:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # The pairings endpoint allows 50 requests / 5 min, so a 400-tournament
+    # batch paces out to roughly 45 minutes.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
 
@@ -33,13 +39,36 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
         run: |
           uv run python scripts/ingest_tournaments.py \
             ${{ inputs.dry_run && '--dry-run' || '' }} \
-            | tee run.log
+            | tee tournaments.log
+
+      # Runs after the tournament list is refreshed so pairings for events that
+      # just appeared are picked up in the same run.
+      - name: Ingest pairings
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
+        run: |
+          uv run python scripts/ingest_pairings.py \
+            --max-requests "${{ inputs.max_requests || '400' }}" \
+            ${{ inputs.dry_run && '--dry-run' || '' }} \
+            | tee pairings.log
+
+      - name: Summary
+        if: always()
+        run: |
           {
-            echo '### Limitless ingest'
+            echo '### Tournaments'
             echo '```'
-            cat run.log
+            cat tournaments.log 2>/dev/null || echo '(step did not run)'
+            echo '```'
+            echo '### Pairings'
+            echo '```'
+            tail -40 pairings.log 2>/dev/null || echo '(step did not run)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
