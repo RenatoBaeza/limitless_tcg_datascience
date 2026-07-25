@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routers import decks
+from app.routers import admin, decks
 
 app = FastAPI(
     title="Limitless TCG API",
@@ -8,6 +8,7 @@ app = FastAPI(
 )
 
 app.include_router(decks.router)
+app.include_router(admin.router)
 
 
 @app.get("/health")
