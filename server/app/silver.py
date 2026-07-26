@@ -1,6 +1,6 @@
 """Driver for the bronze -> silver refresh.
 
-The transform itself is three Postgres functions (sql/005_silver.sql); this
+The transform itself is two Postgres functions (sql/005_silver.sql); this
 module only calls them. Keeping the work server-side is the whole point:
 silver_pairings is derived from ~290k bronze rows joined twice against
 standings, and dragging that through PostgREST to reshape it in Python would
@@ -22,10 +22,13 @@ import httpx2 as httpx
 from app import supabase
 from app.ingest import TOURNAMENTS_TABLE
 
-# Order matters. Both child tables carry a foreign key onto silver_tournaments
-# and inner-join it, so a tournament missing from silver_tournaments yields no
-# standings or pairings rows at all - silently, not as an error.
-STEPS = ("tournaments", "standings", "pairings")
+# Order matters. silver_pairings carries a foreign key onto silver_tournaments
+# and inner-joins it, so a tournament missing from silver_tournaments yields no
+# pairings rows at all - silently, not as an error.
+#
+# There is no standings step: silver_standings is a view over bronze_standings
+# (sql/007_shrink.sql), so it needs no refreshing and cannot fall behind.
+STEPS = ("tournaments", "pairings")
 
 CHUNK_SIZE = 200
 

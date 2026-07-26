@@ -68,9 +68,12 @@ The database is three layers, and which one you want is rarely ambiguous:
   faithful mirror of the Limitless API, quirks intact. Only the ingest writes
   it. It is the layer to debug against and the only one that can be rebuilt
   solely by re-fetching.
-- **Silver** (`silver_tournaments`, `silver_standings`, `silver_pairings`) is
-  analysis-shaped: one row per real match, restated as winner/loser with each
-  side's deck joined in.
+- **Silver** (`silver_tournaments`, `silver_pairings`, plus the
+  `silver_standings` *view*) is analysis-shaped: one row per real match,
+  restated as winner/loser with each side's deck joined in. `silver_standings`
+  is a view over `bronze_standings`, not a table — the transform was a
+  column-for-column copy, so materialising it bought nothing and cost 118k
+  duplicated rows (`sql/007_shrink.sql`).
 - **Gold** (`gold_decks`, `gold_deck_events`, `gold_matchups`) is
   question-shaped. It exists to answer *how does each deck do against each
   other deck*, and it is what the frontend reads.
@@ -89,11 +92,11 @@ times out, lower `--chunk-size` rather than reaching for a different design.
 
 Things about both refreshes that are easy to get wrong:
 
-- **Order matters.** In silver, both child tables inner-join
-  `silver_tournaments`, so a tournament missing from it yields no standings or
-  pairings rows *silently*, not as a foreign-key error. In gold, `gold_decks`
-  is a roll-up of the other two and must run after them. `silver.STEPS` and
-  `gold.STEPS` encode the orders.
+- **Order matters.** In silver, `silver_pairings` inner-joins
+  `silver_tournaments`, so a tournament missing from it yields no pairings rows
+  *silently*, not as a foreign-key error. In gold, `gold_decks` is a roll-up of
+  the other two and must run after them. `silver.STEPS` and `gold.STEPS` encode
+  the orders — silver has no standings step, since the view cannot fall behind.
 - **They re-read their whole source every run**, not just what is new. A
   pairing's deck columns come from a standings ingest that usually lands
   *after* the pairing did, so an incremental-by-timestamp refresh would leave

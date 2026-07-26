@@ -104,13 +104,13 @@ def test_pages_past_the_postgrest_row_cap(_client, monkeypatch):
 
 
 def test_refreshes_in_foreign_key_order(_client):
-    """Both child tables inner-join silver_tournaments, so it must go first."""
+    """silver_pairings inner-joins silver_tournaments, so it must go first."""
     client = _client(FakeClient(ids=["a", "b", "c"]))
 
     assert silver.run(_args()) == 0
 
     steps = [step for step, _ in client.calls]
-    assert steps == ["tournaments"] * 2 + ["standings"] * 2 + ["pairings"] * 2
+    assert steps == ["tournaments"] * 2 + ["pairings"] * 2
 
 
 def test_batches_by_chunk_size(_client):
@@ -124,9 +124,9 @@ def test_batches_by_chunk_size(_client):
 
 def test_one_failed_batch_does_not_stop_the_run(_client):
     """A timed-out batch is redone by the next run - it must not abort this one."""
-    client = _client(FakeClient(ids=["a", "b", "c", "d"], fail_on=["standings"]))
+    client = _client(FakeClient(ids=["a", "b", "c", "d"], fail_on=["tournaments"]))
 
-    # 2 of 6 batch-slots failing is over the tolerance, so the run reports failure...
+    # 2 of 4 batch-slots failing is over the tolerance, so the run reports failure...
     assert silver.run(_args()) == 1
     # ...but pairings still ran to completion afterwards.
     assert [batch for step, batch in client.calls if step == "pairings"] == [
@@ -170,7 +170,7 @@ def test_single_tournament_skips_the_listing(_client):
     silver.run(_args(tournament="b"))
 
     assert all(batch == ["b"] for _, batch in client.calls)
-    assert len(client.calls) == 3
+    assert len(client.calls) == len(silver.STEPS)
 
 
 def test_dry_run_writes_nothing(_client):
