@@ -27,7 +27,7 @@ def main() -> int:
     return ingest.run(
         args,
         resource="standings",
-        table="standings",
+        table="bronze_standings",
         row_mapper=to_standing_row,
         # `player` is unique within a tournament, so the natural key works and
         # no surrogate id is needed.

@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app import supabase  # noqa: E402
 from app.limitless import fetch_tournaments, to_row  # noqa: E402
 
-TABLE = "tournaments"
+TABLE = "bronze_tournaments"
 CHUNK_SIZE = 500
 
 

@@ -28,7 +28,7 @@ def main() -> int:
     return ingest.run(
         args,
         resource="pairings",
-        table="pairings",
+        table="bronze_pairings",
         row_mapper=to_pairing_row,
         on_conflict="id",
         key=lambda row: row["id"],

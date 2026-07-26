@@ -73,6 +73,19 @@ jobs:
             ${{ inputs.dry_run && '--dry-run' || '' }} \
             | tee standings.log
 
+      # Last, so it sees everything the three steps above just landed. Unlike
+      # them it talks only to Supabase - no Limitless rate limit applies, and
+      # the work happens inside Postgres - so it costs a minute, not thirty.
+      - name: Refresh silver layer
+        if: ${{ !inputs.dry_run }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
+        run: |
+          uv run python scripts/refresh_silver.py | tee silver.log
+
       - name: Summary
         if: always()
         run: |
@@ -88,5 +101,9 @@ jobs:
             echo '### Standings'
             echo '```'
             tail -20 standings.log 2>/dev/null || echo '(step did not run)'
+            echo '```'
+            echo '### Silver'
+            echo '```'
+            grep -E 'rows after|failed batches' silver.log 2>/dev/null || echo '(step did not run)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

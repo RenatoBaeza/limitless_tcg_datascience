@@ -20,6 +20,10 @@ from app.limitless import RATE_LIMIT_INTERVAL, fetch_tournament_resource
 
 CHUNK_SIZE = 500
 
+# The tournament list doubles as the ingest's own progress ledger, so the loop
+# reads and writes it regardless of which resource it is fetching.
+TOURNAMENTS_TABLE = "bronze_tournaments"
+
 
 def add_common_arguments(parser: argparse.ArgumentParser, default_budget: int) -> None:
     parser.add_argument(
@@ -56,7 +60,7 @@ def pending_tournaments(
     response = supabase._send(
         client,
         "GET",
-        f"{base}/rest/v1/tournaments",
+        f"{base}/rest/v1/{TOURNAMENTS_TABLE}",
         params={
             "select": f"id,name,players,date,{progress_column}",
             "or": f"({progress_column}.is.null,date.gte.{cutoff})",
@@ -82,8 +86,11 @@ def run(
     `key` extracts a row's identity, used to collapse duplicates inside a single
     payload - PostgREST rejects a batch that touches the same key twice.
     """
-    progress_column = f"{table}_ingested_at"
-    count_column = f"{table}_count"
+    # Derived from the resource rather than the table: the progress columns name
+    # what was fetched, and so kept their bare names when the tables gained the
+    # bronze_ prefix. See sql/004_bronze_rename.sql.
+    progress_column = f"{resource}_ingested_at"
+    count_column = f"{resource}_count"
 
     try:
         base, secret_key = supabase.credentials()
@@ -101,7 +108,7 @@ def run(
                 args.max_requests, args.restale_hours,
             )
             remaining = supabase.count_rows(
-                client, base, hdrs, "tournaments", {progress_column: "is.null"}
+                client, base, hdrs, TOURNAMENTS_TABLE, {progress_column: "is.null"}
             )
             print(f"{remaining} tournaments still have no {resource}")
 
@@ -140,7 +147,7 @@ def run(
                     )
 
                 supabase.patch(
-                    client, base, hdrs, "tournaments",
+                    client, base, hdrs, TOURNAMENTS_TABLE,
                     {"id": f"eq.{tid}"},
                     {
                         progress_column: datetime.now(timezone.utc).isoformat(),
@@ -165,7 +172,7 @@ def run(
         print(f"tournaments processed: {len(targets)}, empty: {empty}, failed: {failed}")
 
         still_pending = supabase.count_rows(
-            client, base, hdrs, "tournaments", {progress_column: "is.null"}
+            client, base, hdrs, TOURNAMENTS_TABLE, {progress_column: "is.null"}
         )
         print(f"tournaments still pending: {still_pending}")
 

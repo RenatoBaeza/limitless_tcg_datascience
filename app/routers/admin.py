@@ -2,8 +2,9 @@
 header - lets it be hit from anywhere that can issue a GET (cron pingers,
 browser, curl) without extra client support. Which secret matches picks the
 job: ADMIN_KEY_STANDINGS runs ingest_standings, ADMIN_KEY_PAIRINGS runs
-ingest_pairings. A run takes minutes (rate-limited to ~1 tournament/6.2s), so
-it's dispatched to a background task and the request returns immediately.
+ingest_pairings, ADMIN_KEY_SILVER rebuilds the silver layer. A run takes
+minutes (the ingests are rate-limited to ~1 tournament/6.2s), so it's
+dispatched to a background task and the request returns immediately.
 """
 
 import argparse
@@ -13,7 +14,7 @@ from typing import Callable
 from dotenv import load_dotenv
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 
-from app import ingest
+from app import ingest, silver
 from app.limitless import to_pairing_row, to_standing_row
 
 router = APIRouter(prefix="/admin", tags=["admin"])
@@ -23,7 +24,7 @@ def _run_standings(args: argparse.Namespace) -> None:
     ingest.run(
         args,
         resource="standings",
-        table="standings",
+        table="bronze_standings",
         row_mapper=to_standing_row,
         on_conflict="tournament_id,player",
         key=lambda row: (row["tournament_id"], row["player"]),
@@ -34,16 +35,26 @@ def _run_pairings(args: argparse.Namespace) -> None:
     ingest.run(
         args,
         resource="pairings",
-        table="pairings",
+        table="bronze_pairings",
         row_mapper=to_pairing_row,
         on_conflict="id",
         key=lambda row: row["id"],
     )
 
 
+def _run_silver(args: argparse.Namespace) -> None:
+    # Takes no ingest arguments - it reads whatever bronze currently holds.
+    silver.run(
+        argparse.Namespace(
+            chunk_size=silver.CHUNK_SIZE, tournament=None, only=None, dry_run=False
+        )
+    )
+
+
 _JOBS: dict[str, Callable[[argparse.Namespace], None]] = {
     "ADMIN_KEY_STANDINGS": _run_standings,
     "ADMIN_KEY_PAIRINGS": _run_pairings,
+    "ADMIN_KEY_SILVER": _run_silver,
 }
 
 

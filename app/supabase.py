@@ -107,6 +107,30 @@ def upsert(
         raise RuntimeError(f"upsert into {table} failed ({response.status_code}): {response.text}")
 
 
+def rpc(
+    client: httpx.Client,
+    base: str,
+    hdrs: dict[str, str],
+    function: str,
+    payload: dict[str, Any] | None = None,
+) -> Any:
+    """Call a Postgres function through PostgREST and return its result.
+
+    A single-value function comes back as a bare JSON scalar, a set-returning
+    one as a list of objects.
+    """
+    response = _send(
+        client,
+        "POST",
+        f"{base}/rest/v1/rpc/{function}",
+        headers=hdrs,
+        json=payload or {},
+    )
+    if response.status_code >= 400:
+        raise RuntimeError(f"rpc {function} failed ({response.status_code}): {response.text}")
+    return response.json()
+
+
 def patch(
     client: httpx.Client,
     base: str,
