@@ -9,6 +9,12 @@ __pycache__/
 *.py[cod]
 .venv/
 .env
+.env.local
 .pytest_cache/
 .ipynb_checkpoints/
 .ruff_cache/
+
+# client
+node_modules/
+dist/
+*.tsbuildinfo

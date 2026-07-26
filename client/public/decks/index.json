@@ -1,0 +1,2474 @@
+{
+  "generated_at": "2026-07-26T07:52:38+00:00",
+  "sprite_source": "https://r2.limitlesstcg.net/pokemon/gen9",
+  "decks": [
+    {
+      "id": "aegislash-par",
+      "name": "Aegislash",
+      "icons": [
+        "aegislash"
+      ],
+      "image": "/decks/aegislash-par.png",
+      "sprites": [
+        "/decks/sprites/aegislash.png"
+      ]
+    },
+    {
+      "id": "alakazam-dudunsparce",
+      "name": "Alakazam Dudunsparce",
+      "icons": [
+        "alakazam",
+        "dudunsparce"
+      ],
+      "image": "/decks/alakazam-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/alakazam.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "alakazam-ex",
+      "name": "Alakazam",
+      "icons": [
+        "alakazam"
+      ],
+      "image": "/decks/alakazam-ex.png",
+      "sprites": [
+        "/decks/sprites/alakazam.png"
+      ]
+    },
+    {
+      "id": "alakazam-meg",
+      "name": "Alakazam",
+      "icons": [
+        "alakazam"
+      ],
+      "image": "/decks/alakazam-meg.png",
+      "sprites": [
+        "/decks/sprites/alakazam.png"
+      ]
+    },
+    {
+      "id": "alolan-exeggutor-ex",
+      "name": "Alolan Exeggutor ex",
+      "icons": [
+        "exeggutor-alola"
+      ],
+      "image": "/decks/alolan-exeggutor-ex.png",
+      "sprites": [
+        "/decks/sprites/exeggutor-alola.png"
+      ]
+    },
+    {
+      "id": "ancient-box",
+      "name": "Ancient Box",
+      "icons": [
+        "roaring-moon",
+        "flutter-mane"
+      ],
+      "image": "/decks/ancient-box.png",
+      "sprites": [
+        "/decks/sprites/roaring-moon.png",
+        "/decks/sprites/flutter-mane.png"
+      ]
+    },
+    {
+      "id": "arcanine-ex-sv",
+      "name": "Arcanine",
+      "icons": [
+        "arcanine"
+      ],
+      "image": "/decks/arcanine-ex-sv.png",
+      "sprites": [
+        "/decks/sprites/arcanine.png"
+      ]
+    },
+    {
+      "id": "archaludon-dudunsparce",
+      "name": "Archaludon Dudunsparce",
+      "icons": [
+        "archaludon",
+        "dudunsparce"
+      ],
+      "image": "/decks/archaludon-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/archaludon.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "archaludon-ex",
+      "name": "Archaludon",
+      "icons": [
+        "archaludon"
+      ],
+      "image": "/decks/archaludon-ex.png",
+      "sprites": [
+        "/decks/sprites/archaludon.png"
+      ]
+    },
+    {
+      "id": "archaludon-zoroark",
+      "name": "Archaludon Zoroark",
+      "icons": [
+        "archaludon",
+        "zoroark"
+      ],
+      "image": "/decks/archaludon-zoroark.png",
+      "sprites": [
+        "/decks/sprites/archaludon.png",
+        "/decks/sprites/zoroark.png"
+      ]
+    },
+    {
+      "id": "azumarill-ssp",
+      "name": "Azumarill",
+      "icons": [
+        "azumarill"
+      ],
+      "image": "/decks/azumarill-ssp.png",
+      "sprites": [
+        "/decks/sprites/azumarill.png"
+      ]
+    },
+    {
+      "id": "banette-ex-sv",
+      "name": "Banette",
+      "icons": [
+        "banette"
+      ],
+      "image": "/decks/banette-ex-sv.png",
+      "sprites": [
+        "/decks/sprites/banette.png"
+      ]
+    },
+    {
+      "id": "basic-box-m",
+      "name": "Basic Box",
+      "icons": [
+        "ogerpon",
+        "clefairy"
+      ],
+      "image": "/decks/basic-box-m.png",
+      "sprites": [
+        "/decks/sprites/ogerpon.png",
+        "/decks/sprites/clefairy.png"
+      ]
+    },
+    {
+      "id": "beedrill-ex-cri",
+      "name": "Beedrill",
+      "icons": [
+        "beedrill"
+      ],
+      "image": "/decks/beedrill-ex-cri.png",
+      "sprites": [
+        "/decks/sprites/beedrill.png"
+      ]
+    },
+    {
+      "id": "blaziken-ex-jtg",
+      "name": "Blaziken",
+      "icons": [
+        "blaziken"
+      ],
+      "image": "/decks/blaziken-ex-jtg.png",
+      "sprites": [
+        "/decks/sprites/blaziken.png"
+      ]
+    },
+    {
+      "id": "blaziken-zoroark",
+      "name": "Blaziken Zoroark",
+      "icons": [
+        "blaziken",
+        "zoroark"
+      ],
+      "image": "/decks/blaziken-zoroark.png",
+      "sprites": [
+        "/decks/sprites/blaziken.png",
+        "/decks/sprites/zoroark.png"
+      ]
+    },
+    {
+      "id": "blissey-ex",
+      "name": "Blissey",
+      "icons": [
+        "blissey"
+      ],
+      "image": "/decks/blissey-ex.png",
+      "sprites": [
+        "/decks/sprites/blissey.png"
+      ]
+    },
+    {
+      "id": "bloodmoon-ursaluna-sfa",
+      "name": "Bloodmoon Ursaluna",
+      "icons": [
+        "ursaluna-bloodmoon"
+      ],
+      "image": "/decks/bloodmoon-ursaluna-sfa.png",
+      "sprites": [
+        "/decks/sprites/ursaluna-bloodmoon.png"
+      ]
+    },
+    {
+      "id": "bronzong-tef",
+      "name": "Bronzong",
+      "icons": [
+        "bronzong"
+      ],
+      "image": "/decks/bronzong-tef.png",
+      "sprites": [
+        "/decks/sprites/bronzong.png"
+      ]
+    },
+    {
+      "id": "ceruledge-ex",
+      "name": "Ceruledge",
+      "icons": [
+        "ceruledge"
+      ],
+      "image": "/decks/ceruledge-ex.png",
+      "sprites": [
+        "/decks/sprites/ceruledge.png"
+      ]
+    },
+    {
+      "id": "charizard-dragapult",
+      "name": "Charizard Dragapult",
+      "icons": [
+        "charizard",
+        "dragapult"
+      ],
+      "image": "/decks/charizard-dragapult.png",
+      "sprites": [
+        "/decks/sprites/charizard.png",
+        "/decks/sprites/dragapult.png"
+      ]
+    },
+    {
+      "id": "charizard-dusknoir",
+      "name": "Charizard Dusknoir",
+      "icons": [
+        "charizard",
+        "dusknoir"
+      ],
+      "image": "/decks/charizard-dusknoir.png",
+      "sprites": [
+        "/decks/sprites/charizard.png",
+        "/decks/sprites/dusknoir.png"
+      ]
+    },
+    {
+      "id": "charizard-ex",
+      "name": "Charizard",
+      "icons": [
+        "charizard"
+      ],
+      "image": "/decks/charizard-ex.png",
+      "sprites": [
+        "/decks/sprites/charizard.png"
+      ]
+    },
+    {
+      "id": "charizard-greninja",
+      "name": "Charizard Greninja",
+      "icons": [
+        "charizard",
+        "greninja"
+      ],
+      "image": "/decks/charizard-greninja.png",
+      "sprites": [
+        "/decks/sprites/charizard.png",
+        "/decks/sprites/greninja.png"
+      ]
+    },
+    {
+      "id": "charizard-noctowl",
+      "name": "Charizard Noctowl",
+      "icons": [
+        "charizard",
+        "noctowl"
+      ],
+      "image": "/decks/charizard-noctowl.png",
+      "sprites": [
+        "/decks/sprites/charizard.png",
+        "/decks/sprites/noctowl.png"
+      ]
+    },
+    {
+      "id": "charizard-pidgeot",
+      "name": "Charizard Pidgeot",
+      "icons": [
+        "charizard",
+        "pidgeot"
+      ],
+      "image": "/decks/charizard-pidgeot.png",
+      "sprites": [
+        "/decks/sprites/charizard.png",
+        "/decks/sprites/pidgeot.png"
+      ]
+    },
+    {
+      "id": "chien-pao-baxcalibur",
+      "name": "Chien-Pao Baxcalibur",
+      "icons": [
+        "chien-pao",
+        "baxcalibur"
+      ],
+      "image": "/decks/chien-pao-baxcalibur.png",
+      "sprites": [
+        "/decks/sprites/chien-pao.png",
+        "/decks/sprites/baxcalibur.png"
+      ]
+    },
+    {
+      "id": "chien-pao-noctowl",
+      "name": "Chien-Pao Noctowl",
+      "icons": [
+        "chien-pao",
+        "noctowl"
+      ],
+      "image": "/decks/chien-pao-noctowl.png",
+      "sprites": [
+        "/decks/sprites/chien-pao.png",
+        "/decks/sprites/noctowl.png"
+      ]
+    },
+    {
+      "id": "cinderace-ex",
+      "name": "Cinderace",
+      "icons": [
+        "cinderace"
+      ],
+      "image": "/decks/cinderace-ex.png",
+      "sprites": [
+        "/decks/sprites/cinderace.png"
+      ]
+    },
+    {
+      "id": "clefairy-ogerpon",
+      "name": "Clefairy Ogerpon",
+      "icons": [
+        "clefairy",
+        "ogerpon"
+      ],
+      "image": "/decks/clefairy-ogerpon.png",
+      "sprites": [
+        "/decks/sprites/clefairy.png",
+        "/decks/sprites/ogerpon.png"
+      ]
+    },
+    {
+      "id": "cofagrigus-ex",
+      "name": "Cofagrigus",
+      "icons": [
+        "cofagrigus"
+      ],
+      "image": "/decks/cofagrigus-ex.png",
+      "sprites": [
+        "/decks/sprites/cofagrigus.png"
+      ]
+    },
+    {
+      "id": "conkeldurr-twm",
+      "name": "Conkeldurr",
+      "icons": [
+        "conkeldurr"
+      ],
+      "image": "/decks/conkeldurr-twm.png",
+      "sprites": [
+        "/decks/sprites/conkeldurr.png"
+      ]
+    },
+    {
+      "id": "copperajah-ex",
+      "name": "Copperajah",
+      "icons": [
+        "copperajah"
+      ],
+      "image": "/decks/copperajah-ex.png",
+      "sprites": [
+        "/decks/sprites/copperajah.png"
+      ]
+    },
+    {
+      "id": "cornerstone-mask-ogerpon-ex",
+      "name": "Cornerstone Mask Ogerpon",
+      "icons": [
+        "ogerpon-cornerstone"
+      ],
+      "image": "/decks/cornerstone-mask-ogerpon-ex.png",
+      "sprites": [
+        "/decks/sprites/ogerpon-cornerstone.png"
+      ]
+    },
+    {
+      "id": "crustle-dri",
+      "name": "Crustle",
+      "icons": [
+        "crustle"
+      ],
+      "image": "/decks/crustle-dri.png",
+      "sprites": [
+        "/decks/sprites/crustle.png"
+      ]
+    },
+    {
+      "id": "cynthia-garchomp-ex",
+      "name": "Cynthia's Garchomp",
+      "icons": [
+        "garchomp"
+      ],
+      "image": "/decks/cynthia-garchomp-ex.png",
+      "sprites": [
+        "/decks/sprites/garchomp.png"
+      ]
+    },
+    {
+      "id": "decidueye-daa",
+      "name": "Decidueye",
+      "icons": [
+        "decidueye"
+      ],
+      "image": "/decks/decidueye-daa.png",
+      "sprites": [
+        "/decks/sprites/decidueye.png"
+      ]
+    },
+    {
+      "id": "decidueye-ex",
+      "name": "Decidueye",
+      "icons": [
+        "decidueye"
+      ],
+      "image": "/decks/decidueye-ex.png",
+      "sprites": [
+        "/decks/sprites/decidueye.png"
+      ]
+    },
+    {
+      "id": "dhelmise-pbl",
+      "name": "Dhelmise",
+      "icons": [
+        "dhelmise",
+        "banette"
+      ],
+      "image": "/decks/dhelmise-pbl.png",
+      "sprites": [
+        "/decks/sprites/dhelmise.png",
+        "/decks/sprites/banette.png"
+      ]
+    },
+    {
+      "id": "diancie-dusknoir",
+      "name": "Diancie Dusknoir",
+      "icons": [
+        "diancie-mega",
+        "dusknoir"
+      ],
+      "image": "/decks/diancie-dusknoir.png",
+      "sprites": [
+        "/decks/sprites/diancie-mega.png",
+        "/decks/sprites/dusknoir.png"
+      ]
+    },
+    {
+      "id": "dondozo-svi",
+      "name": "Dondozo",
+      "icons": [
+        "dondozo",
+        "tatsugiri"
+      ],
+      "image": "/decks/dondozo-svi.png",
+      "sprites": [
+        "/decks/sprites/dondozo.png",
+        "/decks/sprites/tatsugiri.png"
+      ]
+    },
+    {
+      "id": "doublade-por",
+      "name": "Doublade",
+      "icons": [
+        "doublade"
+      ],
+      "image": "/decks/doublade-por.png",
+      "sprites": [
+        "/decks/sprites/doublade.png"
+      ]
+    },
+    {
+      "id": "dragapult-blaziken",
+      "name": "Dragapult Blaziken",
+      "icons": [
+        "dragapult",
+        "blaziken"
+      ],
+      "image": "/decks/dragapult-blaziken.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/blaziken.png"
+      ]
+    },
+    {
+      "id": "dragapult-charizard",
+      "name": "Dragapult Charizard",
+      "icons": [
+        "dragapult",
+        "charizard"
+      ],
+      "image": "/decks/dragapult-charizard.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/charizard.png"
+      ]
+    },
+    {
+      "id": "dragapult-dudunsparce",
+      "name": "Dragapult Dudunsparce",
+      "icons": [
+        "dragapult",
+        "dudunsparce"
+      ],
+      "image": "/decks/dragapult-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "dragapult-dusknoir",
+      "name": "Dragapult Dusknoir",
+      "icons": [
+        "dragapult",
+        "dusknoir"
+      ],
+      "image": "/decks/dragapult-dusknoir.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/dusknoir.png"
+      ]
+    },
+    {
+      "id": "dragapult-ex",
+      "name": "Dragapult",
+      "icons": [
+        "dragapult"
+      ],
+      "image": "/decks/dragapult-ex.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png"
+      ]
+    },
+    {
+      "id": "dragapult-froslass",
+      "name": "Dragapult Froslass",
+      "icons": [
+        "dragapult",
+        "froslass"
+      ],
+      "image": "/decks/dragapult-froslass.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/froslass.png"
+      ]
+    },
+    {
+      "id": "dragapult-iron-thorns",
+      "name": "Dragapult Iron Thorns",
+      "icons": [
+        "dragapult",
+        "iron-thorns"
+      ],
+      "image": "/decks/dragapult-iron-thorns.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/iron-thorns.png"
+      ]
+    },
+    {
+      "id": "dragapult-pidgeot",
+      "name": "Dragapult Pidgeot",
+      "icons": [
+        "dragapult",
+        "pidgeot"
+      ],
+      "image": "/decks/dragapult-pidgeot.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/pidgeot.png"
+      ]
+    },
+    {
+      "id": "dragapult-zoroark",
+      "name": "Dragapult Zoroark",
+      "icons": [
+        "dragapult",
+        "zoroark"
+      ],
+      "image": "/decks/dragapult-zoroark.png",
+      "sprites": [
+        "/decks/sprites/dragapult.png",
+        "/decks/sprites/zoroark.png"
+      ]
+    },
+    {
+      "id": "dragonite-eelektrik",
+      "name": "Dragonite Eelektrik",
+      "icons": [
+        "dragonite-mega",
+        "eelektrik"
+      ],
+      "image": "/decks/dragonite-eelektrik.png",
+      "sprites": [
+        "/decks/sprites/dragonite-mega.png",
+        "/decks/sprites/eelektrik.png"
+      ]
+    },
+    {
+      "id": "dudunsparce-control",
+      "name": "Dudunsparce Control",
+      "icons": [
+        "dudunsparce",
+        "elgyem"
+      ],
+      "image": "/decks/dudunsparce-control.png",
+      "sprites": [
+        "/decks/sprites/dudunsparce.png",
+        "/decks/sprites/elgyem.png"
+      ]
+    },
+    {
+      "id": "eelektrik-blk",
+      "name": "Eelektrik",
+      "icons": [
+        "eelektrik"
+      ],
+      "image": "/decks/eelektrik-blk.png",
+      "sprites": [
+        "/decks/sprites/eelektrik.png"
+      ]
+    },
+    {
+      "id": "erikas-victreebel",
+      "name": "Erika's Victreebel",
+      "icons": [
+        "victreebel",
+        "tangela"
+      ],
+      "image": "/decks/erikas-victreebel.png",
+      "sprites": [
+        "/decks/sprites/victreebel.png",
+        "/decks/sprites/tangela.png"
+      ]
+    },
+    {
+      "id": "espathra-ex",
+      "name": "Espathra",
+      "icons": [
+        "espathra"
+      ],
+      "image": "/decks/espathra-ex.png",
+      "sprites": [
+        "/decks/sprites/espathra.png"
+      ]
+    },
+    {
+      "id": "espathra-froslass",
+      "name": "Espathra Froslass",
+      "icons": [
+        "espathra",
+        "froslass"
+      ],
+      "image": "/decks/espathra-froslass.png",
+      "sprites": [
+        "/decks/sprites/espathra.png",
+        "/decks/sprites/froslass.png"
+      ]
+    },
+    {
+      "id": "espathra-xatu",
+      "name": "Espathra Xatu",
+      "icons": [
+        "espathra",
+        "xatu"
+      ],
+      "image": "/decks/espathra-xatu.png",
+      "sprites": [
+        "/decks/sprites/espathra.png",
+        "/decks/sprites/xatu.png"
+      ]
+    },
+    {
+      "id": "ethan-magcargo",
+      "name": "Ethan's Magcargo",
+      "icons": [
+        "magcargo",
+        "ho-oh"
+      ],
+      "image": "/decks/ethan-magcargo.png",
+      "sprites": [
+        "/decks/sprites/magcargo.png",
+        "/decks/sprites/ho-oh.png"
+      ]
+    },
+    {
+      "id": "ethan-typhlosion",
+      "name": "Ethan's Typhlosion",
+      "icons": [
+        "typhlosion"
+      ],
+      "image": "/decks/ethan-typhlosion.png",
+      "sprites": [
+        "/decks/sprites/typhlosion.png"
+      ]
+    },
+    {
+      "id": "farigiraf-crustle",
+      "name": "Farigiraf Crustle",
+      "icons": [
+        "farigiraf",
+        "crustle"
+      ],
+      "image": "/decks/farigiraf-crustle.png",
+      "sprites": [
+        "/decks/sprites/farigiraf.png",
+        "/decks/sprites/crustle.png"
+      ]
+    },
+    {
+      "id": "farigiraf-ex",
+      "name": "Farigiraf",
+      "icons": [
+        "farigiraf"
+      ],
+      "image": "/decks/farigiraf-ex.png",
+      "sprites": [
+        "/decks/sprites/farigiraf.png"
+      ]
+    },
+    {
+      "id": "farigiraf-milotic",
+      "name": "Farigiraf Milotic",
+      "icons": [
+        "farigiraf",
+        "milotic"
+      ],
+      "image": "/decks/farigiraf-milotic.png",
+      "sprites": [
+        "/decks/sprites/farigiraf.png",
+        "/decks/sprites/milotic.png"
+      ]
+    },
+    {
+      "id": "feraligatr-tef",
+      "name": "Feraligatr",
+      "icons": [
+        "feraligatr"
+      ],
+      "image": "/decks/feraligatr-tef.png",
+      "sprites": [
+        "/decks/sprites/feraligatr.png"
+      ]
+    },
+    {
+      "id": "festival-lead",
+      "name": "Festival Lead",
+      "icons": [
+        "dipplin",
+        "thwackey"
+      ],
+      "image": "/decks/festival-lead.png",
+      "sprites": [
+        "/decks/sprites/dipplin.png",
+        "/decks/sprites/thwackey.png"
+      ]
+    },
+    {
+      "id": "flareon-ex",
+      "name": "Flareon",
+      "icons": [
+        "flareon"
+      ],
+      "image": "/decks/flareon-ex.png",
+      "sprites": [
+        "/decks/sprites/flareon.png"
+      ]
+    },
+    {
+      "id": "flareon-noctowl",
+      "name": "Flareon Noctowl",
+      "icons": [
+        "flareon",
+        "noctowl"
+      ],
+      "image": "/decks/flareon-noctowl.png",
+      "sprites": [
+        "/decks/sprites/flareon.png",
+        "/decks/sprites/noctowl.png"
+      ]
+    },
+    {
+      "id": "flygon-ex-ssp",
+      "name": "Flygon",
+      "icons": [
+        "flygon"
+      ],
+      "image": "/decks/flygon-ex-ssp.png",
+      "sprites": [
+        "/decks/sprites/flygon.png"
+      ]
+    },
+    {
+      "id": "forretress-ex",
+      "name": "Forretress",
+      "icons": [
+        "forretress"
+      ],
+      "image": "/decks/forretress-ex.png",
+      "sprites": [
+        "/decks/sprites/forretress.png"
+      ]
+    },
+    {
+      "id": "froslass-munkidori",
+      "name": "Froslass Munkidori",
+      "icons": [
+        "froslass",
+        "munkidori"
+      ],
+      "image": "/decks/froslass-munkidori.png",
+      "sprites": [
+        "/decks/sprites/froslass.png",
+        "/decks/sprites/munkidori.png"
+      ]
+    },
+    {
+      "id": "future-box",
+      "name": "Future Box",
+      "icons": [
+        "miraidon",
+        "iron-crown"
+      ],
+      "image": "/decks/future-box.png",
+      "sprites": [
+        "/decks/sprites/miraidon.png",
+        "/decks/sprites/iron-crown.png"
+      ]
+    },
+    {
+      "id": "galvantula-ex",
+      "name": "Galvantula",
+      "icons": [
+        "galvantula"
+      ],
+      "image": "/decks/galvantula-ex.png",
+      "sprites": [
+        "/decks/sprites/galvantula.png"
+      ]
+    },
+    {
+      "id": "garchomp-ex",
+      "name": "Garchomp",
+      "icons": [
+        "garchomp"
+      ],
+      "image": "/decks/garchomp-ex.png",
+      "sprites": [
+        "/decks/sprites/garchomp.png"
+      ]
+    },
+    {
+      "id": "gardevoir-ex-sv",
+      "name": "Gardevoir",
+      "icons": [
+        "gardevoir"
+      ],
+      "image": "/decks/gardevoir-ex-sv.png",
+      "sprites": [
+        "/decks/sprites/gardevoir.png"
+      ]
+    },
+    {
+      "id": "gardevoir-jellicent",
+      "name": "Gardevoir Jellicent",
+      "icons": [
+        "gardevoir",
+        "jellicent"
+      ],
+      "image": "/decks/gardevoir-jellicent.png",
+      "sprites": [
+        "/decks/sprites/gardevoir.png",
+        "/decks/sprites/jellicent.png"
+      ]
+    },
+    {
+      "id": "gengar-ex",
+      "name": "Gengar",
+      "icons": [
+        "gengar"
+      ],
+      "image": "/decks/gengar-ex.png",
+      "sprites": [
+        "/decks/sprites/gengar.png"
+      ]
+    },
+    {
+      "id": "gholdengo-dragapult",
+      "name": "Gholdengo Dragapult",
+      "icons": [
+        "gholdengo",
+        "dragapult"
+      ],
+      "image": "/decks/gholdengo-dragapult.png",
+      "sprites": [
+        "/decks/sprites/gholdengo.png",
+        "/decks/sprites/dragapult.png"
+      ]
+    },
+    {
+      "id": "gholdengo-dudunsparce",
+      "name": "Gholdengo Dudunsparce",
+      "icons": [
+        "gholdengo",
+        "dudunsparce"
+      ],
+      "image": "/decks/gholdengo-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/gholdengo.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "gholdengo-ex",
+      "name": "Gholdengo",
+      "icons": [
+        "gholdengo"
+      ],
+      "image": "/decks/gholdengo-ex.png",
+      "sprites": [
+        "/decks/sprites/gholdengo.png"
+      ]
+    },
+    {
+      "id": "gholdengo-joltik-box",
+      "name": "Gholdengo Joltik Box",
+      "icons": [
+        "gholdengo",
+        "joltik"
+      ],
+      "image": "/decks/gholdengo-joltik-box.png",
+      "sprites": [
+        "/decks/sprites/gholdengo.png",
+        "/decks/sprites/joltik.png"
+      ]
+    },
+    {
+      "id": "gholdengo-lunatone",
+      "name": "Gholdengo Lunatone",
+      "icons": [
+        "gholdengo",
+        "lunatone"
+      ],
+      "image": "/decks/gholdengo-lunatone.png",
+      "sprites": [
+        "/decks/sprites/gholdengo.png",
+        "/decks/sprites/lunatone.png"
+      ]
+    },
+    {
+      "id": "gholdengo-typhlosion",
+      "name": "Gholdengo Typhlosion",
+      "icons": [
+        "gholdengo",
+        "typhlosion"
+      ],
+      "image": "/decks/gholdengo-typhlosion.png",
+      "sprites": [
+        "/decks/sprites/gholdengo.png",
+        "/decks/sprites/typhlosion.png"
+      ]
+    },
+    {
+      "id": "gothitelle-epo",
+      "name": "Gothitelle",
+      "icons": [
+        "gothitelle"
+      ],
+      "image": "/decks/gothitelle-epo.png",
+      "sprites": [
+        "/decks/sprites/gothitelle.png"
+      ]
+    },
+    {
+      "id": "gouging-fire-ex",
+      "name": "Gouging Fire",
+      "icons": [
+        "gouging-fire"
+      ],
+      "image": "/decks/gouging-fire-ex.png",
+      "sprites": [
+        "/decks/sprites/gouging-fire.png"
+      ]
+    },
+    {
+      "id": "great-tusk-tef",
+      "name": "Great Tusk Mill",
+      "icons": [
+        "great-tusk"
+      ],
+      "image": "/decks/great-tusk-tef.png",
+      "sprites": [
+        "/decks/sprites/great-tusk.png"
+      ]
+    },
+    {
+      "id": "greninja-blaziken",
+      "name": "Greninja Blaziken",
+      "icons": [
+        "greninja",
+        "blaziken"
+      ],
+      "image": "/decks/greninja-blaziken.png",
+      "sprites": [
+        "/decks/sprites/greninja.png",
+        "/decks/sprites/blaziken.png"
+      ]
+    },
+    {
+      "id": "greninja-ex",
+      "name": "Greninja",
+      "icons": [
+        "greninja"
+      ],
+      "image": "/decks/greninja-ex.png",
+      "sprites": [
+        "/decks/sprites/greninja.png"
+      ]
+    },
+    {
+      "id": "greninja-froslass",
+      "name": "Greninja Froslass",
+      "icons": [
+        "greninja",
+        "froslass"
+      ],
+      "image": "/decks/greninja-froslass.png",
+      "sprites": [
+        "/decks/sprites/greninja.png",
+        "/decks/sprites/froslass.png"
+      ]
+    },
+    {
+      "id": "grimmsnarl-froslass",
+      "name": "Grimmsnarl Froslass",
+      "icons": [
+        "grimmsnarl",
+        "froslass"
+      ],
+      "image": "/decks/grimmsnarl-froslass.png",
+      "sprites": [
+        "/decks/sprites/grimmsnarl.png",
+        "/decks/sprites/froslass.png"
+      ]
+    },
+    {
+      "id": "heatran-metang",
+      "name": "Heatran Metang",
+      "icons": [
+        "heatran",
+        "metang"
+      ],
+      "image": "/decks/heatran-metang.png",
+      "sprites": [
+        "/decks/sprites/heatran.png",
+        "/decks/sprites/metang.png"
+      ]
+    },
+    {
+      "id": "ho-oh-armarouge",
+      "name": "Ho-Oh Armarouge",
+      "icons": [
+        "ho-oh",
+        "armarouge"
+      ],
+      "image": "/decks/ho-oh-armarouge.png",
+      "sprites": [
+        "/decks/sprites/ho-oh.png",
+        "/decks/sprites/armarouge.png"
+      ]
+    },
+    {
+      "id": "hop-zacian",
+      "name": "Hop's Zacian",
+      "icons": [
+        "zacian-crowned",
+        "snorlax"
+      ],
+      "image": "/decks/hop-zacian.png",
+      "sprites": [
+        "/decks/sprites/zacian-crowned.png",
+        "/decks/sprites/snorlax.png"
+      ]
+    },
+    {
+      "id": "hops-trevenant",
+      "name": "Hop's Trevenant",
+      "icons": [
+        "trevenant"
+      ],
+      "image": "/decks/hops-trevenant.png",
+      "sprites": [
+        "/decks/sprites/trevenant.png"
+      ]
+    },
+    {
+      "id": "hydrapple-ex",
+      "name": "Hydrapple",
+      "icons": [
+        "hydrapple"
+      ],
+      "image": "/decks/hydrapple-ex.png",
+      "sprites": [
+        "/decks/sprites/hydrapple.png"
+      ]
+    },
+    {
+      "id": "hydrapple-ogerpon",
+      "name": "Hydrapple Ogerpon",
+      "icons": [
+        "hydrapple",
+        "ogerpon"
+      ],
+      "image": "/decks/hydrapple-ogerpon.png",
+      "sprites": [
+        "/decks/sprites/hydrapple.png",
+        "/decks/sprites/ogerpon.png"
+      ]
+    },
+    {
+      "id": "hydreigon-ex",
+      "name": "Hydreigon",
+      "icons": [
+        "hydreigon"
+      ],
+      "image": "/decks/hydreigon-ex.png",
+      "sprites": [
+        "/decks/sprites/hydreigon.png"
+      ]
+    },
+    {
+      "id": "incineroar-ex",
+      "name": "Incineroar",
+      "icons": [
+        "incineroar"
+      ],
+      "image": "/decks/incineroar-ex.png",
+      "sprites": [
+        "/decks/sprites/incineroar.png"
+      ]
+    },
+    {
+      "id": "iono-bellibolt",
+      "name": "Iono's Bellibolt",
+      "icons": [
+        "bellibolt",
+        "voltorb"
+      ],
+      "image": "/decks/iono-bellibolt.png",
+      "sprites": [
+        "/decks/sprites/bellibolt.png",
+        "/decks/sprites/voltorb.png"
+      ]
+    },
+    {
+      "id": "iron-hands-ex",
+      "name": "Future Hands",
+      "icons": [
+        "iron-hands",
+        "iron-crown"
+      ],
+      "image": "/decks/iron-hands-ex.png",
+      "sprites": [
+        "/decks/sprites/iron-hands.png",
+        "/decks/sprites/iron-crown.png"
+      ]
+    },
+    {
+      "id": "iron-hands-magneton",
+      "name": "Iron Hands Magneton",
+      "icons": [
+        "iron-hands",
+        "magneton"
+      ],
+      "image": "/decks/iron-hands-magneton.png",
+      "sprites": [
+        "/decks/sprites/iron-hands.png",
+        "/decks/sprites/magneton.png"
+      ]
+    },
+    {
+      "id": "iron-thorns-crustle",
+      "name": "Iron Thorns Crustle",
+      "icons": [
+        "iron-thorns",
+        "crustle"
+      ],
+      "image": "/decks/iron-thorns-crustle.png",
+      "sprites": [
+        "/decks/sprites/iron-thorns.png",
+        "/decks/sprites/crustle.png"
+      ]
+    },
+    {
+      "id": "iron-thorns-ex",
+      "name": "Iron Thorns",
+      "icons": [
+        "iron-thorns"
+      ],
+      "image": "/decks/iron-thorns-ex.png",
+      "sprites": [
+        "/decks/sprites/iron-thorns.png"
+      ]
+    },
+    {
+      "id": "iron-valiant-ex",
+      "name": "Iron Valiant",
+      "icons": [
+        "iron-valiant"
+      ],
+      "image": "/decks/iron-valiant-ex.png",
+      "sprites": [
+        "/decks/sprites/iron-valiant.png"
+      ]
+    },
+    {
+      "id": "jellicent-dusknoir",
+      "name": "Jellicent Dusknoir",
+      "icons": [
+        "jellicent",
+        "dusknoir"
+      ],
+      "image": "/decks/jellicent-dusknoir.png",
+      "sprites": [
+        "/decks/sprites/jellicent.png",
+        "/decks/sprites/dusknoir.png"
+      ]
+    },
+    {
+      "id": "joltik-box",
+      "name": "Joltik Box",
+      "icons": [
+        "joltik",
+        "pikachu"
+      ],
+      "image": "/decks/joltik-box.png",
+      "sprites": [
+        "/decks/sprites/joltik.png",
+        "/decks/sprites/pikachu.png"
+      ]
+    },
+    {
+      "id": "kangaskhan-bouffalant",
+      "name": "Kangaskhan Bouffalant",
+      "icons": [
+        "kangaskhan-mega",
+        "bouffalant"
+      ],
+      "image": "/decks/kangaskhan-bouffalant.png",
+      "sprites": [
+        "/decks/sprites/kangaskhan-mega.png",
+        "/decks/sprites/bouffalant.png"
+      ]
+    },
+    {
+      "id": "kangaskhan-forretress",
+      "name": "Kangaskhan Forretress",
+      "icons": [
+        "kangaskhan-mega",
+        "forretress"
+      ],
+      "image": "/decks/kangaskhan-forretress.png",
+      "sprites": [
+        "/decks/sprites/kangaskhan-mega.png",
+        "/decks/sprites/forretress.png"
+      ]
+    },
+    {
+      "id": "klawf-par",
+      "name": "Klawf",
+      "icons": [
+        "klawf",
+        "brute-bonnet"
+      ],
+      "image": "/decks/klawf-par.png",
+      "sprites": [
+        "/decks/sprites/klawf.png",
+        "/decks/sprites/brute-bonnet.png"
+      ]
+    },
+    {
+      "id": "lillie-clefairy",
+      "name": "Lillie's Clefairy",
+      "icons": [
+        "clefairy"
+      ],
+      "image": "/decks/lillie-clefairy.png",
+      "sprites": [
+        "/decks/sprites/clefairy.png"
+      ]
+    },
+    {
+      "id": "lopunny-dudunsparce",
+      "name": "Lopunny Dudunsparce",
+      "icons": [
+        "lopunny-mega",
+        "dudunsparce"
+      ],
+      "image": "/decks/lopunny-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/lopunny-mega.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "lopunny-dusknoir",
+      "name": "Lopunny Dusknoir",
+      "icons": [
+        "lopunny-mega",
+        "dusknoir"
+      ],
+      "image": "/decks/lopunny-dusknoir.png",
+      "sprites": [
+        "/decks/sprites/lopunny-mega.png",
+        "/decks/sprites/dusknoir.png"
+      ]
+    },
+    {
+      "id": "lucario-hariyama",
+      "name": "Lucario Hariyama",
+      "icons": [
+        "lucario-mega",
+        "hariyama"
+      ],
+      "image": "/decks/lucario-hariyama.png",
+      "sprites": [
+        "/decks/sprites/lucario-mega.png",
+        "/decks/sprites/hariyama.png"
+      ]
+    },
+    {
+      "id": "luxray-ex",
+      "name": "Luxray",
+      "icons": [
+        "luxray"
+      ],
+      "image": "/decks/luxray-ex.png",
+      "sprites": [
+        "/decks/sprites/luxray.png"
+      ]
+    },
+    {
+      "id": "mamoswine-ex",
+      "name": "Mamoswine",
+      "icons": [
+        "mamoswine"
+      ],
+      "image": "/decks/mamoswine-ex.png",
+      "sprites": [
+        "/decks/sprites/mamoswine.png"
+      ]
+    },
+    {
+      "id": "manectric-eelektrik",
+      "name": "Manectric Eelektrik",
+      "icons": [
+        "manectric-mega",
+        "eelektrik"
+      ],
+      "image": "/decks/manectric-eelektrik.png",
+      "sprites": [
+        "/decks/sprites/manectric-mega.png",
+        "/decks/sprites/eelektrik.png"
+      ]
+    },
+    {
+      "id": "marnie-grimmsnarl-ex",
+      "name": "Marnie's Grimmsnarl",
+      "icons": [
+        "grimmsnarl"
+      ],
+      "image": "/decks/marnie-grimmsnarl-ex.png",
+      "sprites": [
+        "/decks/sprites/grimmsnarl.png"
+      ]
+    },
+    {
+      "id": "mega-abomasnow-ex",
+      "name": "Mega Abomasnow",
+      "icons": [
+        "abomasnow-mega"
+      ],
+      "image": "/decks/mega-abomasnow-ex.png",
+      "sprites": [
+        "/decks/sprites/abomasnow-mega.png"
+      ]
+    },
+    {
+      "id": "mega-absol-box",
+      "name": "Mega Absol Box",
+      "icons": [
+        "absol-mega",
+        "kangaskhan-mega"
+      ],
+      "image": "/decks/mega-absol-box.png",
+      "sprites": [
+        "/decks/sprites/absol-mega.png",
+        "/decks/sprites/kangaskhan-mega.png"
+      ]
+    },
+    {
+      "id": "mega-camerupt-ex",
+      "name": "Mega Camerupt",
+      "icons": [
+        "camerupt-mega"
+      ],
+      "image": "/decks/mega-camerupt-ex.png",
+      "sprites": [
+        "/decks/sprites/camerupt-mega.png"
+      ]
+    },
+    {
+      "id": "mega-charizard-x-ex",
+      "name": "Mega Charizard X",
+      "icons": [
+        "charizard-mega-x"
+      ],
+      "image": "/decks/mega-charizard-x-ex.png",
+      "sprites": [
+        "/decks/sprites/charizard-mega-x.png"
+      ]
+    },
+    {
+      "id": "mega-diancie-ex",
+      "name": "Mega Diancie",
+      "icons": [
+        "diancie-mega"
+      ],
+      "image": "/decks/mega-diancie-ex.png",
+      "sprites": [
+        "/decks/sprites/diancie-mega.png"
+      ]
+    },
+    {
+      "id": "mega-dragonite-ex",
+      "name": "Mega Dragonite",
+      "icons": [
+        "dragonite-mega"
+      ],
+      "image": "/decks/mega-dragonite-ex.png",
+      "sprites": [
+        "/decks/sprites/dragonite-mega.png"
+      ]
+    },
+    {
+      "id": "mega-excadrill-ex",
+      "name": "Mega Excadrill",
+      "icons": [
+        "excadrill-mega"
+      ],
+      "image": "/decks/mega-excadrill-ex.png",
+      "sprites": [
+        "/decks/sprites/excadrill-mega.png"
+      ]
+    },
+    {
+      "id": "mega-feraligatr-ex",
+      "name": "Mega Feraligatr",
+      "icons": [
+        "feraligatr-mega"
+      ],
+      "image": "/decks/mega-feraligatr-ex.png",
+      "sprites": [
+        "/decks/sprites/feraligatr-mega.png"
+      ]
+    },
+    {
+      "id": "mega-froslass-dudunsparce",
+      "name": "Froslass Dudunsparce",
+      "icons": [
+        "froslass-mega",
+        "dudunsparce"
+      ],
+      "image": "/decks/mega-froslass-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/froslass-mega.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "mega-froslass-ex",
+      "name": "Mega Froslass",
+      "icons": [
+        "froslass-mega"
+      ],
+      "image": "/decks/mega-froslass-ex.png",
+      "sprites": [
+        "/decks/sprites/froslass-mega.png"
+      ]
+    },
+    {
+      "id": "mega-gengar-ex",
+      "name": "Mega Gengar",
+      "icons": [
+        "gengar-mega"
+      ],
+      "image": "/decks/mega-gengar-ex.png",
+      "sprites": [
+        "/decks/sprites/gengar-mega.png"
+      ]
+    },
+    {
+      "id": "mega-greninja-ex",
+      "name": "Mega Greninja",
+      "icons": [
+        "greninja-mega"
+      ],
+      "image": "/decks/mega-greninja-ex.png",
+      "sprites": [
+        "/decks/sprites/greninja-mega.png"
+      ]
+    },
+    {
+      "id": "mega-kangaskhan-ex",
+      "name": "Mega Kangaskhan",
+      "icons": [
+        "kangaskhan-mega"
+      ],
+      "image": "/decks/mega-kangaskhan-ex.png",
+      "sprites": [
+        "/decks/sprites/kangaskhan-mega.png"
+      ]
+    },
+    {
+      "id": "mega-latias-ex",
+      "name": "Mega Latias",
+      "icons": [
+        "latias-mega"
+      ],
+      "image": "/decks/mega-latias-ex.png",
+      "sprites": [
+        "/decks/sprites/latias-mega.png"
+      ]
+    },
+    {
+      "id": "mega-lopunny-ex",
+      "name": "Mega Lopunny",
+      "icons": [
+        "lopunny-mega"
+      ],
+      "image": "/decks/mega-lopunny-ex.png",
+      "sprites": [
+        "/decks/sprites/lopunny-mega.png"
+      ]
+    },
+    {
+      "id": "mega-lucario-ex",
+      "name": "Mega Lucario",
+      "icons": [
+        "lucario-mega"
+      ],
+      "image": "/decks/mega-lucario-ex.png",
+      "sprites": [
+        "/decks/sprites/lucario-mega.png"
+      ]
+    },
+    {
+      "id": "mega-manectric-ex-meg",
+      "name": "Mega Manectric",
+      "icons": [
+        "manectric-mega"
+      ],
+      "image": "/decks/mega-manectric-ex-meg.png",
+      "sprites": [
+        "/decks/sprites/manectric-mega.png"
+      ]
+    },
+    {
+      "id": "mega-sharpedo-ex",
+      "name": "Mega Sharpedo",
+      "icons": [
+        "sharpedo-mega"
+      ],
+      "image": "/decks/mega-sharpedo-ex.png",
+      "sprites": [
+        "/decks/sprites/sharpedo-mega.png"
+      ]
+    },
+    {
+      "id": "mega-starmie-ex",
+      "name": "Mega Starmie",
+      "icons": [
+        "starmie-mega"
+      ],
+      "image": "/decks/mega-starmie-ex.png",
+      "sprites": [
+        "/decks/sprites/starmie-mega.png"
+      ]
+    },
+    {
+      "id": "mega-venusaur-ex",
+      "name": "Mega Venusaur",
+      "icons": [
+        "venusaur-mega"
+      ],
+      "image": "/decks/mega-venusaur-ex.png",
+      "sprites": [
+        "/decks/sprites/venusaur-mega.png"
+      ]
+    },
+    {
+      "id": "mega-zygarde-ex",
+      "name": "Mega Zygarde",
+      "icons": [
+        "zygarde-mega"
+      ],
+      "image": "/decks/mega-zygarde-ex.png",
+      "sprites": [
+        "/decks/sprites/zygarde-mega.png"
+      ]
+    },
+    {
+      "id": "meowscarada-ex",
+      "name": "Meowscarada",
+      "icons": [
+        "meowscarada"
+      ],
+      "image": "/decks/meowscarada-ex.png",
+      "sprites": [
+        "/decks/sprites/meowscarada.png"
+      ]
+    },
+    {
+      "id": "metagross-cri",
+      "name": "Metagross",
+      "icons": [
+        "metagross"
+      ],
+      "image": "/decks/metagross-cri.png",
+      "sprites": [
+        "/decks/sprites/metagross.png"
+      ]
+    },
+    {
+      "id": "milotic-ex",
+      "name": "Milotic",
+      "icons": [
+        "milotic"
+      ],
+      "image": "/decks/milotic-ex.png",
+      "sprites": [
+        "/decks/sprites/milotic.png"
+      ]
+    },
+    {
+      "id": "mimikyu-ogerpon",
+      "name": "Mimikyu Ogerpon",
+      "icons": [
+        "mimikyu",
+        "ogerpon-cornerstone"
+      ],
+      "image": "/decks/mimikyu-ogerpon.png",
+      "sprites": [
+        "/decks/sprites/mimikyu.png",
+        "/decks/sprites/ogerpon-cornerstone.png"
+      ]
+    },
+    {
+      "id": "miraidon-eelektrik",
+      "name": "Miraidon Eelektrik",
+      "icons": [
+        "miraidon",
+        "eelektrik"
+      ],
+      "image": "/decks/miraidon-eelektrik.png",
+      "sprites": [
+        "/decks/sprites/miraidon.png",
+        "/decks/sprites/eelektrik.png"
+      ]
+    },
+    {
+      "id": "miraidon-ex",
+      "name": "Miraidon",
+      "icons": [
+        "miraidon"
+      ],
+      "image": "/decks/miraidon-ex.png",
+      "sprites": [
+        "/decks/sprites/miraidon.png"
+      ]
+    },
+    {
+      "id": "misty-gyarados",
+      "name": "Misty's Gyarados",
+      "icons": [
+        "gyarados",
+        "psyduck"
+      ],
+      "image": "/decks/misty-gyarados.png",
+      "sprites": [
+        "/decks/sprites/gyarados.png",
+        "/decks/sprites/psyduck.png"
+      ]
+    },
+    {
+      "id": "n-zoroark",
+      "name": "N's Zoroark",
+      "icons": [
+        "zoroark"
+      ],
+      "image": "/decks/n-zoroark.png",
+      "sprites": [
+        "/decks/sprites/zoroark.png"
+      ]
+    },
+    {
+      "id": "n-zoroark-lucario",
+      "name": "Zoroark Lucario",
+      "icons": [
+        "zoroark",
+        "lucario-mega"
+      ],
+      "image": "/decks/n-zoroark-lucario.png",
+      "sprites": [
+        "/decks/sprites/zoroark.png",
+        "/decks/sprites/lucario-mega.png"
+      ]
+    },
+    {
+      "id": "ogerpon-ex",
+      "name": "Ogerpon",
+      "icons": [
+        "ogerpon",
+        "ogerpon-wellspring"
+      ],
+      "image": "/decks/ogerpon-ex.png",
+      "sprites": [
+        "/decks/sprites/ogerpon.png",
+        "/decks/sprites/ogerpon-wellspring.png"
+      ]
+    },
+    {
+      "id": "ogerpon-meganium",
+      "name": "Ogerpon Meganium",
+      "icons": [
+        "ogerpon",
+        "meganium"
+      ],
+      "image": "/decks/ogerpon-meganium.png",
+      "sprites": [
+        "/decks/sprites/ogerpon.png",
+        "/decks/sprites/meganium.png"
+      ]
+    },
+    {
+      "id": "ogerpon-meganium-arboliva",
+      "name": "Ogerpon Meganium Arboliva",
+      "icons": [
+        "ogerpon",
+        "arboliva"
+      ],
+      "image": "/decks/ogerpon-meganium-arboliva.png",
+      "sprites": [
+        "/decks/sprites/ogerpon.png",
+        "/decks/sprites/arboliva.png"
+      ]
+    },
+    {
+      "id": "ogerpon-meganium-hydrapple",
+      "name": "Ogerpon Meganium Hydrapple",
+      "icons": [
+        "ogerpon",
+        "hydrapple"
+      ],
+      "image": "/decks/ogerpon-meganium-hydrapple.png",
+      "sprites": [
+        "/decks/sprites/ogerpon.png",
+        "/decks/sprites/hydrapple.png"
+      ]
+    },
+    {
+      "id": "okidogi-barbaracle",
+      "name": "Okidogi Barbaracle",
+      "icons": [
+        "okidogi",
+        "barbaracle"
+      ],
+      "image": "/decks/okidogi-barbaracle.png",
+      "sprites": [
+        "/decks/sprites/okidogi.png",
+        "/decks/sprites/barbaracle.png"
+      ]
+    },
+    {
+      "id": "okidogi-ex",
+      "name": "Okidogi",
+      "icons": [
+        "okidogi"
+      ],
+      "image": "/decks/okidogi-ex.png",
+      "sprites": [
+        "/decks/sprites/okidogi.png"
+      ]
+    },
+    {
+      "id": "okidogi-twm",
+      "name": "Okidogi",
+      "icons": [
+        "okidogi"
+      ],
+      "image": "/decks/okidogi-twm.png",
+      "sprites": [
+        "/decks/sprites/okidogi.png"
+      ]
+    },
+    {
+      "id": "other",
+      "name": "Other",
+      "icons": [
+        "substitute"
+      ],
+      "image": "/decks/other.png",
+      "sprites": [
+        "/decks/sprites/substitute.png"
+      ]
+    },
+    {
+      "id": "palafin-ex",
+      "name": "Palafin",
+      "icons": [
+        "palafin-hero"
+      ],
+      "image": "/decks/palafin-ex.png",
+      "sprites": [
+        "/decks/sprites/palafin-hero.png"
+      ]
+    },
+    {
+      "id": "paldean-tauros-pfl",
+      "name": "Paldean Tauros",
+      "icons": [
+        "tauros-paldea"
+      ],
+      "image": "/decks/paldean-tauros-pfl.png",
+      "sprites": [
+        "/decks/sprites/tauros-paldea.png"
+      ]
+    },
+    {
+      "id": "pidgeot-control",
+      "name": "Pidgeot Control",
+      "icons": [
+        "pidgeot"
+      ],
+      "image": "/decks/pidgeot-control.png",
+      "sprites": [
+        "/decks/sprites/pidgeot.png"
+      ]
+    },
+    {
+      "id": "poison-archaludon",
+      "name": "Poison Archaludon",
+      "icons": [
+        "archaludon",
+        "brute-bonnet"
+      ],
+      "image": "/decks/poison-archaludon.png",
+      "sprites": [
+        "/decks/sprites/archaludon.png",
+        "/decks/sprites/brute-bonnet.png"
+      ]
+    },
+    {
+      "id": "poison-mega-latias",
+      "name": "Poison Latias",
+      "icons": [
+        "latias-mega",
+        "brute-bonnet"
+      ],
+      "image": "/decks/poison-mega-latias.png",
+      "sprites": [
+        "/decks/sprites/latias-mega.png",
+        "/decks/sprites/brute-bonnet.png"
+      ]
+    },
+    {
+      "id": "poison-terapagos",
+      "name": "Poison Terapagos",
+      "icons": [
+        "terapagos",
+        "brute-bonnet"
+      ],
+      "image": "/decks/poison-terapagos.png",
+      "sprites": [
+        "/decks/sprites/terapagos.png",
+        "/decks/sprites/brute-bonnet.png"
+      ]
+    },
+    {
+      "id": "raging-bolt-ex",
+      "name": "Raging Bolt",
+      "icons": [
+        "raging-bolt"
+      ],
+      "image": "/decks/raging-bolt-ex.png",
+      "sprites": [
+        "/decks/sprites/raging-bolt.png"
+      ]
+    },
+    {
+      "id": "raging-bolt-ogerpon",
+      "name": "Raging Bolt Ogerpon",
+      "icons": [
+        "raging-bolt",
+        "ogerpon"
+      ],
+      "image": "/decks/raging-bolt-ogerpon.png",
+      "sprites": [
+        "/decks/sprites/raging-bolt.png",
+        "/decks/sprites/ogerpon.png"
+      ]
+    },
+    {
+      "id": "ranging-bolt-sandy-shocks",
+      "name": "Raging Bolt Sandy Shocks",
+      "icons": [
+        "raging-bolt",
+        "sandy-shocks"
+      ],
+      "image": "/decks/ranging-bolt-sandy-shocks.png",
+      "sprites": [
+        "/decks/sprites/raging-bolt.png",
+        "/decks/sprites/sandy-shocks.png"
+      ]
+    },
+    {
+      "id": "reging-bolt-bellibolt",
+      "name": "Raging Bolt Bellibolt",
+      "icons": [
+        "raging-bolt",
+        "bellibolt"
+      ],
+      "image": "/decks/reging-bolt-bellibolt.png",
+      "sprites": [
+        "/decks/sprites/raging-bolt.png",
+        "/decks/sprites/bellibolt.png"
+      ]
+    },
+    {
+      "id": "roaring-moon-dudunsparce",
+      "name": "Roaring Moon Dudunsparce",
+      "icons": [
+        "roaring-moon",
+        "dudunsparce"
+      ],
+      "image": "/decks/roaring-moon-dudunsparce.png",
+      "sprites": [
+        "/decks/sprites/roaring-moon.png",
+        "/decks/sprites/dudunsparce.png"
+      ]
+    },
+    {
+      "id": "roaring-moon-ex",
+      "name": "Roaring Moon",
+      "icons": [
+        "roaring-moon"
+      ],
+      "image": "/decks/roaring-moon-ex.png",
+      "sprites": [
+        "/decks/sprites/roaring-moon.png"
+      ]
+    },
+    {
+      "id": "rocket-mewtwo-ex",
+      "name": "Rocket's Mewtwo",
+      "icons": [
+        "mewtwo",
+        "spidops"
+      ],
+      "image": "/decks/rocket-mewtwo-ex.png",
+      "sprites": [
+        "/decks/sprites/mewtwo.png",
+        "/decks/sprites/spidops.png"
+      ]
+    },
+    {
+      "id": "rocket-nidoking-ex",
+      "name": "Rocket's Nidoking",
+      "icons": [
+        "nidoking"
+      ],
+      "image": "/decks/rocket-nidoking-ex.png",
+      "sprites": [
+        "/decks/sprites/nidoking.png"
+      ]
+    },
+    {
+      "id": "rocket-porygon-z",
+      "name": "Rocket's Porygon-Z",
+      "icons": [
+        "porygon-z"
+      ],
+      "image": "/decks/rocket-porygon-z.png",
+      "sprites": [
+        "/decks/sprites/porygon-z.png"
+      ]
+    },
+    {
+      "id": "rocket-spidops",
+      "name": "Rocket's Spidops",
+      "icons": [
+        "spidops"
+      ],
+      "image": "/decks/rocket-spidops.png",
+      "sprites": [
+        "/decks/sprites/spidops.png"
+      ]
+    },
+    {
+      "id": "rockets-honchkrow",
+      "name": "Rocket's Honchkrow",
+      "icons": [
+        "honchkrow",
+        "porygon2"
+      ],
+      "image": "/decks/rockets-honchkrow.png",
+      "sprites": [
+        "/decks/sprites/honchkrow.png",
+        "/decks/sprites/porygon2.png"
+      ]
+    },
+    {
+      "id": "salamence-ex",
+      "name": "Salamence",
+      "icons": [
+        "salamence"
+      ],
+      "image": "/decks/salamence-ex.png",
+      "sprites": [
+        "/decks/sprites/salamence.png"
+      ]
+    },
+    {
+      "id": "scizor-ex",
+      "name": "Scizor",
+      "icons": [
+        "scizor"
+      ],
+      "image": "/decks/scizor-ex.png",
+      "sprites": [
+        "/decks/sprites/scizor.png"
+      ]
+    },
+    {
+      "id": "scovillain-ex",
+      "name": "Scovillain",
+      "icons": [
+        "scovillain"
+      ],
+      "image": "/decks/scovillain-ex.png",
+      "sprites": [
+        "/decks/sprites/scovillain.png"
+      ]
+    },
+    {
+      "id": "seaking-pre",
+      "name": "Seaking Festival Lead",
+      "icons": [
+        "seaking",
+        "thwackey"
+      ],
+      "image": "/decks/seaking-pre.png",
+      "sprites": [
+        "/decks/sprites/seaking.png",
+        "/decks/sprites/thwackey.png"
+      ]
+    },
+    {
+      "id": "sharpedo-toxtricity",
+      "name": "Sharpedo Toxtricity",
+      "icons": [
+        "sharpedo-mega",
+        "toxtricity"
+      ],
+      "image": "/decks/sharpedo-toxtricity.png",
+      "sprites": [
+        "/decks/sprites/sharpedo-mega.png",
+        "/decks/sprites/toxtricity.png"
+      ]
+    },
+    {
+      "id": "sinistcha-ogerpon",
+      "name": "Sinistcha Ogerpon",
+      "icons": [
+        "sinistcha",
+        "ogerpon"
+      ],
+      "image": "/decks/sinistcha-ogerpon.png",
+      "sprites": [
+        "/decks/sprites/sinistcha.png",
+        "/decks/sprites/ogerpon.png"
+      ]
+    },
+    {
+      "id": "slaking-ex",
+      "name": "Slaking",
+      "icons": [
+        "slaking"
+      ],
+      "image": "/decks/slaking-ex.png",
+      "sprites": [
+        "/decks/sprites/slaking.png"
+      ]
+    },
+    {
+      "id": "slowking-scr",
+      "name": "Slowking",
+      "icons": [
+        "slowking"
+      ],
+      "image": "/decks/slowking-scr.png",
+      "sprites": [
+        "/decks/sprites/slowking.png"
+      ]
+    },
+    {
+      "id": "spidops-ex",
+      "name": "Spidops",
+      "icons": [
+        "spidops"
+      ],
+      "image": "/decks/spidops-ex.png",
+      "sprites": [
+        "/decks/sprites/spidops.png"
+      ]
+    },
+    {
+      "id": "starmie-dusknoir",
+      "name": "Starmie Dusknoir",
+      "icons": [
+        "starmie-mega",
+        "dusknoir"
+      ],
+      "image": "/decks/starmie-dusknoir.png",
+      "sprites": [
+        "/decks/sprites/starmie-mega.png",
+        "/decks/sprites/dusknoir.png"
+      ]
+    },
+    {
+      "id": "starmie-froslass",
+      "name": "Starmie Froslass",
+      "icons": [
+        "starmie-mega",
+        "froslass"
+      ],
+      "image": "/decks/starmie-froslass.png",
+      "sprites": [
+        "/decks/sprites/starmie-mega.png",
+        "/decks/sprites/froslass.png"
+      ]
+    },
+    {
+      "id": "steelix-dodrio",
+      "name": "Steelix Dodrio",
+      "icons": [
+        "steelix",
+        "dodrio"
+      ],
+      "image": "/decks/steelix-dodrio.png",
+      "sprites": [
+        "/decks/sprites/steelix.png",
+        "/decks/sprites/dodrio.png"
+      ]
+    },
+    {
+      "id": "steelix-par",
+      "name": "Steelix",
+      "icons": [
+        "steelix"
+      ],
+      "image": "/decks/steelix-par.png",
+      "sprites": [
+        "/decks/sprites/steelix.png"
+      ]
+    },
+    {
+      "id": "stevens-metagross",
+      "name": "Steven's Metagross",
+      "icons": [
+        "metagross"
+      ],
+      "image": "/decks/stevens-metagross.png",
+      "sprites": [
+        "/decks/sprites/metagross.png"
+      ]
+    },
+    {
+      "id": "sylveon-pre",
+      "name": "Sylveon",
+      "icons": [
+        "sylveon"
+      ],
+      "image": "/decks/sylveon-pre.png",
+      "sprites": [
+        "/decks/sprites/sylveon.png"
+      ]
+    },
+    {
+      "id": "tera-box",
+      "name": "Tera Box",
+      "icons": [
+        "noctowl",
+        "ogerpon-wellspring"
+      ],
+      "image": "/decks/tera-box.png",
+      "sprites": [
+        "/decks/sprites/noctowl.png",
+        "/decks/sprites/ogerpon-wellspring.png"
+      ]
+    },
+    {
+      "id": "terapagos-noctowl",
+      "name": "Terapagos Noctowl",
+      "icons": [
+        "terapagos",
+        "noctowl"
+      ],
+      "image": "/decks/terapagos-noctowl.png",
+      "sprites": [
+        "/decks/sprites/terapagos.png",
+        "/decks/sprites/noctowl.png"
+      ]
+    },
+    {
+      "id": "ting-lu-ex",
+      "name": "Ting-Lu",
+      "icons": [
+        "ting-lu"
+      ],
+      "image": "/decks/ting-lu-ex.png",
+      "sprites": [
+        "/decks/sprites/ting-lu.png"
+      ]
+    },
+    {
+      "id": "tinkaton-ex",
+      "name": "Tinkaton",
+      "icons": [
+        "tinkaton"
+      ],
+      "image": "/decks/tinkaton-ex.png",
+      "sprites": [
+        "/decks/sprites/tinkaton.png"
+      ]
+    },
+    {
+      "id": "toedscruel-ex",
+      "name": "Toedscruel",
+      "icons": [
+        "toedscruel",
+        "ogerpon"
+      ],
+      "image": "/decks/toedscruel-ex.png",
+      "sprites": [
+        "/decks/sprites/toedscruel.png",
+        "/decks/sprites/ogerpon.png"
+      ]
+    },
+    {
+      "id": "torterra-ex",
+      "name": "Torterra",
+      "icons": [
+        "torterra"
+      ],
+      "image": "/decks/torterra-ex.png",
+      "sprites": [
+        "/decks/sprites/torterra.png"
+      ]
+    },
+    {
+      "id": "toxtricity-box",
+      "name": "Toxtricity Box",
+      "icons": [
+        "toxtricity",
+        "absol-mega"
+      ],
+      "image": "/decks/toxtricity-box.png",
+      "sprites": [
+        "/decks/sprites/toxtricity.png",
+        "/decks/sprites/absol-mega.png"
+      ]
+    },
+    {
+      "id": "toxtricity-brute-bonnet",
+      "name": "Toxtricity Brute Bonnet",
+      "icons": [
+        "toxtricity",
+        "brute-bonnet"
+      ],
+      "image": "/decks/toxtricity-brute-bonnet.png",
+      "sprites": [
+        "/decks/sprites/toxtricity.png",
+        "/decks/sprites/brute-bonnet.png"
+      ]
+    },
+    {
+      "id": "toxtricity-pfl",
+      "name": "Toxtricity Box",
+      "icons": [
+        "toxtricity",
+        "absol-mega"
+      ],
+      "image": "/decks/toxtricity-pfl.png",
+      "sprites": [
+        "/decks/sprites/toxtricity.png",
+        "/decks/sprites/absol-mega.png"
+      ]
+    },
+    {
+      "id": "tsareena-ex",
+      "name": "Tsareena",
+      "icons": [
+        "tsareena"
+      ],
+      "image": "/decks/tsareena-ex.png",
+      "sprites": [
+        "/decks/sprites/tsareena.png"
+      ]
+    },
+    {
+      "id": "tyranitar-jtg",
+      "name": "Tyranitar",
+      "icons": [
+        "tyranitar"
+      ],
+      "image": "/decks/tyranitar-jtg.png",
+      "sprites": [
+        "/decks/sprites/tyranitar.png"
+      ]
+    },
+    {
+      "id": "united-wings",
+      "name": "United Wings",
+      "icons": [
+        "murkrow",
+        "flamigo"
+      ],
+      "image": "/decks/united-wings.png",
+      "sprites": [
+        "/decks/sprites/murkrow.png",
+        "/decks/sprites/flamigo.png"
+      ]
+    },
+    {
+      "id": "ursaluna-iron-valiant",
+      "name": "Ursaluna Iron Valiant",
+      "icons": [
+        "ursaluna-bloodmoon",
+        "iron-valiant"
+      ],
+      "image": "/decks/ursaluna-iron-valiant.png",
+      "sprites": [
+        "/decks/sprites/ursaluna-bloodmoon.png",
+        "/decks/sprites/iron-valiant.png"
+      ]
+    },
+    {
+      "id": "ursaluna-lunatone",
+      "name": "Ursaluna Lunatone",
+      "icons": [
+        "ursaluna-bloodmoon",
+        "lunatone"
+      ],
+      "image": "/decks/ursaluna-lunatone.png",
+      "sprites": [
+        "/decks/sprites/ursaluna-bloodmoon.png",
+        "/decks/sprites/lunatone.png"
+      ]
+    },
+    {
+      "id": "venomoth-froslass",
+      "name": "Venomoth Froslass",
+      "icons": [
+        "venomoth",
+        "froslass"
+      ],
+      "image": "/decks/venomoth-froslass.png",
+      "sprites": [
+        "/decks/sprites/venomoth.png",
+        "/decks/sprites/froslass.png"
+      ]
+    },
+    {
+      "id": "wailord-ex",
+      "name": "Wailord",
+      "icons": [
+        "wailord"
+      ],
+      "image": "/decks/wailord-ex.png",
+      "sprites": [
+        "/decks/sprites/wailord.png"
+      ]
+    },
+    {
+      "id": "wugtrio-svi",
+      "name": "Wugtrio Mill",
+      "icons": [
+        "wugtrio"
+      ],
+      "image": "/decks/wugtrio-svi.png",
+      "sprites": [
+        "/decks/sprites/wugtrio.png"
+      ]
+    },
+    {
+      "id": "yanmega-ex",
+      "name": "Yanmega",
+      "icons": [
+        "yanmega"
+      ],
+      "image": "/decks/yanmega-ex.png",
+      "sprites": [
+        "/decks/sprites/yanmega.png"
+      ]
+    },
+    {
+      "id": "zoroark-crustle",
+      "name": "Zoroark Crustle",
+      "icons": [
+        "zoroark",
+        "crustle"
+      ],
+      "image": "/decks/zoroark-crustle.png",
+      "sprites": [
+        "/decks/sprites/zoroark.png",
+        "/decks/sprites/crustle.png"
+      ]
+    },
+    {
+      "id": "zygarde-barbaracle",
+      "name": "Zygarde Barbaracle",
+      "icons": [
+        "zygarde-mega",
+        "barbaracle"
+      ],
+      "image": "/decks/zygarde-barbaracle.png",
+      "sprites": [
+        "/decks/sprites/zygarde-mega.png",
+        "/decks/sprites/barbaracle.png"
+      ]
+    }
+  ]
+}

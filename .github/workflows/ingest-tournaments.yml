@@ -25,6 +25,9 @@ jobs:
     # The API allows 50 requests / 5 min, shared across both per-tournament
     # endpoints. 300 each paces out to roughly 30 minutes per step.
     timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: server
     steps:
       - uses: actions/checkout@v4
 
@@ -74,8 +77,8 @@ jobs:
             | tee standings.log
 
       # Last, so it sees everything the three steps above just landed. Unlike
-      # them it talks only to Supabase - no Limitless rate limit applies, and
-      # the work happens inside Postgres - so it costs a minute, not thirty.
+      # them they talk only to Supabase - no Limitless rate limit applies, and
+      # the work happens inside Postgres - so they cost a minute, not thirty.
       - name: Refresh silver layer
         if: ${{ !inputs.dry_run }}
         env:
@@ -85,6 +88,17 @@ jobs:
           PYTHONUNBUFFERED: "1"
         run: |
           uv run python scripts/refresh_silver.py | tee silver.log
+
+      # Gold reads silver, so it can only run after the step above.
+      - name: Refresh gold layer
+        if: ${{ !inputs.dry_run }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
+        run: |
+          uv run python scripts/refresh_gold.py | tee gold.log
 
       - name: Summary
         if: always()
@@ -105,5 +119,9 @@ jobs:
             echo '### Silver'
             echo '```'
             grep -E 'rows after|failed batches' silver.log 2>/dev/null || echo '(step did not run)'
+            echo '```'
+            echo '### Gold'
+            echo '```'
+            grep -E 'rows after|failed batches' gold.log 2>/dev/null || echo '(step did not run)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

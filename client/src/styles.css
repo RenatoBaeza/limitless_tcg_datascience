@@ -1,0 +1,776 @@
+/*
+ * Chart chrome and ink. Both modes are selected sets rather than one flipped
+ * into the other, and the data colours live in scale.ts for the same reason.
+ */
+
+:root {
+  color-scheme: light;
+
+  --surface-1: #fcfcfb;
+  --page: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --ghost: rgba(11, 11, 11, 0.04);
+  --selected: rgba(42, 120, 214, 0.12);
+
+  /* Slot 1 of the categorical palette - the single series in the deck detail
+     dot plot. One series, so no legend box: the title names it. */
+  --series-1: #2a78d6;
+
+  --radius: 6px;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-1: #1a1a19;
+  --page: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --ghost: rgba(255, 255, 255, 0.06);
+  --selected: rgba(57, 135, 229, 0.2);
+  --series-1: #3987e5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 20px;
+}
+h2 {
+  font-size: 15px;
+}
+
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── header ─────────────────────────────────────────────────────────────── */
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-meta {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.header-meta .dot {
+  color: var(--axis);
+  margin: 0 6px;
+}
+
+/* ── controls ───────────────────────────────────────────────────────────── */
+
+/* One row, above everything it scopes. Every panel below re-renders against
+   the same slice, so the numbers always agree. */
+.filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field > label,
+.field > span.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.segmented {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--ghost);
+  border-radius: var(--radius);
+}
+
+.segmented button {
+  border: 0;
+  background: transparent;
+  padding: 5px 11px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.segmented button:hover {
+  background: var(--ghost);
+  color: var(--text-primary);
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+select {
+  font: inherit;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-primary);
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding-bottom: 7px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* ── panels ─────────────────────────────────────────────────────────────── */
+
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.panel-note {
+  color: var(--text-muted);
+  font-size: 12px;
+  max-width: 62ch;
+}
+
+/* Refetch holds the previous render rather than flashing a skeleton. */
+.stale {
+  opacity: 0.55;
+  transition: opacity 120ms ease-out;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 13px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tile-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tile-value {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  /* Proportional figures: tabular-nums makes a standalone number look loose. */
+}
+
+.tile-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── matrix ─────────────────────────────────────────────────────────────── */
+
+.matrix-scroll {
+  overflow: auto;
+  max-height: 78vh;
+}
+
+.matrix {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.matrix th,
+.matrix td {
+  padding: 0;
+  margin: 0;
+}
+
+.matrix thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--grid);
+}
+
+.matrix tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--surface-1);
+  border-right: 1px solid var(--grid);
+}
+
+.matrix thead th:first-child {
+  z-index: 3;
+  left: 0;
+}
+
+.corner {
+  min-width: 190px;
+  text-align: left;
+  padding: 0 10px 8px 4px !important;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: bottom;
+}
+
+.col-head {
+  width: 54px;
+  height: 56px;
+  vertical-align: bottom;
+  padding-bottom: 6px !important;
+}
+
+.col-head img {
+  display: block;
+  margin: 0 auto;
+  height: 30px;
+  max-width: 46px;
+  object-fit: contain;
+}
+
+.col-head.focused,
+.row-head.focused {
+  background: var(--selected) !important;
+}
+
+.row-head {
+  height: 44px;
+}
+
+.row-head button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px 4px 4px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 4px;
+}
+
+.row-head button:hover {
+  background: var(--ghost);
+}
+
+.row-head img {
+  height: 26px;
+  max-width: 44px;
+  object-fit: contain;
+  flex: none;
+}
+
+.row-head .name {
+  font-size: 12.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 2px of surface between fills, never a border drawn around the marks. */
+.cell {
+  width: 54px;
+  height: 44px;
+  padding: 1px !important;
+}
+
+.cell button {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.cell button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -2px;
+}
+
+.cell button .value {
+  padding-bottom: 1px;
+}
+
+/* Interval spans 50%: the point estimate is not distinguishable from even. */
+.cell button .value.inconclusive {
+  border-bottom: 1.5px dotted currentColor;
+}
+
+.cell.mirror div,
+.cell.empty div {
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.cell.mirror div {
+  background: var(--ghost);
+}
+
+.cell.empty div {
+  border: 1px solid var(--grid);
+}
+
+/* ── legend ─────────────────────────────────────────────────────────────── */
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-ramp {
+  display: flex;
+  gap: 2px;
+}
+
+.legend-ramp span {
+  width: 26px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-key {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-key .swatch {
+  width: 14px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--ghost);
+}
+
+.legend-key .dotted {
+  border-bottom: 1.5px dotted var(--text-secondary);
+  padding: 0 2px;
+}
+
+/* ── tables ─────────────────────────────────────────────────────────────── */
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+table.data th {
+  text-align: right;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 10px 8px;
+  border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+}
+
+table.data th:first-child,
+table.data td:first-child {
+  text-align: left;
+  padding-left: 4px;
+}
+
+table.data td {
+  text-align: right;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--grid);
+  white-space: nowrap;
+}
+
+table.data tbody tr:hover {
+  background: var(--ghost);
+}
+
+table.data tbody tr[aria-selected="true"] {
+  background: var(--selected);
+}
+
+table.data th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+table.data th.sortable:hover {
+  color: var(--text-primary);
+}
+
+.deck-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.deck-cell img {
+  height: 24px;
+  max-width: 44px;
+  object-fit: contain;
+  flex: none;
+}
+
+.deck-cell button {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: var(--axis);
+  text-underline-offset: 3px;
+}
+
+.deck-cell button:hover {
+  text-decoration-color: var(--text-primary);
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.secondary {
+  color: var(--text-secondary);
+}
+
+/* ── deck detail dot plot ───────────────────────────────────────────────── */
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detail-head img {
+  height: 34px;
+  max-width: 90px;
+  object-fit: contain;
+}
+
+.close {
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.close:hover {
+  color: var(--text-primary);
+  background: var(--ghost);
+}
+
+.dots {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dot-row {
+  display: grid;
+  grid-template-columns: 190px 1fr 132px;
+  align-items: center;
+  gap: 12px;
+  padding: 2px 0;
+  border-radius: 4px;
+}
+
+.dot-row:hover {
+  background: var(--ghost);
+}
+
+.dot-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  min-width: 0;
+}
+
+.dot-label img {
+  height: 22px;
+  max-width: 40px;
+  object-fit: contain;
+  flex: none;
+}
+
+.dot-label span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dot-track {
+  position: relative;
+  height: 26px;
+}
+
+/* Hairline grid, solid and one shade off the surface - never dashed. */
+.dot-track .gridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--grid);
+}
+
+.dot-track .gridline.even {
+  background: var(--axis);
+}
+
+.dot-track .whisker {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--axis);
+  border-radius: 1px;
+}
+
+.dot-track .dot {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--series-1);
+  /* 2px surface ring so overlapping marks stay separable. */
+  box-shadow: 0 0 0 2px var(--surface-1);
+}
+
+.dot-axis {
+  display: grid;
+  grid-template-columns: 190px 1fr 132px;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+  padding-top: 4px;
+}
+
+.dot-axis .ticks {
+  position: relative;
+  height: 14px;
+}
+
+.dot-axis .ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.dot-value {
+  text-align: right;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.dot-value strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* ── tooltip ────────────────────────────────────────────────────────────── */
+
+.tooltip {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+  padding: 9px 11px;
+  font-size: 12px;
+  max-width: 260px;
+}
+
+.tooltip .headline {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 1px;
+}
+
+.tooltip .who {
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.tooltip .who .key {
+  display: inline-block;
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.tooltip dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1px 10px;
+  margin: 0;
+}
+
+.tooltip dt {
+  color: var(--text-muted);
+}
+
+.tooltip dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── states ─────────────────────────────────────────────────────────────── */
+
+.notice {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.notice code {
+  background: var(--ghost);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.error {
+  border-left: 3px solid #d03b3b;
+  padding: 12px 14px;
+  background: var(--ghost);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+@media (max-width: 720px) {
+  .dot-row,
+  .dot-axis {
+    grid-template-columns: 130px 1fr 104px;
+  }
+}
