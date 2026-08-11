@@ -1,0 +1,33 @@
+<!--
+  The app icon. Drawn rather than sprited so it stays sharp at every size and
+  costs one small request.
+
+  The red is the design system's red arm - hue 25 in OKLCH, same as scale.ts -
+  pushed near the gamut edge, because at 16px in a tab a muted brick red stops
+  reading as red at all. The ink and the white half are the text-primary and
+  surface-1 tokens, so the mark is made of the same colours as the page.
+  (No CSS variable names spelled out above: a double hyphen is illegal inside
+  an XML comment and makes the file fail to parse.)
+
+  Geometry is on whole units against a 32-unit box, so every edge lands on a
+  pixel boundary at 32px and a half-pixel at 16px. The outer stroke matters
+  more than it looks: the lower half is near-white, and without a dark ring it
+  dissolves into a light tab bar.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Poke Ball">
+  <defs>
+    <clipPath id="ball">
+      <circle cx="16" cy="16" r="15" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#ball)">
+    <rect width="32" height="16" fill="#d62c2b" />
+    <rect y="16" width="32" height="16" fill="#fcfcfb" />
+    <rect y="14" width="32" height="4" fill="#0b0b0b" />
+  </g>
+
+  <circle cx="16" cy="16" r="15" fill="none" stroke="#0b0b0b" stroke-width="2" />
+  <circle cx="16" cy="16" r="5.5" fill="#0b0b0b" />
+  <circle cx="16" cy="16" r="3.2" fill="#fcfcfb" />
+</svg>

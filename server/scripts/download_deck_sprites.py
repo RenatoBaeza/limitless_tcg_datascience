@@ -2,14 +2,16 @@
 
 Writes one PNG per deck into ../client/public/decks/, named by the deck_id that
 silver_pairings carries, plus an index.json mapping ids to display names. See
-app/sprites.py for why files are keyed on the id rather than the name.
+app/sprites.py for why files are keyed on the id rather than the name, and why
+the raw per-Pokemon sprites are cached in .sprite-cache/ instead of being served.
 
-Cheap to re-run: sprites already on disk are left alone unless --force.
+Cheap to re-run: sprites already in the cache are left alone unless --force.
 
 Usage:
     uv run python scripts/download_deck_sprites.py [--dry-run]
     uv run python scripts/download_deck_sprites.py --force
     uv run python scripts/download_deck_sprites.py --out some/other/dir
+    uv run python scripts/download_deck_sprites.py --sprite-cache /tmp/sprites
 """
 
 import argparse

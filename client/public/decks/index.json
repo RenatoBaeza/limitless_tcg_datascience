@@ -8,10 +8,7 @@
       "icons": [
         "aegislash"
       ],
-      "image": "/decks/aegislash-par.png",
-      "sprites": [
-        "/decks/sprites/aegislash.png"
-      ]
+      "image": "/decks/aegislash-par.png"
     },
     {
       "id": "alakazam-dudunsparce",
@@ -20,11 +17,7 @@
         "alakazam",
         "dudunsparce"
       ],
-      "image": "/decks/alakazam-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/alakazam.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/alakazam-dudunsparce.png"
     },
     {
       "id": "alakazam-ex",
@@ -32,10 +25,7 @@
       "icons": [
         "alakazam"
       ],
-      "image": "/decks/alakazam-ex.png",
-      "sprites": [
-        "/decks/sprites/alakazam.png"
-      ]
+      "image": "/decks/alakazam-ex.png"
     },
     {
       "id": "alakazam-meg",
@@ -43,10 +33,7 @@
       "icons": [
         "alakazam"
       ],
-      "image": "/decks/alakazam-meg.png",
-      "sprites": [
-        "/decks/sprites/alakazam.png"
-      ]
+      "image": "/decks/alakazam-meg.png"
     },
     {
       "id": "alolan-exeggutor-ex",
@@ -54,10 +41,7 @@
       "icons": [
         "exeggutor-alola"
       ],
-      "image": "/decks/alolan-exeggutor-ex.png",
-      "sprites": [
-        "/decks/sprites/exeggutor-alola.png"
-      ]
+      "image": "/decks/alolan-exeggutor-ex.png"
     },
     {
       "id": "ancient-box",
@@ -66,11 +50,7 @@
         "roaring-moon",
         "flutter-mane"
       ],
-      "image": "/decks/ancient-box.png",
-      "sprites": [
-        "/decks/sprites/roaring-moon.png",
-        "/decks/sprites/flutter-mane.png"
-      ]
+      "image": "/decks/ancient-box.png"
     },
     {
       "id": "arcanine-ex-sv",
@@ -78,10 +58,7 @@
       "icons": [
         "arcanine"
       ],
-      "image": "/decks/arcanine-ex-sv.png",
-      "sprites": [
-        "/decks/sprites/arcanine.png"
-      ]
+      "image": "/decks/arcanine-ex-sv.png"
     },
     {
       "id": "archaludon-dudunsparce",
@@ -90,11 +67,7 @@
         "archaludon",
         "dudunsparce"
       ],
-      "image": "/decks/archaludon-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/archaludon.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/archaludon-dudunsparce.png"
     },
     {
       "id": "archaludon-ex",
@@ -102,10 +75,7 @@
       "icons": [
         "archaludon"
       ],
-      "image": "/decks/archaludon-ex.png",
-      "sprites": [
-        "/decks/sprites/archaludon.png"
-      ]
+      "image": "/decks/archaludon-ex.png"
     },
     {
       "id": "archaludon-zoroark",
@@ -114,11 +84,7 @@
         "archaludon",
         "zoroark"
       ],
-      "image": "/decks/archaludon-zoroark.png",
-      "sprites": [
-        "/decks/sprites/archaludon.png",
-        "/decks/sprites/zoroark.png"
-      ]
+      "image": "/decks/archaludon-zoroark.png"
     },
     {
       "id": "azumarill-ssp",
@@ -126,10 +92,7 @@
       "icons": [
         "azumarill"
       ],
-      "image": "/decks/azumarill-ssp.png",
-      "sprites": [
-        "/decks/sprites/azumarill.png"
-      ]
+      "image": "/decks/azumarill-ssp.png"
     },
     {
       "id": "banette-ex-sv",
@@ -137,10 +100,7 @@
       "icons": [
         "banette"
       ],
-      "image": "/decks/banette-ex-sv.png",
-      "sprites": [
-        "/decks/sprites/banette.png"
-      ]
+      "image": "/decks/banette-ex-sv.png"
     },
     {
       "id": "basic-box-m",
@@ -149,11 +109,7 @@
         "ogerpon",
         "clefairy"
       ],
-      "image": "/decks/basic-box-m.png",
-      "sprites": [
-        "/decks/sprites/ogerpon.png",
-        "/decks/sprites/clefairy.png"
-      ]
+      "image": "/decks/basic-box-m.png"
     },
     {
       "id": "beedrill-ex-cri",
@@ -161,10 +117,7 @@
       "icons": [
         "beedrill"
       ],
-      "image": "/decks/beedrill-ex-cri.png",
-      "sprites": [
-        "/decks/sprites/beedrill.png"
-      ]
+      "image": "/decks/beedrill-ex-cri.png"
     },
     {
       "id": "blaziken-ex-jtg",
@@ -172,10 +125,7 @@
       "icons": [
         "blaziken"
       ],
-      "image": "/decks/blaziken-ex-jtg.png",
-      "sprites": [
-        "/decks/sprites/blaziken.png"
-      ]
+      "image": "/decks/blaziken-ex-jtg.png"
     },
     {
       "id": "blaziken-zoroark",
@@ -184,11 +134,7 @@
         "blaziken",
         "zoroark"
       ],
-      "image": "/decks/blaziken-zoroark.png",
-      "sprites": [
-        "/decks/sprites/blaziken.png",
-        "/decks/sprites/zoroark.png"
-      ]
+      "image": "/decks/blaziken-zoroark.png"
     },
     {
       "id": "blissey-ex",
@@ -196,10 +142,7 @@
       "icons": [
         "blissey"
       ],
-      "image": "/decks/blissey-ex.png",
-      "sprites": [
-        "/decks/sprites/blissey.png"
-      ]
+      "image": "/decks/blissey-ex.png"
     },
     {
       "id": "bloodmoon-ursaluna-sfa",
@@ -207,10 +150,7 @@
       "icons": [
         "ursaluna-bloodmoon"
       ],
-      "image": "/decks/bloodmoon-ursaluna-sfa.png",
-      "sprites": [
-        "/decks/sprites/ursaluna-bloodmoon.png"
-      ]
+      "image": "/decks/bloodmoon-ursaluna-sfa.png"
     },
     {
       "id": "bronzong-tef",
@@ -218,10 +158,7 @@
       "icons": [
         "bronzong"
       ],
-      "image": "/decks/bronzong-tef.png",
-      "sprites": [
-        "/decks/sprites/bronzong.png"
-      ]
+      "image": "/decks/bronzong-tef.png"
     },
     {
       "id": "ceruledge-ex",
@@ -229,10 +166,7 @@
       "icons": [
         "ceruledge"
       ],
-      "image": "/decks/ceruledge-ex.png",
-      "sprites": [
-        "/decks/sprites/ceruledge.png"
-      ]
+      "image": "/decks/ceruledge-ex.png"
     },
     {
       "id": "charizard-dragapult",
@@ -241,11 +175,7 @@
         "charizard",
         "dragapult"
       ],
-      "image": "/decks/charizard-dragapult.png",
-      "sprites": [
-        "/decks/sprites/charizard.png",
-        "/decks/sprites/dragapult.png"
-      ]
+      "image": "/decks/charizard-dragapult.png"
     },
     {
       "id": "charizard-dusknoir",
@@ -254,11 +184,7 @@
         "charizard",
         "dusknoir"
       ],
-      "image": "/decks/charizard-dusknoir.png",
-      "sprites": [
-        "/decks/sprites/charizard.png",
-        "/decks/sprites/dusknoir.png"
-      ]
+      "image": "/decks/charizard-dusknoir.png"
     },
     {
       "id": "charizard-ex",
@@ -266,10 +192,7 @@
       "icons": [
         "charizard"
       ],
-      "image": "/decks/charizard-ex.png",
-      "sprites": [
-        "/decks/sprites/charizard.png"
-      ]
+      "image": "/decks/charizard-ex.png"
     },
     {
       "id": "charizard-greninja",
@@ -278,11 +201,7 @@
         "charizard",
         "greninja"
       ],
-      "image": "/decks/charizard-greninja.png",
-      "sprites": [
-        "/decks/sprites/charizard.png",
-        "/decks/sprites/greninja.png"
-      ]
+      "image": "/decks/charizard-greninja.png"
     },
     {
       "id": "charizard-noctowl",
@@ -291,11 +210,7 @@
         "charizard",
         "noctowl"
       ],
-      "image": "/decks/charizard-noctowl.png",
-      "sprites": [
-        "/decks/sprites/charizard.png",
-        "/decks/sprites/noctowl.png"
-      ]
+      "image": "/decks/charizard-noctowl.png"
     },
     {
       "id": "charizard-pidgeot",
@@ -304,11 +219,7 @@
         "charizard",
         "pidgeot"
       ],
-      "image": "/decks/charizard-pidgeot.png",
-      "sprites": [
-        "/decks/sprites/charizard.png",
-        "/decks/sprites/pidgeot.png"
-      ]
+      "image": "/decks/charizard-pidgeot.png"
     },
     {
       "id": "chien-pao-baxcalibur",
@@ -317,11 +228,7 @@
         "chien-pao",
         "baxcalibur"
       ],
-      "image": "/decks/chien-pao-baxcalibur.png",
-      "sprites": [
-        "/decks/sprites/chien-pao.png",
-        "/decks/sprites/baxcalibur.png"
-      ]
+      "image": "/decks/chien-pao-baxcalibur.png"
     },
     {
       "id": "chien-pao-noctowl",
@@ -330,11 +237,7 @@
         "chien-pao",
         "noctowl"
       ],
-      "image": "/decks/chien-pao-noctowl.png",
-      "sprites": [
-        "/decks/sprites/chien-pao.png",
-        "/decks/sprites/noctowl.png"
-      ]
+      "image": "/decks/chien-pao-noctowl.png"
     },
     {
       "id": "cinderace-ex",
@@ -342,10 +245,7 @@
       "icons": [
         "cinderace"
       ],
-      "image": "/decks/cinderace-ex.png",
-      "sprites": [
-        "/decks/sprites/cinderace.png"
-      ]
+      "image": "/decks/cinderace-ex.png"
     },
     {
       "id": "clefairy-ogerpon",
@@ -354,11 +254,7 @@
         "clefairy",
         "ogerpon"
       ],
-      "image": "/decks/clefairy-ogerpon.png",
-      "sprites": [
-        "/decks/sprites/clefairy.png",
-        "/decks/sprites/ogerpon.png"
-      ]
+      "image": "/decks/clefairy-ogerpon.png"
     },
     {
       "id": "cofagrigus-ex",
@@ -366,10 +262,7 @@
       "icons": [
         "cofagrigus"
       ],
-      "image": "/decks/cofagrigus-ex.png",
-      "sprites": [
-        "/decks/sprites/cofagrigus.png"
-      ]
+      "image": "/decks/cofagrigus-ex.png"
     },
     {
       "id": "conkeldurr-twm",
@@ -377,10 +270,7 @@
       "icons": [
         "conkeldurr"
       ],
-      "image": "/decks/conkeldurr-twm.png",
-      "sprites": [
-        "/decks/sprites/conkeldurr.png"
-      ]
+      "image": "/decks/conkeldurr-twm.png"
     },
     {
       "id": "copperajah-ex",
@@ -388,10 +278,7 @@
       "icons": [
         "copperajah"
       ],
-      "image": "/decks/copperajah-ex.png",
-      "sprites": [
-        "/decks/sprites/copperajah.png"
-      ]
+      "image": "/decks/copperajah-ex.png"
     },
     {
       "id": "cornerstone-mask-ogerpon-ex",
@@ -399,10 +286,7 @@
       "icons": [
         "ogerpon-cornerstone"
       ],
-      "image": "/decks/cornerstone-mask-ogerpon-ex.png",
-      "sprites": [
-        "/decks/sprites/ogerpon-cornerstone.png"
-      ]
+      "image": "/decks/cornerstone-mask-ogerpon-ex.png"
     },
     {
       "id": "crustle-dri",
@@ -410,10 +294,7 @@
       "icons": [
         "crustle"
       ],
-      "image": "/decks/crustle-dri.png",
-      "sprites": [
-        "/decks/sprites/crustle.png"
-      ]
+      "image": "/decks/crustle-dri.png"
     },
     {
       "id": "cynthia-garchomp-ex",
@@ -421,10 +302,7 @@
       "icons": [
         "garchomp"
       ],
-      "image": "/decks/cynthia-garchomp-ex.png",
-      "sprites": [
-        "/decks/sprites/garchomp.png"
-      ]
+      "image": "/decks/cynthia-garchomp-ex.png"
     },
     {
       "id": "decidueye-daa",
@@ -432,10 +310,7 @@
       "icons": [
         "decidueye"
       ],
-      "image": "/decks/decidueye-daa.png",
-      "sprites": [
-        "/decks/sprites/decidueye.png"
-      ]
+      "image": "/decks/decidueye-daa.png"
     },
     {
       "id": "decidueye-ex",
@@ -443,10 +318,7 @@
       "icons": [
         "decidueye"
       ],
-      "image": "/decks/decidueye-ex.png",
-      "sprites": [
-        "/decks/sprites/decidueye.png"
-      ]
+      "image": "/decks/decidueye-ex.png"
     },
     {
       "id": "dhelmise-pbl",
@@ -455,11 +327,7 @@
         "dhelmise",
         "banette"
       ],
-      "image": "/decks/dhelmise-pbl.png",
-      "sprites": [
-        "/decks/sprites/dhelmise.png",
-        "/decks/sprites/banette.png"
-      ]
+      "image": "/decks/dhelmise-pbl.png"
     },
     {
       "id": "diancie-dusknoir",
@@ -468,11 +336,7 @@
         "diancie-mega",
         "dusknoir"
       ],
-      "image": "/decks/diancie-dusknoir.png",
-      "sprites": [
-        "/decks/sprites/diancie-mega.png",
-        "/decks/sprites/dusknoir.png"
-      ]
+      "image": "/decks/diancie-dusknoir.png"
     },
     {
       "id": "dondozo-svi",
@@ -481,11 +345,7 @@
         "dondozo",
         "tatsugiri"
       ],
-      "image": "/decks/dondozo-svi.png",
-      "sprites": [
-        "/decks/sprites/dondozo.png",
-        "/decks/sprites/tatsugiri.png"
-      ]
+      "image": "/decks/dondozo-svi.png"
     },
     {
       "id": "doublade-por",
@@ -493,10 +353,7 @@
       "icons": [
         "doublade"
       ],
-      "image": "/decks/doublade-por.png",
-      "sprites": [
-        "/decks/sprites/doublade.png"
-      ]
+      "image": "/decks/doublade-por.png"
     },
     {
       "id": "dragapult-blaziken",
@@ -505,11 +362,7 @@
         "dragapult",
         "blaziken"
       ],
-      "image": "/decks/dragapult-blaziken.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/blaziken.png"
-      ]
+      "image": "/decks/dragapult-blaziken.png"
     },
     {
       "id": "dragapult-charizard",
@@ -518,11 +371,7 @@
         "dragapult",
         "charizard"
       ],
-      "image": "/decks/dragapult-charizard.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/charizard.png"
-      ]
+      "image": "/decks/dragapult-charizard.png"
     },
     {
       "id": "dragapult-dudunsparce",
@@ -531,11 +380,7 @@
         "dragapult",
         "dudunsparce"
       ],
-      "image": "/decks/dragapult-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/dragapult-dudunsparce.png"
     },
     {
       "id": "dragapult-dusknoir",
@@ -544,11 +389,7 @@
         "dragapult",
         "dusknoir"
       ],
-      "image": "/decks/dragapult-dusknoir.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/dusknoir.png"
-      ]
+      "image": "/decks/dragapult-dusknoir.png"
     },
     {
       "id": "dragapult-ex",
@@ -556,10 +397,7 @@
       "icons": [
         "dragapult"
       ],
-      "image": "/decks/dragapult-ex.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png"
-      ]
+      "image": "/decks/dragapult-ex.png"
     },
     {
       "id": "dragapult-froslass",
@@ -568,11 +406,7 @@
         "dragapult",
         "froslass"
       ],
-      "image": "/decks/dragapult-froslass.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/froslass.png"
-      ]
+      "image": "/decks/dragapult-froslass.png"
     },
     {
       "id": "dragapult-iron-thorns",
@@ -581,11 +415,7 @@
         "dragapult",
         "iron-thorns"
       ],
-      "image": "/decks/dragapult-iron-thorns.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/iron-thorns.png"
-      ]
+      "image": "/decks/dragapult-iron-thorns.png"
     },
     {
       "id": "dragapult-pidgeot",
@@ -594,11 +424,7 @@
         "dragapult",
         "pidgeot"
       ],
-      "image": "/decks/dragapult-pidgeot.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/pidgeot.png"
-      ]
+      "image": "/decks/dragapult-pidgeot.png"
     },
     {
       "id": "dragapult-zoroark",
@@ -607,11 +433,7 @@
         "dragapult",
         "zoroark"
       ],
-      "image": "/decks/dragapult-zoroark.png",
-      "sprites": [
-        "/decks/sprites/dragapult.png",
-        "/decks/sprites/zoroark.png"
-      ]
+      "image": "/decks/dragapult-zoroark.png"
     },
     {
       "id": "dragonite-eelektrik",
@@ -620,11 +442,7 @@
         "dragonite-mega",
         "eelektrik"
       ],
-      "image": "/decks/dragonite-eelektrik.png",
-      "sprites": [
-        "/decks/sprites/dragonite-mega.png",
-        "/decks/sprites/eelektrik.png"
-      ]
+      "image": "/decks/dragonite-eelektrik.png"
     },
     {
       "id": "dudunsparce-control",
@@ -633,11 +451,7 @@
         "dudunsparce",
         "elgyem"
       ],
-      "image": "/decks/dudunsparce-control.png",
-      "sprites": [
-        "/decks/sprites/dudunsparce.png",
-        "/decks/sprites/elgyem.png"
-      ]
+      "image": "/decks/dudunsparce-control.png"
     },
     {
       "id": "eelektrik-blk",
@@ -645,10 +459,7 @@
       "icons": [
         "eelektrik"
       ],
-      "image": "/decks/eelektrik-blk.png",
-      "sprites": [
-        "/decks/sprites/eelektrik.png"
-      ]
+      "image": "/decks/eelektrik-blk.png"
     },
     {
       "id": "erikas-victreebel",
@@ -657,11 +468,7 @@
         "victreebel",
         "tangela"
       ],
-      "image": "/decks/erikas-victreebel.png",
-      "sprites": [
-        "/decks/sprites/victreebel.png",
-        "/decks/sprites/tangela.png"
-      ]
+      "image": "/decks/erikas-victreebel.png"
     },
     {
       "id": "espathra-ex",
@@ -669,10 +476,7 @@
       "icons": [
         "espathra"
       ],
-      "image": "/decks/espathra-ex.png",
-      "sprites": [
-        "/decks/sprites/espathra.png"
-      ]
+      "image": "/decks/espathra-ex.png"
     },
     {
       "id": "espathra-froslass",
@@ -681,11 +485,7 @@
         "espathra",
         "froslass"
       ],
-      "image": "/decks/espathra-froslass.png",
-      "sprites": [
-        "/decks/sprites/espathra.png",
-        "/decks/sprites/froslass.png"
-      ]
+      "image": "/decks/espathra-froslass.png"
     },
     {
       "id": "espathra-xatu",
@@ -694,11 +494,7 @@
         "espathra",
         "xatu"
       ],
-      "image": "/decks/espathra-xatu.png",
-      "sprites": [
-        "/decks/sprites/espathra.png",
-        "/decks/sprites/xatu.png"
-      ]
+      "image": "/decks/espathra-xatu.png"
     },
     {
       "id": "ethan-magcargo",
@@ -707,11 +503,7 @@
         "magcargo",
         "ho-oh"
       ],
-      "image": "/decks/ethan-magcargo.png",
-      "sprites": [
-        "/decks/sprites/magcargo.png",
-        "/decks/sprites/ho-oh.png"
-      ]
+      "image": "/decks/ethan-magcargo.png"
     },
     {
       "id": "ethan-typhlosion",
@@ -719,10 +511,7 @@
       "icons": [
         "typhlosion"
       ],
-      "image": "/decks/ethan-typhlosion.png",
-      "sprites": [
-        "/decks/sprites/typhlosion.png"
-      ]
+      "image": "/decks/ethan-typhlosion.png"
     },
     {
       "id": "farigiraf-crustle",
@@ -731,11 +520,7 @@
         "farigiraf",
         "crustle"
       ],
-      "image": "/decks/farigiraf-crustle.png",
-      "sprites": [
-        "/decks/sprites/farigiraf.png",
-        "/decks/sprites/crustle.png"
-      ]
+      "image": "/decks/farigiraf-crustle.png"
     },
     {
       "id": "farigiraf-ex",
@@ -743,10 +528,7 @@
       "icons": [
         "farigiraf"
       ],
-      "image": "/decks/farigiraf-ex.png",
-      "sprites": [
-        "/decks/sprites/farigiraf.png"
-      ]
+      "image": "/decks/farigiraf-ex.png"
     },
     {
       "id": "farigiraf-milotic",
@@ -755,11 +537,7 @@
         "farigiraf",
         "milotic"
       ],
-      "image": "/decks/farigiraf-milotic.png",
-      "sprites": [
-        "/decks/sprites/farigiraf.png",
-        "/decks/sprites/milotic.png"
-      ]
+      "image": "/decks/farigiraf-milotic.png"
     },
     {
       "id": "feraligatr-tef",
@@ -767,10 +545,7 @@
       "icons": [
         "feraligatr"
       ],
-      "image": "/decks/feraligatr-tef.png",
-      "sprites": [
-        "/decks/sprites/feraligatr.png"
-      ]
+      "image": "/decks/feraligatr-tef.png"
     },
     {
       "id": "festival-lead",
@@ -779,11 +554,7 @@
         "dipplin",
         "thwackey"
       ],
-      "image": "/decks/festival-lead.png",
-      "sprites": [
-        "/decks/sprites/dipplin.png",
-        "/decks/sprites/thwackey.png"
-      ]
+      "image": "/decks/festival-lead.png"
     },
     {
       "id": "flareon-ex",
@@ -791,10 +562,7 @@
       "icons": [
         "flareon"
       ],
-      "image": "/decks/flareon-ex.png",
-      "sprites": [
-        "/decks/sprites/flareon.png"
-      ]
+      "image": "/decks/flareon-ex.png"
     },
     {
       "id": "flareon-noctowl",
@@ -803,11 +571,7 @@
         "flareon",
         "noctowl"
       ],
-      "image": "/decks/flareon-noctowl.png",
-      "sprites": [
-        "/decks/sprites/flareon.png",
-        "/decks/sprites/noctowl.png"
-      ]
+      "image": "/decks/flareon-noctowl.png"
     },
     {
       "id": "flygon-ex-ssp",
@@ -815,10 +579,7 @@
       "icons": [
         "flygon"
       ],
-      "image": "/decks/flygon-ex-ssp.png",
-      "sprites": [
-        "/decks/sprites/flygon.png"
-      ]
+      "image": "/decks/flygon-ex-ssp.png"
     },
     {
       "id": "forretress-ex",
@@ -826,10 +587,7 @@
       "icons": [
         "forretress"
       ],
-      "image": "/decks/forretress-ex.png",
-      "sprites": [
-        "/decks/sprites/forretress.png"
-      ]
+      "image": "/decks/forretress-ex.png"
     },
     {
       "id": "froslass-munkidori",
@@ -838,11 +596,7 @@
         "froslass",
         "munkidori"
       ],
-      "image": "/decks/froslass-munkidori.png",
-      "sprites": [
-        "/decks/sprites/froslass.png",
-        "/decks/sprites/munkidori.png"
-      ]
+      "image": "/decks/froslass-munkidori.png"
     },
     {
       "id": "future-box",
@@ -851,11 +605,7 @@
         "miraidon",
         "iron-crown"
       ],
-      "image": "/decks/future-box.png",
-      "sprites": [
-        "/decks/sprites/miraidon.png",
-        "/decks/sprites/iron-crown.png"
-      ]
+      "image": "/decks/future-box.png"
     },
     {
       "id": "galvantula-ex",
@@ -863,10 +613,7 @@
       "icons": [
         "galvantula"
       ],
-      "image": "/decks/galvantula-ex.png",
-      "sprites": [
-        "/decks/sprites/galvantula.png"
-      ]
+      "image": "/decks/galvantula-ex.png"
     },
     {
       "id": "garchomp-ex",
@@ -874,10 +621,7 @@
       "icons": [
         "garchomp"
       ],
-      "image": "/decks/garchomp-ex.png",
-      "sprites": [
-        "/decks/sprites/garchomp.png"
-      ]
+      "image": "/decks/garchomp-ex.png"
     },
     {
       "id": "gardevoir-ex-sv",
@@ -885,10 +629,7 @@
       "icons": [
         "gardevoir"
       ],
-      "image": "/decks/gardevoir-ex-sv.png",
-      "sprites": [
-        "/decks/sprites/gardevoir.png"
-      ]
+      "image": "/decks/gardevoir-ex-sv.png"
     },
     {
       "id": "gardevoir-jellicent",
@@ -897,11 +638,7 @@
         "gardevoir",
         "jellicent"
       ],
-      "image": "/decks/gardevoir-jellicent.png",
-      "sprites": [
-        "/decks/sprites/gardevoir.png",
-        "/decks/sprites/jellicent.png"
-      ]
+      "image": "/decks/gardevoir-jellicent.png"
     },
     {
       "id": "gengar-ex",
@@ -909,10 +646,7 @@
       "icons": [
         "gengar"
       ],
-      "image": "/decks/gengar-ex.png",
-      "sprites": [
-        "/decks/sprites/gengar.png"
-      ]
+      "image": "/decks/gengar-ex.png"
     },
     {
       "id": "gholdengo-dragapult",
@@ -921,11 +655,7 @@
         "gholdengo",
         "dragapult"
       ],
-      "image": "/decks/gholdengo-dragapult.png",
-      "sprites": [
-        "/decks/sprites/gholdengo.png",
-        "/decks/sprites/dragapult.png"
-      ]
+      "image": "/decks/gholdengo-dragapult.png"
     },
     {
       "id": "gholdengo-dudunsparce",
@@ -934,11 +664,7 @@
         "gholdengo",
         "dudunsparce"
       ],
-      "image": "/decks/gholdengo-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/gholdengo.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/gholdengo-dudunsparce.png"
     },
     {
       "id": "gholdengo-ex",
@@ -946,10 +672,7 @@
       "icons": [
         "gholdengo"
       ],
-      "image": "/decks/gholdengo-ex.png",
-      "sprites": [
-        "/decks/sprites/gholdengo.png"
-      ]
+      "image": "/decks/gholdengo-ex.png"
     },
     {
       "id": "gholdengo-joltik-box",
@@ -958,11 +681,7 @@
         "gholdengo",
         "joltik"
       ],
-      "image": "/decks/gholdengo-joltik-box.png",
-      "sprites": [
-        "/decks/sprites/gholdengo.png",
-        "/decks/sprites/joltik.png"
-      ]
+      "image": "/decks/gholdengo-joltik-box.png"
     },
     {
       "id": "gholdengo-lunatone",
@@ -971,11 +690,7 @@
         "gholdengo",
         "lunatone"
       ],
-      "image": "/decks/gholdengo-lunatone.png",
-      "sprites": [
-        "/decks/sprites/gholdengo.png",
-        "/decks/sprites/lunatone.png"
-      ]
+      "image": "/decks/gholdengo-lunatone.png"
     },
     {
       "id": "gholdengo-typhlosion",
@@ -984,11 +699,7 @@
         "gholdengo",
         "typhlosion"
       ],
-      "image": "/decks/gholdengo-typhlosion.png",
-      "sprites": [
-        "/decks/sprites/gholdengo.png",
-        "/decks/sprites/typhlosion.png"
-      ]
+      "image": "/decks/gholdengo-typhlosion.png"
     },
     {
       "id": "gothitelle-epo",
@@ -996,10 +707,7 @@
       "icons": [
         "gothitelle"
       ],
-      "image": "/decks/gothitelle-epo.png",
-      "sprites": [
-        "/decks/sprites/gothitelle.png"
-      ]
+      "image": "/decks/gothitelle-epo.png"
     },
     {
       "id": "gouging-fire-ex",
@@ -1007,10 +715,7 @@
       "icons": [
         "gouging-fire"
       ],
-      "image": "/decks/gouging-fire-ex.png",
-      "sprites": [
-        "/decks/sprites/gouging-fire.png"
-      ]
+      "image": "/decks/gouging-fire-ex.png"
     },
     {
       "id": "great-tusk-tef",
@@ -1018,10 +723,7 @@
       "icons": [
         "great-tusk"
       ],
-      "image": "/decks/great-tusk-tef.png",
-      "sprites": [
-        "/decks/sprites/great-tusk.png"
-      ]
+      "image": "/decks/great-tusk-tef.png"
     },
     {
       "id": "greninja-blaziken",
@@ -1030,11 +732,7 @@
         "greninja",
         "blaziken"
       ],
-      "image": "/decks/greninja-blaziken.png",
-      "sprites": [
-        "/decks/sprites/greninja.png",
-        "/decks/sprites/blaziken.png"
-      ]
+      "image": "/decks/greninja-blaziken.png"
     },
     {
       "id": "greninja-ex",
@@ -1042,10 +740,7 @@
       "icons": [
         "greninja"
       ],
-      "image": "/decks/greninja-ex.png",
-      "sprites": [
-        "/decks/sprites/greninja.png"
-      ]
+      "image": "/decks/greninja-ex.png"
     },
     {
       "id": "greninja-froslass",
@@ -1054,11 +749,7 @@
         "greninja",
         "froslass"
       ],
-      "image": "/decks/greninja-froslass.png",
-      "sprites": [
-        "/decks/sprites/greninja.png",
-        "/decks/sprites/froslass.png"
-      ]
+      "image": "/decks/greninja-froslass.png"
     },
     {
       "id": "grimmsnarl-froslass",
@@ -1067,11 +758,7 @@
         "grimmsnarl",
         "froslass"
       ],
-      "image": "/decks/grimmsnarl-froslass.png",
-      "sprites": [
-        "/decks/sprites/grimmsnarl.png",
-        "/decks/sprites/froslass.png"
-      ]
+      "image": "/decks/grimmsnarl-froslass.png"
     },
     {
       "id": "heatran-metang",
@@ -1080,11 +767,7 @@
         "heatran",
         "metang"
       ],
-      "image": "/decks/heatran-metang.png",
-      "sprites": [
-        "/decks/sprites/heatran.png",
-        "/decks/sprites/metang.png"
-      ]
+      "image": "/decks/heatran-metang.png"
     },
     {
       "id": "ho-oh-armarouge",
@@ -1093,11 +776,7 @@
         "ho-oh",
         "armarouge"
       ],
-      "image": "/decks/ho-oh-armarouge.png",
-      "sprites": [
-        "/decks/sprites/ho-oh.png",
-        "/decks/sprites/armarouge.png"
-      ]
+      "image": "/decks/ho-oh-armarouge.png"
     },
     {
       "id": "hop-zacian",
@@ -1106,11 +785,7 @@
         "zacian-crowned",
         "snorlax"
       ],
-      "image": "/decks/hop-zacian.png",
-      "sprites": [
-        "/decks/sprites/zacian-crowned.png",
-        "/decks/sprites/snorlax.png"
-      ]
+      "image": "/decks/hop-zacian.png"
     },
     {
       "id": "hops-trevenant",
@@ -1118,10 +793,7 @@
       "icons": [
         "trevenant"
       ],
-      "image": "/decks/hops-trevenant.png",
-      "sprites": [
-        "/decks/sprites/trevenant.png"
-      ]
+      "image": "/decks/hops-trevenant.png"
     },
     {
       "id": "hydrapple-ex",
@@ -1129,10 +801,7 @@
       "icons": [
         "hydrapple"
       ],
-      "image": "/decks/hydrapple-ex.png",
-      "sprites": [
-        "/decks/sprites/hydrapple.png"
-      ]
+      "image": "/decks/hydrapple-ex.png"
     },
     {
       "id": "hydrapple-ogerpon",
@@ -1141,11 +810,7 @@
         "hydrapple",
         "ogerpon"
       ],
-      "image": "/decks/hydrapple-ogerpon.png",
-      "sprites": [
-        "/decks/sprites/hydrapple.png",
-        "/decks/sprites/ogerpon.png"
-      ]
+      "image": "/decks/hydrapple-ogerpon.png"
     },
     {
       "id": "hydreigon-ex",
@@ -1153,10 +818,7 @@
       "icons": [
         "hydreigon"
       ],
-      "image": "/decks/hydreigon-ex.png",
-      "sprites": [
-        "/decks/sprites/hydreigon.png"
-      ]
+      "image": "/decks/hydreigon-ex.png"
     },
     {
       "id": "incineroar-ex",
@@ -1164,10 +826,7 @@
       "icons": [
         "incineroar"
       ],
-      "image": "/decks/incineroar-ex.png",
-      "sprites": [
-        "/decks/sprites/incineroar.png"
-      ]
+      "image": "/decks/incineroar-ex.png"
     },
     {
       "id": "iono-bellibolt",
@@ -1176,11 +835,7 @@
         "bellibolt",
         "voltorb"
       ],
-      "image": "/decks/iono-bellibolt.png",
-      "sprites": [
-        "/decks/sprites/bellibolt.png",
-        "/decks/sprites/voltorb.png"
-      ]
+      "image": "/decks/iono-bellibolt.png"
     },
     {
       "id": "iron-hands-ex",
@@ -1189,11 +844,7 @@
         "iron-hands",
         "iron-crown"
       ],
-      "image": "/decks/iron-hands-ex.png",
-      "sprites": [
-        "/decks/sprites/iron-hands.png",
-        "/decks/sprites/iron-crown.png"
-      ]
+      "image": "/decks/iron-hands-ex.png"
     },
     {
       "id": "iron-hands-magneton",
@@ -1202,11 +853,7 @@
         "iron-hands",
         "magneton"
       ],
-      "image": "/decks/iron-hands-magneton.png",
-      "sprites": [
-        "/decks/sprites/iron-hands.png",
-        "/decks/sprites/magneton.png"
-      ]
+      "image": "/decks/iron-hands-magneton.png"
     },
     {
       "id": "iron-thorns-crustle",
@@ -1215,11 +862,7 @@
         "iron-thorns",
         "crustle"
       ],
-      "image": "/decks/iron-thorns-crustle.png",
-      "sprites": [
-        "/decks/sprites/iron-thorns.png",
-        "/decks/sprites/crustle.png"
-      ]
+      "image": "/decks/iron-thorns-crustle.png"
     },
     {
       "id": "iron-thorns-ex",
@@ -1227,10 +870,7 @@
       "icons": [
         "iron-thorns"
       ],
-      "image": "/decks/iron-thorns-ex.png",
-      "sprites": [
-        "/decks/sprites/iron-thorns.png"
-      ]
+      "image": "/decks/iron-thorns-ex.png"
     },
     {
       "id": "iron-valiant-ex",
@@ -1238,10 +878,7 @@
       "icons": [
         "iron-valiant"
       ],
-      "image": "/decks/iron-valiant-ex.png",
-      "sprites": [
-        "/decks/sprites/iron-valiant.png"
-      ]
+      "image": "/decks/iron-valiant-ex.png"
     },
     {
       "id": "jellicent-dusknoir",
@@ -1250,11 +887,7 @@
         "jellicent",
         "dusknoir"
       ],
-      "image": "/decks/jellicent-dusknoir.png",
-      "sprites": [
-        "/decks/sprites/jellicent.png",
-        "/decks/sprites/dusknoir.png"
-      ]
+      "image": "/decks/jellicent-dusknoir.png"
     },
     {
       "id": "joltik-box",
@@ -1263,11 +896,7 @@
         "joltik",
         "pikachu"
       ],
-      "image": "/decks/joltik-box.png",
-      "sprites": [
-        "/decks/sprites/joltik.png",
-        "/decks/sprites/pikachu.png"
-      ]
+      "image": "/decks/joltik-box.png"
     },
     {
       "id": "kangaskhan-bouffalant",
@@ -1276,11 +905,7 @@
         "kangaskhan-mega",
         "bouffalant"
       ],
-      "image": "/decks/kangaskhan-bouffalant.png",
-      "sprites": [
-        "/decks/sprites/kangaskhan-mega.png",
-        "/decks/sprites/bouffalant.png"
-      ]
+      "image": "/decks/kangaskhan-bouffalant.png"
     },
     {
       "id": "kangaskhan-forretress",
@@ -1289,11 +914,7 @@
         "kangaskhan-mega",
         "forretress"
       ],
-      "image": "/decks/kangaskhan-forretress.png",
-      "sprites": [
-        "/decks/sprites/kangaskhan-mega.png",
-        "/decks/sprites/forretress.png"
-      ]
+      "image": "/decks/kangaskhan-forretress.png"
     },
     {
       "id": "klawf-par",
@@ -1302,11 +923,7 @@
         "klawf",
         "brute-bonnet"
       ],
-      "image": "/decks/klawf-par.png",
-      "sprites": [
-        "/decks/sprites/klawf.png",
-        "/decks/sprites/brute-bonnet.png"
-      ]
+      "image": "/decks/klawf-par.png"
     },
     {
       "id": "lillie-clefairy",
@@ -1314,10 +931,7 @@
       "icons": [
         "clefairy"
       ],
-      "image": "/decks/lillie-clefairy.png",
-      "sprites": [
-        "/decks/sprites/clefairy.png"
-      ]
+      "image": "/decks/lillie-clefairy.png"
     },
     {
       "id": "lopunny-dudunsparce",
@@ -1326,11 +940,7 @@
         "lopunny-mega",
         "dudunsparce"
       ],
-      "image": "/decks/lopunny-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/lopunny-mega.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/lopunny-dudunsparce.png"
     },
     {
       "id": "lopunny-dusknoir",
@@ -1339,11 +949,7 @@
         "lopunny-mega",
         "dusknoir"
       ],
-      "image": "/decks/lopunny-dusknoir.png",
-      "sprites": [
-        "/decks/sprites/lopunny-mega.png",
-        "/decks/sprites/dusknoir.png"
-      ]
+      "image": "/decks/lopunny-dusknoir.png"
     },
     {
       "id": "lucario-hariyama",
@@ -1352,11 +958,7 @@
         "lucario-mega",
         "hariyama"
       ],
-      "image": "/decks/lucario-hariyama.png",
-      "sprites": [
-        "/decks/sprites/lucario-mega.png",
-        "/decks/sprites/hariyama.png"
-      ]
+      "image": "/decks/lucario-hariyama.png"
     },
     {
       "id": "luxray-ex",
@@ -1364,10 +966,7 @@
       "icons": [
         "luxray"
       ],
-      "image": "/decks/luxray-ex.png",
-      "sprites": [
-        "/decks/sprites/luxray.png"
-      ]
+      "image": "/decks/luxray-ex.png"
     },
     {
       "id": "mamoswine-ex",
@@ -1375,10 +974,7 @@
       "icons": [
         "mamoswine"
       ],
-      "image": "/decks/mamoswine-ex.png",
-      "sprites": [
-        "/decks/sprites/mamoswine.png"
-      ]
+      "image": "/decks/mamoswine-ex.png"
     },
     {
       "id": "manectric-eelektrik",
@@ -1387,11 +983,7 @@
         "manectric-mega",
         "eelektrik"
       ],
-      "image": "/decks/manectric-eelektrik.png",
-      "sprites": [
-        "/decks/sprites/manectric-mega.png",
-        "/decks/sprites/eelektrik.png"
-      ]
+      "image": "/decks/manectric-eelektrik.png"
     },
     {
       "id": "marnie-grimmsnarl-ex",
@@ -1399,10 +991,7 @@
       "icons": [
         "grimmsnarl"
       ],
-      "image": "/decks/marnie-grimmsnarl-ex.png",
-      "sprites": [
-        "/decks/sprites/grimmsnarl.png"
-      ]
+      "image": "/decks/marnie-grimmsnarl-ex.png"
     },
     {
       "id": "mega-abomasnow-ex",
@@ -1410,10 +999,7 @@
       "icons": [
         "abomasnow-mega"
       ],
-      "image": "/decks/mega-abomasnow-ex.png",
-      "sprites": [
-        "/decks/sprites/abomasnow-mega.png"
-      ]
+      "image": "/decks/mega-abomasnow-ex.png"
     },
     {
       "id": "mega-absol-box",
@@ -1422,11 +1008,7 @@
         "absol-mega",
         "kangaskhan-mega"
       ],
-      "image": "/decks/mega-absol-box.png",
-      "sprites": [
-        "/decks/sprites/absol-mega.png",
-        "/decks/sprites/kangaskhan-mega.png"
-      ]
+      "image": "/decks/mega-absol-box.png"
     },
     {
       "id": "mega-camerupt-ex",
@@ -1434,10 +1016,7 @@
       "icons": [
         "camerupt-mega"
       ],
-      "image": "/decks/mega-camerupt-ex.png",
-      "sprites": [
-        "/decks/sprites/camerupt-mega.png"
-      ]
+      "image": "/decks/mega-camerupt-ex.png"
     },
     {
       "id": "mega-charizard-x-ex",
@@ -1445,10 +1024,7 @@
       "icons": [
         "charizard-mega-x"
       ],
-      "image": "/decks/mega-charizard-x-ex.png",
-      "sprites": [
-        "/decks/sprites/charizard-mega-x.png"
-      ]
+      "image": "/decks/mega-charizard-x-ex.png"
     },
     {
       "id": "mega-diancie-ex",
@@ -1456,10 +1032,7 @@
       "icons": [
         "diancie-mega"
       ],
-      "image": "/decks/mega-diancie-ex.png",
-      "sprites": [
-        "/decks/sprites/diancie-mega.png"
-      ]
+      "image": "/decks/mega-diancie-ex.png"
     },
     {
       "id": "mega-dragonite-ex",
@@ -1467,10 +1040,7 @@
       "icons": [
         "dragonite-mega"
       ],
-      "image": "/decks/mega-dragonite-ex.png",
-      "sprites": [
-        "/decks/sprites/dragonite-mega.png"
-      ]
+      "image": "/decks/mega-dragonite-ex.png"
     },
     {
       "id": "mega-excadrill-ex",
@@ -1478,10 +1048,7 @@
       "icons": [
         "excadrill-mega"
       ],
-      "image": "/decks/mega-excadrill-ex.png",
-      "sprites": [
-        "/decks/sprites/excadrill-mega.png"
-      ]
+      "image": "/decks/mega-excadrill-ex.png"
     },
     {
       "id": "mega-feraligatr-ex",
@@ -1489,10 +1056,7 @@
       "icons": [
         "feraligatr-mega"
       ],
-      "image": "/decks/mega-feraligatr-ex.png",
-      "sprites": [
-        "/decks/sprites/feraligatr-mega.png"
-      ]
+      "image": "/decks/mega-feraligatr-ex.png"
     },
     {
       "id": "mega-froslass-dudunsparce",
@@ -1501,11 +1065,7 @@
         "froslass-mega",
         "dudunsparce"
       ],
-      "image": "/decks/mega-froslass-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/froslass-mega.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/mega-froslass-dudunsparce.png"
     },
     {
       "id": "mega-froslass-ex",
@@ -1513,10 +1073,7 @@
       "icons": [
         "froslass-mega"
       ],
-      "image": "/decks/mega-froslass-ex.png",
-      "sprites": [
-        "/decks/sprites/froslass-mega.png"
-      ]
+      "image": "/decks/mega-froslass-ex.png"
     },
     {
       "id": "mega-gengar-ex",
@@ -1524,10 +1081,7 @@
       "icons": [
         "gengar-mega"
       ],
-      "image": "/decks/mega-gengar-ex.png",
-      "sprites": [
-        "/decks/sprites/gengar-mega.png"
-      ]
+      "image": "/decks/mega-gengar-ex.png"
     },
     {
       "id": "mega-greninja-ex",
@@ -1535,10 +1089,7 @@
       "icons": [
         "greninja-mega"
       ],
-      "image": "/decks/mega-greninja-ex.png",
-      "sprites": [
-        "/decks/sprites/greninja-mega.png"
-      ]
+      "image": "/decks/mega-greninja-ex.png"
     },
     {
       "id": "mega-kangaskhan-ex",
@@ -1546,10 +1097,7 @@
       "icons": [
         "kangaskhan-mega"
       ],
-      "image": "/decks/mega-kangaskhan-ex.png",
-      "sprites": [
-        "/decks/sprites/kangaskhan-mega.png"
-      ]
+      "image": "/decks/mega-kangaskhan-ex.png"
     },
     {
       "id": "mega-latias-ex",
@@ -1557,10 +1105,7 @@
       "icons": [
         "latias-mega"
       ],
-      "image": "/decks/mega-latias-ex.png",
-      "sprites": [
-        "/decks/sprites/latias-mega.png"
-      ]
+      "image": "/decks/mega-latias-ex.png"
     },
     {
       "id": "mega-lopunny-ex",
@@ -1568,10 +1113,7 @@
       "icons": [
         "lopunny-mega"
       ],
-      "image": "/decks/mega-lopunny-ex.png",
-      "sprites": [
-        "/decks/sprites/lopunny-mega.png"
-      ]
+      "image": "/decks/mega-lopunny-ex.png"
     },
     {
       "id": "mega-lucario-ex",
@@ -1579,10 +1121,7 @@
       "icons": [
         "lucario-mega"
       ],
-      "image": "/decks/mega-lucario-ex.png",
-      "sprites": [
-        "/decks/sprites/lucario-mega.png"
-      ]
+      "image": "/decks/mega-lucario-ex.png"
     },
     {
       "id": "mega-manectric-ex-meg",
@@ -1590,10 +1129,7 @@
       "icons": [
         "manectric-mega"
       ],
-      "image": "/decks/mega-manectric-ex-meg.png",
-      "sprites": [
-        "/decks/sprites/manectric-mega.png"
-      ]
+      "image": "/decks/mega-manectric-ex-meg.png"
     },
     {
       "id": "mega-sharpedo-ex",
@@ -1601,10 +1137,7 @@
       "icons": [
         "sharpedo-mega"
       ],
-      "image": "/decks/mega-sharpedo-ex.png",
-      "sprites": [
-        "/decks/sprites/sharpedo-mega.png"
-      ]
+      "image": "/decks/mega-sharpedo-ex.png"
     },
     {
       "id": "mega-starmie-ex",
@@ -1612,10 +1145,7 @@
       "icons": [
         "starmie-mega"
       ],
-      "image": "/decks/mega-starmie-ex.png",
-      "sprites": [
-        "/decks/sprites/starmie-mega.png"
-      ]
+      "image": "/decks/mega-starmie-ex.png"
     },
     {
       "id": "mega-venusaur-ex",
@@ -1623,10 +1153,7 @@
       "icons": [
         "venusaur-mega"
       ],
-      "image": "/decks/mega-venusaur-ex.png",
-      "sprites": [
-        "/decks/sprites/venusaur-mega.png"
-      ]
+      "image": "/decks/mega-venusaur-ex.png"
     },
     {
       "id": "mega-zygarde-ex",
@@ -1634,10 +1161,7 @@
       "icons": [
         "zygarde-mega"
       ],
-      "image": "/decks/mega-zygarde-ex.png",
-      "sprites": [
-        "/decks/sprites/zygarde-mega.png"
-      ]
+      "image": "/decks/mega-zygarde-ex.png"
     },
     {
       "id": "meowscarada-ex",
@@ -1645,10 +1169,7 @@
       "icons": [
         "meowscarada"
       ],
-      "image": "/decks/meowscarada-ex.png",
-      "sprites": [
-        "/decks/sprites/meowscarada.png"
-      ]
+      "image": "/decks/meowscarada-ex.png"
     },
     {
       "id": "metagross-cri",
@@ -1656,10 +1177,7 @@
       "icons": [
         "metagross"
       ],
-      "image": "/decks/metagross-cri.png",
-      "sprites": [
-        "/decks/sprites/metagross.png"
-      ]
+      "image": "/decks/metagross-cri.png"
     },
     {
       "id": "milotic-ex",
@@ -1667,10 +1185,7 @@
       "icons": [
         "milotic"
       ],
-      "image": "/decks/milotic-ex.png",
-      "sprites": [
-        "/decks/sprites/milotic.png"
-      ]
+      "image": "/decks/milotic-ex.png"
     },
     {
       "id": "mimikyu-ogerpon",
@@ -1679,11 +1194,7 @@
         "mimikyu",
         "ogerpon-cornerstone"
       ],
-      "image": "/decks/mimikyu-ogerpon.png",
-      "sprites": [
-        "/decks/sprites/mimikyu.png",
-        "/decks/sprites/ogerpon-cornerstone.png"
-      ]
+      "image": "/decks/mimikyu-ogerpon.png"
     },
     {
       "id": "miraidon-eelektrik",
@@ -1692,11 +1203,7 @@
         "miraidon",
         "eelektrik"
       ],
-      "image": "/decks/miraidon-eelektrik.png",
-      "sprites": [
-        "/decks/sprites/miraidon.png",
-        "/decks/sprites/eelektrik.png"
-      ]
+      "image": "/decks/miraidon-eelektrik.png"
     },
     {
       "id": "miraidon-ex",
@@ -1704,10 +1211,7 @@
       "icons": [
         "miraidon"
       ],
-      "image": "/decks/miraidon-ex.png",
-      "sprites": [
-        "/decks/sprites/miraidon.png"
-      ]
+      "image": "/decks/miraidon-ex.png"
     },
     {
       "id": "misty-gyarados",
@@ -1716,11 +1220,7 @@
         "gyarados",
         "psyduck"
       ],
-      "image": "/decks/misty-gyarados.png",
-      "sprites": [
-        "/decks/sprites/gyarados.png",
-        "/decks/sprites/psyduck.png"
-      ]
+      "image": "/decks/misty-gyarados.png"
     },
     {
       "id": "n-zoroark",
@@ -1728,10 +1228,7 @@
       "icons": [
         "zoroark"
       ],
-      "image": "/decks/n-zoroark.png",
-      "sprites": [
-        "/decks/sprites/zoroark.png"
-      ]
+      "image": "/decks/n-zoroark.png"
     },
     {
       "id": "n-zoroark-lucario",
@@ -1740,11 +1237,7 @@
         "zoroark",
         "lucario-mega"
       ],
-      "image": "/decks/n-zoroark-lucario.png",
-      "sprites": [
-        "/decks/sprites/zoroark.png",
-        "/decks/sprites/lucario-mega.png"
-      ]
+      "image": "/decks/n-zoroark-lucario.png"
     },
     {
       "id": "ogerpon-ex",
@@ -1753,11 +1246,7 @@
         "ogerpon",
         "ogerpon-wellspring"
       ],
-      "image": "/decks/ogerpon-ex.png",
-      "sprites": [
-        "/decks/sprites/ogerpon.png",
-        "/decks/sprites/ogerpon-wellspring.png"
-      ]
+      "image": "/decks/ogerpon-ex.png"
     },
     {
       "id": "ogerpon-meganium",
@@ -1766,11 +1255,7 @@
         "ogerpon",
         "meganium"
       ],
-      "image": "/decks/ogerpon-meganium.png",
-      "sprites": [
-        "/decks/sprites/ogerpon.png",
-        "/decks/sprites/meganium.png"
-      ]
+      "image": "/decks/ogerpon-meganium.png"
     },
     {
       "id": "ogerpon-meganium-arboliva",
@@ -1779,11 +1264,7 @@
         "ogerpon",
         "arboliva"
       ],
-      "image": "/decks/ogerpon-meganium-arboliva.png",
-      "sprites": [
-        "/decks/sprites/ogerpon.png",
-        "/decks/sprites/arboliva.png"
-      ]
+      "image": "/decks/ogerpon-meganium-arboliva.png"
     },
     {
       "id": "ogerpon-meganium-hydrapple",
@@ -1792,11 +1273,7 @@
         "ogerpon",
         "hydrapple"
       ],
-      "image": "/decks/ogerpon-meganium-hydrapple.png",
-      "sprites": [
-        "/decks/sprites/ogerpon.png",
-        "/decks/sprites/hydrapple.png"
-      ]
+      "image": "/decks/ogerpon-meganium-hydrapple.png"
     },
     {
       "id": "okidogi-barbaracle",
@@ -1805,11 +1282,7 @@
         "okidogi",
         "barbaracle"
       ],
-      "image": "/decks/okidogi-barbaracle.png",
-      "sprites": [
-        "/decks/sprites/okidogi.png",
-        "/decks/sprites/barbaracle.png"
-      ]
+      "image": "/decks/okidogi-barbaracle.png"
     },
     {
       "id": "okidogi-ex",
@@ -1817,10 +1290,7 @@
       "icons": [
         "okidogi"
       ],
-      "image": "/decks/okidogi-ex.png",
-      "sprites": [
-        "/decks/sprites/okidogi.png"
-      ]
+      "image": "/decks/okidogi-ex.png"
     },
     {
       "id": "okidogi-twm",
@@ -1828,10 +1298,7 @@
       "icons": [
         "okidogi"
       ],
-      "image": "/decks/okidogi-twm.png",
-      "sprites": [
-        "/decks/sprites/okidogi.png"
-      ]
+      "image": "/decks/okidogi-twm.png"
     },
     {
       "id": "other",
@@ -1839,10 +1306,7 @@
       "icons": [
         "substitute"
       ],
-      "image": "/decks/other.png",
-      "sprites": [
-        "/decks/sprites/substitute.png"
-      ]
+      "image": "/decks/other.png"
     },
     {
       "id": "palafin-ex",
@@ -1850,10 +1314,7 @@
       "icons": [
         "palafin-hero"
       ],
-      "image": "/decks/palafin-ex.png",
-      "sprites": [
-        "/decks/sprites/palafin-hero.png"
-      ]
+      "image": "/decks/palafin-ex.png"
     },
     {
       "id": "paldean-tauros-pfl",
@@ -1861,10 +1322,7 @@
       "icons": [
         "tauros-paldea"
       ],
-      "image": "/decks/paldean-tauros-pfl.png",
-      "sprites": [
-        "/decks/sprites/tauros-paldea.png"
-      ]
+      "image": "/decks/paldean-tauros-pfl.png"
     },
     {
       "id": "pidgeot-control",
@@ -1872,10 +1330,7 @@
       "icons": [
         "pidgeot"
       ],
-      "image": "/decks/pidgeot-control.png",
-      "sprites": [
-        "/decks/sprites/pidgeot.png"
-      ]
+      "image": "/decks/pidgeot-control.png"
     },
     {
       "id": "poison-archaludon",
@@ -1884,11 +1339,7 @@
         "archaludon",
         "brute-bonnet"
       ],
-      "image": "/decks/poison-archaludon.png",
-      "sprites": [
-        "/decks/sprites/archaludon.png",
-        "/decks/sprites/brute-bonnet.png"
-      ]
+      "image": "/decks/poison-archaludon.png"
     },
     {
       "id": "poison-mega-latias",
@@ -1897,11 +1348,7 @@
         "latias-mega",
         "brute-bonnet"
       ],
-      "image": "/decks/poison-mega-latias.png",
-      "sprites": [
-        "/decks/sprites/latias-mega.png",
-        "/decks/sprites/brute-bonnet.png"
-      ]
+      "image": "/decks/poison-mega-latias.png"
     },
     {
       "id": "poison-terapagos",
@@ -1910,11 +1357,7 @@
         "terapagos",
         "brute-bonnet"
       ],
-      "image": "/decks/poison-terapagos.png",
-      "sprites": [
-        "/decks/sprites/terapagos.png",
-        "/decks/sprites/brute-bonnet.png"
-      ]
+      "image": "/decks/poison-terapagos.png"
     },
     {
       "id": "raging-bolt-ex",
@@ -1922,10 +1365,7 @@
       "icons": [
         "raging-bolt"
       ],
-      "image": "/decks/raging-bolt-ex.png",
-      "sprites": [
-        "/decks/sprites/raging-bolt.png"
-      ]
+      "image": "/decks/raging-bolt-ex.png"
     },
     {
       "id": "raging-bolt-ogerpon",
@@ -1934,11 +1374,7 @@
         "raging-bolt",
         "ogerpon"
       ],
-      "image": "/decks/raging-bolt-ogerpon.png",
-      "sprites": [
-        "/decks/sprites/raging-bolt.png",
-        "/decks/sprites/ogerpon.png"
-      ]
+      "image": "/decks/raging-bolt-ogerpon.png"
     },
     {
       "id": "ranging-bolt-sandy-shocks",
@@ -1947,11 +1383,7 @@
         "raging-bolt",
         "sandy-shocks"
       ],
-      "image": "/decks/ranging-bolt-sandy-shocks.png",
-      "sprites": [
-        "/decks/sprites/raging-bolt.png",
-        "/decks/sprites/sandy-shocks.png"
-      ]
+      "image": "/decks/ranging-bolt-sandy-shocks.png"
     },
     {
       "id": "reging-bolt-bellibolt",
@@ -1960,11 +1392,7 @@
         "raging-bolt",
         "bellibolt"
       ],
-      "image": "/decks/reging-bolt-bellibolt.png",
-      "sprites": [
-        "/decks/sprites/raging-bolt.png",
-        "/decks/sprites/bellibolt.png"
-      ]
+      "image": "/decks/reging-bolt-bellibolt.png"
     },
     {
       "id": "roaring-moon-dudunsparce",
@@ -1973,11 +1401,7 @@
         "roaring-moon",
         "dudunsparce"
       ],
-      "image": "/decks/roaring-moon-dudunsparce.png",
-      "sprites": [
-        "/decks/sprites/roaring-moon.png",
-        "/decks/sprites/dudunsparce.png"
-      ]
+      "image": "/decks/roaring-moon-dudunsparce.png"
     },
     {
       "id": "roaring-moon-ex",
@@ -1985,10 +1409,7 @@
       "icons": [
         "roaring-moon"
       ],
-      "image": "/decks/roaring-moon-ex.png",
-      "sprites": [
-        "/decks/sprites/roaring-moon.png"
-      ]
+      "image": "/decks/roaring-moon-ex.png"
     },
     {
       "id": "rocket-mewtwo-ex",
@@ -1997,11 +1418,7 @@
         "mewtwo",
         "spidops"
       ],
-      "image": "/decks/rocket-mewtwo-ex.png",
-      "sprites": [
-        "/decks/sprites/mewtwo.png",
-        "/decks/sprites/spidops.png"
-      ]
+      "image": "/decks/rocket-mewtwo-ex.png"
     },
     {
       "id": "rocket-nidoking-ex",
@@ -2009,10 +1426,7 @@
       "icons": [
         "nidoking"
       ],
-      "image": "/decks/rocket-nidoking-ex.png",
-      "sprites": [
-        "/decks/sprites/nidoking.png"
-      ]
+      "image": "/decks/rocket-nidoking-ex.png"
     },
     {
       "id": "rocket-porygon-z",
@@ -2020,10 +1434,7 @@
       "icons": [
         "porygon-z"
       ],
-      "image": "/decks/rocket-porygon-z.png",
-      "sprites": [
-        "/decks/sprites/porygon-z.png"
-      ]
+      "image": "/decks/rocket-porygon-z.png"
     },
     {
       "id": "rocket-spidops",
@@ -2031,10 +1442,7 @@
       "icons": [
         "spidops"
       ],
-      "image": "/decks/rocket-spidops.png",
-      "sprites": [
-        "/decks/sprites/spidops.png"
-      ]
+      "image": "/decks/rocket-spidops.png"
     },
     {
       "id": "rockets-honchkrow",
@@ -2043,11 +1451,7 @@
         "honchkrow",
         "porygon2"
       ],
-      "image": "/decks/rockets-honchkrow.png",
-      "sprites": [
-        "/decks/sprites/honchkrow.png",
-        "/decks/sprites/porygon2.png"
-      ]
+      "image": "/decks/rockets-honchkrow.png"
     },
     {
       "id": "salamence-ex",
@@ -2055,10 +1459,7 @@
       "icons": [
         "salamence"
       ],
-      "image": "/decks/salamence-ex.png",
-      "sprites": [
-        "/decks/sprites/salamence.png"
-      ]
+      "image": "/decks/salamence-ex.png"
     },
     {
       "id": "scizor-ex",
@@ -2066,10 +1467,7 @@
       "icons": [
         "scizor"
       ],
-      "image": "/decks/scizor-ex.png",
-      "sprites": [
-        "/decks/sprites/scizor.png"
-      ]
+      "image": "/decks/scizor-ex.png"
     },
     {
       "id": "scovillain-ex",
@@ -2077,10 +1475,7 @@
       "icons": [
         "scovillain"
       ],
-      "image": "/decks/scovillain-ex.png",
-      "sprites": [
-        "/decks/sprites/scovillain.png"
-      ]
+      "image": "/decks/scovillain-ex.png"
     },
     {
       "id": "seaking-pre",
@@ -2089,11 +1484,7 @@
         "seaking",
         "thwackey"
       ],
-      "image": "/decks/seaking-pre.png",
-      "sprites": [
-        "/decks/sprites/seaking.png",
-        "/decks/sprites/thwackey.png"
-      ]
+      "image": "/decks/seaking-pre.png"
     },
     {
       "id": "sharpedo-toxtricity",
@@ -2102,11 +1493,7 @@
         "sharpedo-mega",
         "toxtricity"
       ],
-      "image": "/decks/sharpedo-toxtricity.png",
-      "sprites": [
-        "/decks/sprites/sharpedo-mega.png",
-        "/decks/sprites/toxtricity.png"
-      ]
+      "image": "/decks/sharpedo-toxtricity.png"
     },
     {
       "id": "sinistcha-ogerpon",
@@ -2115,11 +1502,7 @@
         "sinistcha",
         "ogerpon"
       ],
-      "image": "/decks/sinistcha-ogerpon.png",
-      "sprites": [
-        "/decks/sprites/sinistcha.png",
-        "/decks/sprites/ogerpon.png"
-      ]
+      "image": "/decks/sinistcha-ogerpon.png"
     },
     {
       "id": "slaking-ex",
@@ -2127,10 +1510,7 @@
       "icons": [
         "slaking"
       ],
-      "image": "/decks/slaking-ex.png",
-      "sprites": [
-        "/decks/sprites/slaking.png"
-      ]
+      "image": "/decks/slaking-ex.png"
     },
     {
       "id": "slowking-scr",
@@ -2138,10 +1518,7 @@
       "icons": [
         "slowking"
       ],
-      "image": "/decks/slowking-scr.png",
-      "sprites": [
-        "/decks/sprites/slowking.png"
-      ]
+      "image": "/decks/slowking-scr.png"
     },
     {
       "id": "spidops-ex",
@@ -2149,10 +1526,7 @@
       "icons": [
         "spidops"
       ],
-      "image": "/decks/spidops-ex.png",
-      "sprites": [
-        "/decks/sprites/spidops.png"
-      ]
+      "image": "/decks/spidops-ex.png"
     },
     {
       "id": "starmie-dusknoir",
@@ -2161,11 +1535,7 @@
         "starmie-mega",
         "dusknoir"
       ],
-      "image": "/decks/starmie-dusknoir.png",
-      "sprites": [
-        "/decks/sprites/starmie-mega.png",
-        "/decks/sprites/dusknoir.png"
-      ]
+      "image": "/decks/starmie-dusknoir.png"
     },
     {
       "id": "starmie-froslass",
@@ -2174,11 +1544,7 @@
         "starmie-mega",
         "froslass"
       ],
-      "image": "/decks/starmie-froslass.png",
-      "sprites": [
-        "/decks/sprites/starmie-mega.png",
-        "/decks/sprites/froslass.png"
-      ]
+      "image": "/decks/starmie-froslass.png"
     },
     {
       "id": "steelix-dodrio",
@@ -2187,11 +1553,7 @@
         "steelix",
         "dodrio"
       ],
-      "image": "/decks/steelix-dodrio.png",
-      "sprites": [
-        "/decks/sprites/steelix.png",
-        "/decks/sprites/dodrio.png"
-      ]
+      "image": "/decks/steelix-dodrio.png"
     },
     {
       "id": "steelix-par",
@@ -2199,10 +1561,7 @@
       "icons": [
         "steelix"
       ],
-      "image": "/decks/steelix-par.png",
-      "sprites": [
-        "/decks/sprites/steelix.png"
-      ]
+      "image": "/decks/steelix-par.png"
     },
     {
       "id": "stevens-metagross",
@@ -2210,10 +1569,7 @@
       "icons": [
         "metagross"
       ],
-      "image": "/decks/stevens-metagross.png",
-      "sprites": [
-        "/decks/sprites/metagross.png"
-      ]
+      "image": "/decks/stevens-metagross.png"
     },
     {
       "id": "sylveon-pre",
@@ -2221,10 +1577,7 @@
       "icons": [
         "sylveon"
       ],
-      "image": "/decks/sylveon-pre.png",
-      "sprites": [
-        "/decks/sprites/sylveon.png"
-      ]
+      "image": "/decks/sylveon-pre.png"
     },
     {
       "id": "tera-box",
@@ -2233,11 +1586,7 @@
         "noctowl",
         "ogerpon-wellspring"
       ],
-      "image": "/decks/tera-box.png",
-      "sprites": [
-        "/decks/sprites/noctowl.png",
-        "/decks/sprites/ogerpon-wellspring.png"
-      ]
+      "image": "/decks/tera-box.png"
     },
     {
       "id": "terapagos-noctowl",
@@ -2246,11 +1595,7 @@
         "terapagos",
         "noctowl"
       ],
-      "image": "/decks/terapagos-noctowl.png",
-      "sprites": [
-        "/decks/sprites/terapagos.png",
-        "/decks/sprites/noctowl.png"
-      ]
+      "image": "/decks/terapagos-noctowl.png"
     },
     {
       "id": "ting-lu-ex",
@@ -2258,10 +1603,7 @@
       "icons": [
         "ting-lu"
       ],
-      "image": "/decks/ting-lu-ex.png",
-      "sprites": [
-        "/decks/sprites/ting-lu.png"
-      ]
+      "image": "/decks/ting-lu-ex.png"
     },
     {
       "id": "tinkaton-ex",
@@ -2269,10 +1611,7 @@
       "icons": [
         "tinkaton"
       ],
-      "image": "/decks/tinkaton-ex.png",
-      "sprites": [
-        "/decks/sprites/tinkaton.png"
-      ]
+      "image": "/decks/tinkaton-ex.png"
     },
     {
       "id": "toedscruel-ex",
@@ -2281,11 +1620,7 @@
         "toedscruel",
         "ogerpon"
       ],
-      "image": "/decks/toedscruel-ex.png",
-      "sprites": [
-        "/decks/sprites/toedscruel.png",
-        "/decks/sprites/ogerpon.png"
-      ]
+      "image": "/decks/toedscruel-ex.png"
     },
     {
       "id": "torterra-ex",
@@ -2293,10 +1628,7 @@
       "icons": [
         "torterra"
       ],
-      "image": "/decks/torterra-ex.png",
-      "sprites": [
-        "/decks/sprites/torterra.png"
-      ]
+      "image": "/decks/torterra-ex.png"
     },
     {
       "id": "toxtricity-box",
@@ -2305,11 +1637,7 @@
         "toxtricity",
         "absol-mega"
       ],
-      "image": "/decks/toxtricity-box.png",
-      "sprites": [
-        "/decks/sprites/toxtricity.png",
-        "/decks/sprites/absol-mega.png"
-      ]
+      "image": "/decks/toxtricity-box.png"
     },
     {
       "id": "toxtricity-brute-bonnet",
@@ -2318,11 +1646,7 @@
         "toxtricity",
         "brute-bonnet"
       ],
-      "image": "/decks/toxtricity-brute-bonnet.png",
-      "sprites": [
-        "/decks/sprites/toxtricity.png",
-        "/decks/sprites/brute-bonnet.png"
-      ]
+      "image": "/decks/toxtricity-brute-bonnet.png"
     },
     {
       "id": "toxtricity-pfl",
@@ -2331,11 +1655,7 @@
         "toxtricity",
         "absol-mega"
       ],
-      "image": "/decks/toxtricity-pfl.png",
-      "sprites": [
-        "/decks/sprites/toxtricity.png",
-        "/decks/sprites/absol-mega.png"
-      ]
+      "image": "/decks/toxtricity-pfl.png"
     },
     {
       "id": "tsareena-ex",
@@ -2343,10 +1663,7 @@
       "icons": [
         "tsareena"
       ],
-      "image": "/decks/tsareena-ex.png",
-      "sprites": [
-        "/decks/sprites/tsareena.png"
-      ]
+      "image": "/decks/tsareena-ex.png"
     },
     {
       "id": "tyranitar-jtg",
@@ -2354,10 +1671,7 @@
       "icons": [
         "tyranitar"
       ],
-      "image": "/decks/tyranitar-jtg.png",
-      "sprites": [
-        "/decks/sprites/tyranitar.png"
-      ]
+      "image": "/decks/tyranitar-jtg.png"
     },
     {
       "id": "united-wings",
@@ -2366,11 +1680,7 @@
         "murkrow",
         "flamigo"
       ],
-      "image": "/decks/united-wings.png",
-      "sprites": [
-        "/decks/sprites/murkrow.png",
-        "/decks/sprites/flamigo.png"
-      ]
+      "image": "/decks/united-wings.png"
     },
     {
       "id": "ursaluna-iron-valiant",
@@ -2379,11 +1689,7 @@
         "ursaluna-bloodmoon",
         "iron-valiant"
       ],
-      "image": "/decks/ursaluna-iron-valiant.png",
-      "sprites": [
-        "/decks/sprites/ursaluna-bloodmoon.png",
-        "/decks/sprites/iron-valiant.png"
-      ]
+      "image": "/decks/ursaluna-iron-valiant.png"
     },
     {
       "id": "ursaluna-lunatone",
@@ -2392,11 +1698,7 @@
         "ursaluna-bloodmoon",
         "lunatone"
       ],
-      "image": "/decks/ursaluna-lunatone.png",
-      "sprites": [
-        "/decks/sprites/ursaluna-bloodmoon.png",
-        "/decks/sprites/lunatone.png"
-      ]
+      "image": "/decks/ursaluna-lunatone.png"
     },
     {
       "id": "venomoth-froslass",
@@ -2405,11 +1707,7 @@
         "venomoth",
         "froslass"
       ],
-      "image": "/decks/venomoth-froslass.png",
-      "sprites": [
-        "/decks/sprites/venomoth.png",
-        "/decks/sprites/froslass.png"
-      ]
+      "image": "/decks/venomoth-froslass.png"
     },
     {
       "id": "wailord-ex",
@@ -2417,10 +1715,7 @@
       "icons": [
         "wailord"
       ],
-      "image": "/decks/wailord-ex.png",
-      "sprites": [
-        "/decks/sprites/wailord.png"
-      ]
+      "image": "/decks/wailord-ex.png"
     },
     {
       "id": "wugtrio-svi",
@@ -2428,10 +1723,7 @@
       "icons": [
         "wugtrio"
       ],
-      "image": "/decks/wugtrio-svi.png",
-      "sprites": [
-        "/decks/sprites/wugtrio.png"
-      ]
+      "image": "/decks/wugtrio-svi.png"
     },
     {
       "id": "yanmega-ex",
@@ -2439,10 +1731,7 @@
       "icons": [
         "yanmega"
       ],
-      "image": "/decks/yanmega-ex.png",
-      "sprites": [
-        "/decks/sprites/yanmega.png"
-      ]
+      "image": "/decks/yanmega-ex.png"
     },
     {
       "id": "zoroark-crustle",
@@ -2451,11 +1740,7 @@
         "zoroark",
         "crustle"
       ],
-      "image": "/decks/zoroark-crustle.png",
-      "sprites": [
-        "/decks/sprites/zoroark.png",
-        "/decks/sprites/crustle.png"
-      ]
+      "image": "/decks/zoroark-crustle.png"
     },
     {
       "id": "zygarde-barbaracle",
@@ -2464,11 +1749,7 @@
         "zygarde-mega",
         "barbaracle"
       ],
-      "image": "/decks/zygarde-barbaracle.png",
-      "sprites": [
-        "/decks/sprites/zygarde-mega.png",
-        "/decks/sprites/barbaracle.png"
-      ]
+      "image": "/decks/zygarde-barbaracle.png"
     }
   ]
 }

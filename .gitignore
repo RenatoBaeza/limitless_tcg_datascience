@@ -5,6 +5,10 @@
 cache/
 exports/
 
+# Raw per-Pokemon sprite downloads. Ingredients for the deck composites in
+# client/public/decks/, which are what ships - see server/app/sprites.py
+.sprite-cache/
+
 __pycache__/
 *.py[cod]
 .venv/

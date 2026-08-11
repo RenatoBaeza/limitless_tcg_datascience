@@ -182,12 +182,21 @@ claim, and the interval is what stops them being drawn as if they were.
 ### Deck sprites
 
 `scripts/download_deck_sprites.py` builds `client/public/decks/`: one composited
-PNG per deck plus the individual Pokemon sprites and an `index.json`. Files are
-keyed on `deck_id`, not `deck_name` — names are not unique (two unrelated decks
-are both "Alakazam"), and `deck_id` is what `silver_pairings` and `gold_matchups`
-carry. The deck-to-sprite mapping comes from `silver_standings.deck_icons`, so
-nothing is scraped or name-matched; only the images themselves are fetched, from
-the same CDN limitlesstcg.com uses. See `app/sprites.py`.
+PNG per deck plus an `index.json`, and nothing else. Files are keyed on
+`deck_id`, not `deck_name` — names are not unique (two unrelated decks are both
+"Alakazam"), and `deck_id` is what `silver_pairings` and `gold_matchups` carry.
+The deck-to-sprite mapping comes from `silver_standings.deck_icons`, so nothing
+is scraped or name-matched; only the images themselves are fetched, from the
+same CDN limitlesstcg.com uses. See `app/sprites.py`.
+
+The individual Pokemon sprites are **not** served. They go to `server/.sprite-cache/`,
+gitignored, purely so a re-run refetches nothing — every pixel of them is
+already inside a composite, and 105 of the 206 decks have one icon, so their
+composite *is* that sprite re-saved. Serving both meant handing the browser a
+second copy of every image. Delete the cache freely; the next run rebuilds it.
+The client only ever loads `/decks/<deck_id>.png` (`api.ts` `deckImage()` →
+`DeckIcon.tsx`); nothing reads `index.json`, so it is documentation of the
+mapping rather than a runtime dependency.
 
 ### Adding a new per-tournament resource
 

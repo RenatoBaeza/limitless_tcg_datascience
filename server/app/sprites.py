@@ -6,11 +6,18 @@ Limitless's sprite CDN - the same images https://limitlesstcg.com/decks renders
 in its table - so the deck-to-sprite mapping is already in the database and
 does not have to be scraped back off that page and re-matched by deck name.
 
-A run writes three things into --out (default public/decks):
+A run writes two things into --out (default public/decks):
 
-    sprites/<icon>.png   one file per distinct Pokemon, fetched once
     <deck_id>.png        one file per deck, its icons composited side by side
-    index.json           deck id -> display name, icons, and both paths
+    index.json           deck id -> display name, icons, and image path
+
+The individual Pokemon sprites those composites are built from land in
+--sprite-cache instead, outside the frontend's public/ directory and outside
+git. They are ingredients, not assets: every one of their pixels also lives in
+at least one composite, and half the decks have a single icon, so their
+"composite" is that one sprite re-saved. Nothing serves them, so shipping them
+would send the browser a second copy of every image it already has. The cache
+exists only so a re-run refetches nothing - deleting it costs one redownload.
 
 Files are keyed on `deck_id` rather than on the deck name, for two reasons.
 Names are not unique - two unrelated decks are both called "Alakazam" - so
@@ -28,7 +35,6 @@ CDN, not from the play.limitlesstcg.com API that RATE_LIMIT_INTERVAL paces.
 """
 
 import argparse
-import io
 import json
 import sys
 from datetime import datetime, timezone
@@ -55,6 +61,11 @@ DEFAULT_OUT = "../client/public/decks"
 # serves public/ at the site root.
 DEFAULT_PUBLIC_BASE = "/decks"
 
+# Where the raw per-Pokemon downloads are kept between runs. Relative to server/
+# like --out is, and gitignored - see the module docstring for why it is not
+# under public/.
+DEFAULT_SPRITE_CACHE = ".sprite-cache"
+
 # Pixels between two sprites on a composite. Sprites are ~20-45px wide, so this
 # reads as a gap without pushing them apart.
 GAP = 2
@@ -72,6 +83,14 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
         "--public-base",
         default=DEFAULT_PUBLIC_BASE,
         help=f"URL prefix recorded in index.json (default {DEFAULT_PUBLIC_BASE}).",
+    )
+    parser.add_argument(
+        "--sprite-cache",
+        default=DEFAULT_SPRITE_CACHE,
+        help=(
+            "Directory holding the raw per-Pokemon downloads, relative to the repo "
+            f"root (default {DEFAULT_SPRITE_CACHE}). Not served - see app/sprites.py."
+        ),
     )
     parser.add_argument(
         "--force",
@@ -151,7 +170,7 @@ def run(args: argparse.Namespace) -> int:
     hdrs = supabase.headers(secret_key)
 
     out = Path(args.out)
-    sprite_dir = out / "sprites"
+    sprite_dir = Path(args.sprite_cache)
     public_base = args.public_base.rstrip("/")
 
     with httpx.Client(timeout=60.0) as client:
@@ -164,9 +183,11 @@ def run(args: argparse.Namespace) -> int:
 
         if args.dry_run:
             print(f"dry run - would write {len(found)} composites and index.json under {out}")
+            print(f"dry run - would cache {len(missing)} sprites under {sprite_dir}")
             return 0
 
         sprite_dir.mkdir(parents=True, exist_ok=True)
+        out.mkdir(parents=True, exist_ok=True)
 
         failed_icons: set[str] = set()
         for i, icon in enumerate(missing, start=1):
@@ -194,7 +215,6 @@ def run(args: argparse.Namespace) -> int:
                 "name": deck["deck_name"],
                 "icons": deck_icons,
                 "image": f"{public_base}/{deck_id}.png",
-                "sprites": [f"{public_base}/sprites/{icon}.png" for icon in deck_icons],
             }
         )
 
