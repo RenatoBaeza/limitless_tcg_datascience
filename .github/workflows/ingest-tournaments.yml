@@ -14,6 +14,10 @@ on:
         description: "Tournaments per resource this run"
         type: string
         default: "300"
+      window_months:
+        description: "Months of derived history to keep (RETAIN_MONTHS)"
+        type: string
+        default: "6"
 
 concurrency:
   group: ingest-tournaments
@@ -79,6 +83,8 @@ jobs:
       # Last, so it sees everything the three steps above just landed. Unlike
       # them they talk only to Supabase - no Limitless rate limit applies, and
       # the work happens inside Postgres - so they cost a minute, not thirty.
+      # They enumerate only in-window tournaments (--window-months), so the
+      # prune step below is not undone by the next reconcile.
       - name: Refresh silver layer
         if: ${{ !inputs.dry_run }}
         env:
@@ -87,7 +93,8 @@ jobs:
           PYTHONIOENCODING: utf-8
           PYTHONUNBUFFERED: "1"
         run: |
-          uv run python scripts/refresh_silver.py | tee silver.log
+          uv run python scripts/refresh_silver.py \
+            --window-months "${{ inputs.window_months || '6' }}" | tee silver.log
 
       # Gold reads silver, so it can only run after the step above.
       - name: Refresh gold layer
@@ -98,7 +105,22 @@ jobs:
           PYTHONIOENCODING: utf-8
           PYTHONUNBUFFERED: "1"
         run: |
-          uv run python scripts/refresh_gold.py | tee gold.log
+          uv run python scripts/refresh_gold.py \
+            --window-months "${{ inputs.window_months || '6' }}" | tee gold.log
+
+      # Last of all: the retention policy. Bronze keeps everything within
+      # MIN_TOURNAMENT_DATE, but silver and gold are a rolling window, so the
+      # derived rows outside it are dropped now and never re-added.
+      - name: Prune derived layer to retention window
+        if: ${{ !inputs.dry_run }}
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          PYTHONIOENCODING: utf-8
+          PYTHONUNBUFFERED: "1"
+        run: |
+          uv run python scripts/prune_window.py \
+            --window-months "${{ inputs.window_months || '6' }}" | tee prune.log
 
       - name: Summary
         if: always()
@@ -123,5 +145,9 @@ jobs:
             echo '### Gold'
             echo '```'
             grep -E 'rows after|failed batches' gold.log 2>/dev/null || echo '(step did not run)'
+            echo '```'
+            echo '### Prune'
+            echo '```'
+            grep -E 'rows written|rows after|retention window' prune.log 2>/dev/null || echo '(step did not run)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

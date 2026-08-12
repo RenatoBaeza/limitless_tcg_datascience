@@ -10,13 +10,19 @@ Usage:
 import argparse
 import os
 import sys
+from datetime import date
 
 import httpx2 as httpx
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import supabase  # noqa: E402
-from app.limitless import fetch_tournaments, to_row  # noqa: E402
+from app.limitless import (  # noqa: E402
+    MIN_TOURNAMENT_DATE,
+    fetch_tournaments,
+    in_scope,
+    to_row,
+)
 
 TABLE = "bronze_tournaments"
 CHUNK_SIZE = 500
@@ -28,6 +34,13 @@ def main() -> int:
     parser.add_argument("--format", default="STANDARD")
     parser.add_argument("--page", type=int, default=1)
     parser.add_argument("--limit", type=int, default=2000)
+    parser.add_argument(
+        "--since",
+        type=date.fromisoformat,
+        default=MIN_TOURNAMENT_DATE,
+        help="Skip tournaments before this date (YYYY-MM-DD). Defaults to the "
+             "start of the covered window.",
+    )
     parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -45,7 +58,13 @@ def main() -> int:
     tournaments = fetch_tournaments(
         game=args.game, format=args.format, page=args.page, limit=args.limit
     )
-    rows = [to_row(t) for t in tournaments]
+    # Drop out-of-window events before anything else sees them. The list is
+    # re-fetched whole every run, so without this the pruned back-catalogue
+    # returns on the next schedule.
+    in_window = [t for t in tournaments if in_scope(t, args.since)]
+    if len(in_window) != len(tournaments):
+        print(f"skipped {len(tournaments) - len(in_window)} tournaments before {args.since}")
+    rows = [to_row(t) for t in in_window]
 
     # Deduplicate within the payload itself; PostgREST rejects a batch that
     # touches the same primary key twice.

@@ -5,8 +5,10 @@ The API rate limits to 50 requests per 5 minutes per IP, advertised in the
 caller is responsible for pacing requests (see RATE_LIMIT_INTERVAL).
 """
 
+import calendar
 import hashlib
 import time
+from datetime import date, datetime, timezone
 from typing import Any
 
 import httpx2 as httpx
@@ -17,6 +19,57 @@ BASE_URL = "https://play.limitlesstcg.com/api"
 RATE_LIMIT_REQUESTS = 50
 RATE_LIMIT_WINDOW = 300.0
 RATE_LIMIT_INTERVAL = RATE_LIMIT_WINDOW / RATE_LIMIT_REQUESTS * 1.03  # ~6.2s
+
+# The dataset starts at 2026. Older events are dropped at ingest rather than
+# pruned afterwards, because the tournament list is re-fetched whole every run
+# and would otherwise re-add them within six hours - and each one re-added then
+# costs a pairings and a standings request out of the rate-limit budget.
+#
+# This is the only gate needed. Everything downstream is keyed off
+# bronze_tournaments: the per-tournament ingests pick their work from it, and
+# both derived layers inner-join it, so a tournament that never lands in bronze
+# never reaches silver or gold either. See sql/008_prune_pre_2026.sql for the
+# one-off removal of what predated this rule.
+MIN_TOURNAMENT_DATE = date(2026, 1, 1)
+
+# The rolling retention window: how many months of history the derived layers
+# keep. Older tournaments stay in bronze - it is the only layer that costs API
+# time to rebuild - but their silver and gold rows are pruned and never
+# re-added, because the refreshes enumerate only this window. Everything that
+# computes the cutoff reads it from here so the prune and the refreshes cannot
+# drift. See sql/011_retention_window.sql.
+RETAIN_MONTHS = 6
+
+
+def retention_cutoff(months: int = RETAIN_MONTHS) -> date:
+    """The oldest date the derived layers keep, `months` back from today.
+
+    Month arithmetic, not a fixed number of days, so a month is a month whether
+    it has 28 or 31 days. Days beyond the target month's length clamp to its
+    last day (2026-03-31 minus 1 month is 2026-02-28, not 2026-03-03).
+    """
+    now = datetime.now(timezone.utc)
+    year, month = now.year, now.month - months
+    while month <= 0:
+        month += 12
+        year -= 1
+    day = min(now.day, calendar.monthrange(year, month)[1])
+    return date(year, month, day)
+
+
+def tournament_date(tournament: dict[str, Any]) -> date:
+    """The API's `date` field as a plain date.
+
+    Timestamps come back ISO-8601 with an offset ("2026-01-04T23:10:00+00:00").
+    `Z` is normalised because `fromisoformat` did not accept it before 3.11 and
+    the API is not contractually bound to either spelling.
+    """
+    return datetime.fromisoformat(tournament["date"].replace("Z", "+00:00")).date()
+
+
+def in_scope(tournament: dict[str, Any], since: date = MIN_TOURNAMENT_DATE) -> bool:
+    """Whether a tournament falls inside the window the dataset covers."""
+    return tournament_date(tournament) >= since
 
 
 def fetch_tournaments(

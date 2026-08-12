@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 
 from app import gold, ingest, metagame, silver
-from app.limitless import to_pairing_row, to_standing_row
+from app.limitless import RETAIN_MONTHS, to_pairing_row, to_standing_row
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -47,7 +47,11 @@ def _run_silver(args: argparse.Namespace) -> None:
     # Takes no ingest arguments - it reads whatever bronze currently holds.
     silver.run(
         argparse.Namespace(
-            chunk_size=silver.CHUNK_SIZE, tournament=None, only=None, dry_run=False
+            chunk_size=silver.CHUNK_SIZE,
+            tournament=None,
+            only=None,
+            window_months=RETAIN_MONTHS,
+            dry_run=False,
         )
     )
 
@@ -57,7 +61,11 @@ def _run_gold(args: argparse.Namespace) -> None:
     # a silver refresh.
     gold.run(
         argparse.Namespace(
-            chunk_size=gold.CHUNK_SIZE, tournament=None, only=None, dry_run=False
+            chunk_size=gold.CHUNK_SIZE,
+            tournament=None,
+            only=None,
+            window_months=RETAIN_MONTHS,
+            dry_run=False,
         )
     )
     # The read endpoints memo their results for a few minutes, which would

@@ -1,6 +1,16 @@
 """Transform tests, covering the payload shapes observed in the live API."""
 
-from app.limitless import pairing_id, to_pairing_row, to_row, to_standing_row
+from datetime import date
+
+from app.limitless import (
+    MIN_TOURNAMENT_DATE,
+    in_scope,
+    pairing_id,
+    to_pairing_row,
+    to_row,
+    to_standing_row,
+    tournament_date,
+)
 
 TID = "69725552b1294bfab720364d"
 
@@ -30,6 +40,29 @@ def test_to_row_maps_organizer_id():
     )
     assert row["organizer_id"] == 2679
     assert "organizerId" not in row
+
+
+def test_tournament_date_reads_both_offset_spellings():
+    # The live list returns "Z", the per-tournament payloads "+00:00".
+    assert tournament_date({"date": "2026-07-24T22:00:00.000Z"}) == date(2026, 7, 24)
+    assert tournament_date({"date": "2025-12-27T23:10:00+00:00"}) == date(2025, 12, 27)
+
+
+def test_in_scope_excludes_the_pruned_back_catalogue():
+    # The oldest event the list still returns, and the reason for the cutoff.
+    assert not in_scope({"date": "2025-12-27T23:10:00+00:00"})
+    assert in_scope({"date": "2026-01-04T12:00:00.000Z"})
+
+
+def test_in_scope_boundary_is_inclusive():
+    assert in_scope({"date": f"{MIN_TOURNAMENT_DATE.isoformat()}T00:00:00.000Z"})
+    assert not in_scope({"date": "2025-12-31T23:59:59.000Z"})
+
+
+def test_in_scope_honours_an_explicit_since():
+    tournament = {"date": "2026-03-01T00:00:00.000Z"}
+    assert in_scope(tournament, date(2026, 1, 1))
+    assert not in_scope(tournament, date(2026, 6, 1))
 
 
 def test_normal_match():

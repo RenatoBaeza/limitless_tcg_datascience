@@ -87,7 +87,13 @@ class _NoopContext:
 
 
 def _args(**overrides):
-    defaults = dict(chunk_size=2, tournament=None, only=None, dry_run=False)
+    defaults = dict(
+        chunk_size=2,
+        tournament=None,
+        only=None,
+        window_months=gold.RETAIN_MONTHS,
+        dry_run=False,
+    )
     return argparse.Namespace(**{**defaults, **overrides})
 
 
@@ -101,6 +107,41 @@ def test_rollup_runs_last_and_unbatched(_client):
     steps = [step for step, _ in client.calls]
     assert steps == ["deck_events"] * 2 + ["matchups"] * 2 + ["decks"]
     assert client.calls[-1] == ("decks", None)
+
+
+def test_listing_honours_the_retention_window(_client):
+    """The refresh is handed only in-window tournaments, so it cannot re-add
+    the rows prune_window deleted."""
+    seen: list[dict] = []
+    _client(_RecordingClient(ids=["a", "b", "c"], seen=seen))
+
+    gold.run(_args(window_months=3))
+
+    assert seen, "expected the tournament listing to be captured"
+    for params in seen:
+        assert params.get("date") == f"gte.{gold.retention_cutoff(3).isoformat()}"
+
+
+def test_window_months_zero_lists_everything(_client):
+    """0 disables the window - the escape hatch for a whole-database rebuild."""
+    seen: list[dict] = []
+    _client(_RecordingClient(ids=["a", "b", "c"], seen=seen))
+
+    gold.run(_args(window_months=0))
+
+    assert seen, "expected the tournament listing to be captured"
+    assert all("date" not in params for params in seen)
+
+
+class _RecordingClient(FakeClient):
+    def __init__(self, ids, seen):
+        super().__init__(ids)
+        self.seen = seen
+
+    def request(self, method, url, **kwargs):
+        if url.endswith("/bronze_tournaments") and kwargs.get("params", {}).get("select") == "id":
+            self.seen.append(kwargs["params"])
+        return super().request(method, url, **kwargs)
 
 
 def test_batches_facts_by_chunk_size(_client):

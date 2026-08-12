@@ -88,7 +88,13 @@ class _NoopContext:
 
 
 def _args(**overrides):
-    defaults = dict(chunk_size=2, tournament=None, only=None, dry_run=False)
+    defaults = dict(
+        chunk_size=2,
+        tournament=None,
+        only=None,
+        window_months=silver.RETAIN_MONTHS,
+        dry_run=False,
+    )
     return argparse.Namespace(**{**defaults, **overrides})
 
 
@@ -101,6 +107,41 @@ def test_pages_past_the_postgrest_row_cap(_client, monkeypatch):
 
     listed = [batch for step, batch in client.calls if step == "tournaments"]
     assert listed == [["a", "b", "c", "d", "e"]]
+
+
+def test_listing_honours_the_retention_window(_client):
+    """The refresh is handed only in-window tournaments, so it cannot re-add
+    the rows prune_window deleted."""
+    seen: list[dict] = []
+    _client(_RecordingClient(ids=["a", "b", "c"], seen=seen))
+
+    silver.run(_args(window_months=3))
+
+    assert seen, "expected the tournament listing to be captured"
+    for params in seen:
+        assert params.get("date") == f"gte.{silver.retention_cutoff(3).isoformat()}"
+
+
+def test_window_months_zero_lists_everything(_client):
+    """0 disables the window - the escape hatch for a whole-database rebuild."""
+    seen: list[dict] = []
+    _client(_RecordingClient(ids=["a", "b", "c"], seen=seen))
+
+    silver.run(_args(window_months=0))
+
+    assert seen, "expected the tournament listing to be captured"
+    assert all("date" not in params for params in seen)
+
+
+class _RecordingClient(FakeClient):
+    def __init__(self, ids, seen):
+        super().__init__(ids)
+        self.seen = seen
+
+    def request(self, method, url, **kwargs):
+        if url.endswith("/bronze_tournaments") and kwargs.get("params", {}).get("select") == "id":
+            self.seen.append(kwargs["params"])
+        return super().request(method, url, **kwargs)
 
 
 def test_refreshes_in_foreign_key_order(_client):

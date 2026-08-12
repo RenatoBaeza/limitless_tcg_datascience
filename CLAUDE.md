@@ -33,11 +33,18 @@ uv run python scripts/ingest_standings.py --tournament <id>
 ```
 
 Silver and gold refreshes (both take `--dry-run`, `--tournament <id>`,
-`--chunk-size N`, and a repeatable `--only <step>`):
+`--chunk-size N`, a repeatable `--only <step>`, and `--window-months N`):
 
 ```bash
 uv run python scripts/refresh_silver.py
 uv run python scripts/refresh_gold.py --only matchups
+```
+
+Retention prune (removes derived rows older than the window; `--dry-run`,
+`--window-months N`):
+
+```bash
+uv run python scripts/prune_window.py
 ```
 
 Deck sprite assets, written into `client/public/decks/` (`--dry-run`,
@@ -57,6 +64,43 @@ npm install
 npm run dev        # http://localhost:5173, proxies /api to the FastAPI service
 npm run build      # tsc -b && vite build
 ```
+
+## Talking to the database
+
+The **Supabase MCP server** is how you reach the database directly — running a
+query, checking a count, applying a migration. It authenticates on its own, so
+it works whether or not `server/.env` is filled in, and every call takes the
+project id:
+
+```
+project_id = qegmyvxfzhlpapozremu     # "supabase-reant", matches SUPABASE_URL
+```
+
+That is the only project, and there is no staging copy, so **every MCP call
+lands on production**. The tools worth knowing:
+
+- `execute_sql` — read-only inspection, and the first thing to reach for. Before
+  any statement that deletes or rewrites rows, run the `count(*)` of what it
+  would touch. Send **one statement per call**: a multi-statement query returns
+  only the last result set and silently discards the rest, exactly as the web
+  editor does. `sql/diagnostics_size.sql` is the standing pair of disk-usage
+  queries, and that is why it asks to be run one half at a time.
+- `apply_migration` — DDL. Takes a snake_case `name`; use the migration file's
+  own stem (`008_prune_pre_2026`) so the tracked history mirrors `sql/`.
+- `list_tables`, `list_extensions` — the schema as it actually is, which is what
+  to check against before writing a migration, not what `sql/` says it should be.
+- `get_advisors` — security and performance notices. Worth a run after any DDL;
+  it catches missing RLS policies.
+- `query_logs` — Postgres and PostgREST logs, for when an ingest or refresh is
+  failing on the database side rather than the Limitless side.
+- `create_branch` — a throwaway copy of the schema (no data) if a migration
+  genuinely needs a rehearsal. It bills by the hour, so it is the exception.
+
+Note that `list_migrations` is **not** the record of what this database has.
+Supabase's migration history is empty — every file in `sql/` so far was applied
+before this route existed, and none of them will ever appear there. The files
+under `sql/` are the record, and the history only starts meaning anything from
+the first `apply_migration` onward.
 
 ## Architecture
 
@@ -214,15 +258,59 @@ new resource needs, in order:
 4. Optionally a silver counterpart: a table, a `refresh_silver_<resource>`
    function alongside the others, and its name added to `silver.STEPS`.
 
-**SQL migrations are applied by hand** in the Supabase SQL editor — nothing in
-this repo runs them. They are written to be idempotent and re-runnable. Keep
-semicolons out of SQL comments: the Supabase editor splits statements on
-semicolons without regard for comments, so one inside a comment truncates the
-statement. That is also why `sql/005_silver.sql` and `sql/006_gold.sql` carry no
-comments *inside* their function bodies.
+**SQL migrations are applied through the Supabase MCP `apply_migration` tool** —
+nothing in this repo runs them, and there is no local Postgres to run them
+against. The files under `sql/` remain the source of truth; the MCP call is
+only how they reach the database. They are written to be idempotent and
+re-runnable, so a half-applied migration is fixed by fixing the file and
+applying it whole again, not by hand-patching the difference.
 
-Since nothing runs the migrations, there is no schema test either. Syntax-check
-edits before pasting them in:
+Because it applies straight to production (see *Talking to the database*), read
+before you write: `list_tables` for the shape the database is in now, and
+`execute_sql` for the row counts a destructive statement would touch.
+`sql/008_prune_pre_2026.sql` is the example — its header records the before and
+after row counts of the live run, which is the shape a destructive migration
+should be documented in.
+
+### The retention window
+
+The derived layers are a rolling window, not the full dataset. Bronze keeps
+everything within `MIN_TOURNAMENT_DATE` (it is the only layer that costs API
+time to rebuild), but `silver_*` and `gold_*` hold only the last
+`RETAIN_MONTHS` (default 6). Two halves, both reading the cutoff from
+`app/limitless.py:retention_cutoff` so they cannot drift:
+
+- **The refreshes enumerate only in-window tournaments.** `silver.py` and
+  `gold.py` filter their bronze listing to `date >= cutoff` via `--window-months`
+  (default `RETAIN_MONTHS`; `0` refreshes everything, the whole-database-rebuild
+  escape hatch). The refreshes are full reconciles of whatever slice they are
+  handed, so handing them only in-window tournaments is what stops them re-adding
+  rows the prune removed.
+- **`scripts/prune_window.py` deletes what the window excludes.** It calls
+  `prune_derived_before(cutoff)`, which deletes the out-of-window
+  `silver_tournaments` rows (cascading to `silver_pairings`, `gold_deck_events`
+  and `gold_matchups`), then calls `refresh_gold_decks()` to re-roll the deck
+  dimension no cascade reaches. The two calls are deliberately separate — the
+  delete and a full re-roll together blow the PostgREST statement timeout.
+
+The six-hourly workflow runs the refresh then the prune, in that order. `sql/011`
+tunes autovacuum on the gold tables (the refresh rewrites them every six hours,
+so at the default 20% scale factor they accumulated 58k dead tuples) — and
+dropping rows does not return disk, so a one-off `vacuum full` on the pruned
+tables is what reclaims the space after a big prune.
+
+Semicolons inside SQL comments are safe over MCP: the file is handed to Postgres
+as one string and parsed properly, comments and all. The old ban on them was a
+Supabase SQL editor quirk — the editor split statements on semicolons without
+regard for comments, so one inside a comment truncated the statement. That is
+why `sql/005_silver.sql` and `sql/006_gold.sql` carry no comments *inside* their
+function bodies; new SQL does not need that restraint unless you plan to paste
+it into the web editor.
+
+Since nothing runs the migrations, there is no schema test either.
+`apply_migration` at least fails loudly on a bad statement — Postgres reports
+the real error and the transaction rolls back — but for a long file it is
+cheaper to catch a typo before touching production:
 
 ```bash
 uv run --with pglast python -c "import pglast,sys; pglast.parse_sql(open(sys.argv[1]).read())" sql/006_gold.sql
