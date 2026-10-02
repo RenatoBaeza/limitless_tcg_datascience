@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { fetchCoverage, fetchDecks, fetchMatrix } from "./api";
 import { DeckDetail } from "./components/DeckDetail";
 import { DeckTable } from "./components/DeckTable";
@@ -8,7 +8,7 @@ import { MatchupMatrix } from "./components/MatchupMatrix";
 import { MatchupTable } from "./components/MatchupTable";
 import { ScaleLegend } from "./components/ScaleLegend";
 import { StatTiles } from "./components/StatTiles";
-import { DEFAULT_FILTERS, windowFor, type Filters, type View } from "./filters";
+import { DEFAULT_FILTERS, type Filters, type View } from "./filters";
 import { count, relativeTime } from "./format";
 import { useTheme } from "./useTheme";
 
@@ -20,26 +20,19 @@ export default function App() {
 
   const coverage = useQuery({ queryKey: ["coverage"], queryFn: fetchCoverage });
 
-  // Every panel below scopes to this one window, so their numbers always agree.
-  const dateWindow = useMemo(
-    () => windowFor(filters.preset, coverage.data?.last_event ?? null),
-    [filters.preset, coverage.data?.last_event],
-  );
-
-  const ready = coverage.isSuccess;
+  // Every panel below scopes to this one period, so their numbers always agree.
+  // The server resolves its dates, so nothing here waits on coverage first.
+  const { period } = filters;
 
   const decks = useQuery({
-    queryKey: ["decks", dateWindow, filters.axis, filters.includeOther],
-    queryFn: () => fetchDecks(dateWindow, filters.axis, filters.includeOther),
-    enabled: ready,
+    queryKey: ["decks", period, filters.axis, filters.includeOther],
+    queryFn: () => fetchDecks(period, filters.axis, filters.includeOther),
     placeholderData: (previous) => previous,
   });
 
   const matrix = useQuery({
-    queryKey: ["matrix", dateWindow, filters.axis, filters.minMatches, filters.includeOther],
-    queryFn: () =>
-      fetchMatrix(dateWindow, filters.axis, filters.minMatches, filters.includeOther),
-    enabled: ready,
+    queryKey: ["matrix", period, filters.axis, filters.minMatches, filters.includeOther],
+    queryFn: () => fetchMatrix(period, filters.axis, filters.minMatches, filters.includeOther),
     placeholderData: (previous) => previous,
   });
 
@@ -96,8 +89,8 @@ export default function App() {
 
       {coverage.data?.matches === 0 && (
         <p className="notice">
-          The gold layer is empty. Apply <code>server/sql/006_gold.sql</code> in the Supabase SQL
-          editor, then run <code>uv run python scripts/refresh_gold.py</code>.
+          The gold layer is empty. Apply <code>server/sql/012_gold_finished.sql</code>, then run{" "}
+          <code>uv run python scripts/refresh_gold.py</code> in <code>server/</code>.
         </p>
       )}
 
@@ -139,7 +132,7 @@ export default function App() {
       {selectedDeck && (
         <DeckDetail
           deck={selectedDeck}
-          window={dateWindow}
+          period={period}
           minMatches={filters.minMatches}
           includeOther={filters.includeOther}
           onClose={() => setSelected(null)}

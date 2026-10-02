@@ -1,7 +1,8 @@
 """Response shapes for the metagame endpoints.
 
-These mirror the return types of the gold read functions in sql/006_gold.sql,
-one field per column. Two conventions run through all of them:
+These mirror the gold tables in sql/012_gold_finished.sql, one field per
+column, and app/metagame.py selects each column under the field name used here.
+Two conventions run through all of them:
 
 `win_rate` is wins / (wins + losses) and `score_rate` is
 (wins + ties/2) / matches. Ties are ~6% of matches here, so the two genuinely
@@ -14,8 +15,13 @@ a rate should draw them too.
 """
 
 from datetime import date, datetime
+from typing import Literal
 
 from pydantic import BaseModel
+
+# The windows gold is computed for - the rows of gold_periods. Adding one means
+# a row there, a member here, and a preset in client/src/filters.ts.
+Period = Literal["30d", "90d", "all"]
 
 
 class Coverage(BaseModel):
@@ -29,10 +35,26 @@ class Coverage(BaseModel):
     refreshed_at: datetime | None = None
 
 
+class PeriodInfo(BaseModel):
+    """One window, with the dates it resolved to on the last refresh."""
+
+    period: Period
+    # Null for "all", which runs from the first event in the retention window.
+    days: int | None = None
+    date_from: date | None = None
+    date_to: date | None = None
+    tournaments: int = 0
+    entries: int = 0
+    matches: int = 0
+    decks: int = 0
+    refreshed_at: datetime | None = None
+
+
 class DeckSummary(BaseModel):
     deck_id: str
     deck_name: str | None = None
-    deck_icons: list[str] | None = None
+    # 1 is the most played deck in the period.
+    rank: int
     entries: int
     tournaments: int
     # Share of every deck entry in the window, 0-1. Null only when the window
@@ -46,6 +68,8 @@ class DeckSummary(BaseModel):
     score_rate: float | None = None
     score_low: float | None = None
     score_high: float | None = None
+    # Mirror matches are left out of every rate above and counted here.
+    mirror_matches: int = 0
     champions: int
     top8: int
 
@@ -70,7 +94,6 @@ class DeckMatchup(BaseModel):
 
     deck_b: str
     deck_name: str | None = None
-    deck_icons: list[str] | None = None
     matches: int
     wins: int
     losses: int

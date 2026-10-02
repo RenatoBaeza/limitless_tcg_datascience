@@ -1,8 +1,9 @@
 """The gold refresh driver.
 
 The transform is SQL and is not exercised here. What is worth pinning down is
-the driver's contract with it: the facts are batched, the deck roll-up is not
-and runs last, and a batch that blows up costs only itself.
+the driver's contract with it: periods are resolved first and the dimension
+second, the stats run once per period with matchups before decks, and a call
+that blows up costs only itself.
 """
 
 import argparse
@@ -28,33 +29,31 @@ class FakeResponse:
 
 
 class FakeClient:
-    """Serves the tournament listing and records every refresh call.
+    """Serves the period listing and records every refresh call.
 
-    `fail_on` names steps whose calls should raise, to stand in for a batch that
+    `fail_on` names steps whose calls should raise, to stand in for a call that
     hits a statement timeout.
     """
 
-    def __init__(self, ids, fail_on=(), rows_per_call=7):
-        self.ids = ids
+    def __init__(self, periods=("30d", "all"), fail_on=(), rows_per_call=7):
+        self.periods = list(periods)
         self.fail_on = set(fail_on)
         self.rows_per_call = rows_per_call
-        self.calls: list[tuple[str, list[str] | None]] = []
+        self.calls: list[tuple[str, dict]] = []
+        self.listings: list[dict] = []
 
     def request(self, method, url, **kwargs):
         if method == "POST":
             step = url.rsplit("/rpc/refresh_gold_", 1)[1]
-            batch = kwargs["json"].get("p_tournaments")
-            self.calls.append((step, batch))
+            self.calls.append((step, kwargs["json"]))
             if step in self.fail_on:
                 raise RuntimeError("statement timeout")
             return FakeResponse(200, json_data=self.rows_per_call)
 
         params = kwargs.get("params", {})
-        if url.endswith("/bronze_tournaments") and params.get("select") == "id":
-            offset = int(params["offset"])
-            limit = int(params["limit"])
-            page = self.ids[offset : offset + limit]
-            return FakeResponse(200, json_data=[{"id": i} for i in page])
+        if url.endswith("/gold_periods") and params.get("select") == "period":
+            self.listings.append(params)
+            return FakeResponse(200, json_data=[{"period": p} for p in self.periods])
 
         # Anything else is a count_rows probe.
         return FakeResponse(200, headers={"content-range": "0-0/0"})
@@ -87,141 +86,94 @@ class _NoopContext:
 
 
 def _args(**overrides):
-    defaults = dict(
-        chunk_size=2,
-        tournament=None,
-        only=None,
-        window_months=gold.RETAIN_MONTHS,
-        dry_run=False,
-    )
+    defaults = dict(only=None, period=None, window_months=gold.RETAIN_MONTHS, dry_run=False)
     return argparse.Namespace(**{**defaults, **overrides})
 
 
-def test_rollup_runs_last_and_unbatched(_client):
-    """gold_decks aggregates both fact tables, so it can only run once they are
-    complete - and it is keyed on deck, so there is no batch to hand it."""
-    client = _client(FakeClient(ids=["a", "b", "c"]))
+def test_steps_run_in_dependency_order(_client):
+    """Every step reads the dates refresh_gold_periods resolves, and deck_stats
+    rolls up matchup_stats - so the order is fixed."""
+    client = _client(FakeClient(periods=["30d", "all"]))
 
     assert gold.run(_args()) == 0
 
-    steps = [step for step, _ in client.calls]
-    assert steps == ["deck_events"] * 2 + ["matchups"] * 2 + ["decks"]
-    assert client.calls[-1] == ("decks", None)
+    assert [step for step, _ in client.calls] == [
+        "periods",
+        "decks",
+        "matchup_stats",
+        "matchup_stats",
+        "deck_stats",
+        "deck_stats",
+    ]
 
 
-def test_listing_honours_the_retention_window(_client):
-    """The refresh is handed only in-window tournaments, so it cannot re-add
-    the rows prune_window deleted."""
-    seen: list[dict] = []
-    _client(_RecordingClient(ids=["a", "b", "c"], seen=seen))
+def test_stats_run_once_per_period(_client):
+    client = _client(FakeClient(periods=["30d", "90d", "all"]))
+
+    gold.run(_args())
+
+    for step in gold.PERIOD_STEPS:
+        payloads = [payload for s, payload in client.calls if s == step]
+        assert payloads == [{"p_period": "30d"}, {"p_period": "90d"}, {"p_period": "all"}]
+
+
+def test_periods_are_clamped_to_the_retention_window(_client):
+    """gold must not count tournaments the prune is about to delete."""
+    client = _client(FakeClient())
 
     gold.run(_args(window_months=3))
 
-    assert seen, "expected the tournament listing to be captured"
-    for params in seen:
-        assert params.get("date") == f"gte.{gold.retention_cutoff(3).isoformat()}"
+    assert client.calls[0] == ("periods", {"p_since": gold.retention_cutoff(3).isoformat()})
 
 
-def test_window_months_zero_lists_everything(_client):
-    """0 disables the window - the escape hatch for a whole-database rebuild."""
-    seen: list[dict] = []
-    _client(_RecordingClient(ids=["a", "b", "c"], seen=seen))
+def test_window_months_zero_uses_everything(_client):
+    """0 disables the clamp - the escape hatch for a whole-database rebuild."""
+    client = _client(FakeClient())
 
     gold.run(_args(window_months=0))
 
-    assert seen, "expected the tournament listing to be captured"
-    assert all("date" not in params for params in seen)
+    assert client.calls[0] == ("periods", {"p_since": None})
 
 
-class _RecordingClient(FakeClient):
-    def __init__(self, ids, seen):
-        super().__init__(ids)
-        self.seen = seen
+def test_period_narrows_the_stats_without_listing(_client):
+    client = _client(FakeClient(periods=["30d", "90d", "all"]))
 
-    def request(self, method, url, **kwargs):
-        if url.endswith("/bronze_tournaments") and kwargs.get("params", {}).get("select") == "id":
-            self.seen.append(kwargs["params"])
-        return super().request(method, url, **kwargs)
+    gold.run(_args(period=["90d"]))
 
-
-def test_batches_facts_by_chunk_size(_client):
-    client = _client(FakeClient(ids=["a", "b", "c", "d", "e"]))
-
-    gold.run(_args(chunk_size=2))
-
-    batches = [batch for step, batch in client.calls if step == "matchups"]
-    assert batches == [["a", "b"], ["c", "d"], ["e"]]
+    assert client.listings == []
+    assert [payload for step, payload in client.calls if step in gold.PERIOD_STEPS] == [
+        {"p_period": "90d"},
+        {"p_period": "90d"},
+    ]
 
 
-def test_pages_past_the_postgrest_row_cap(_client, monkeypatch):
-    """PostgREST caps a response at 1000 rows whatever limit is asked for."""
-    monkeypatch.setattr(gold, "PAGE_SIZE", 2)
-    client = _client(FakeClient(ids=["a", "b", "c", "d", "e"]))
+def test_one_failed_call_does_not_stop_the_run(_client):
+    """A timed-out call is redone by the next run - it must not abort this one."""
+    client = _client(FakeClient(periods=["30d", "90d", "all"], fail_on=["matchup_stats"]))
 
-    gold.run(_args(chunk_size=10))
-
-    listed = [batch for step, batch in client.calls if step == "deck_events"]
-    assert listed == [["a", "b", "c", "d", "e"]]
-
-
-def test_one_failed_batch_does_not_stop_the_run(_client):
-    """A timed-out batch is redone by the next run - it must not abort this one."""
-    client = _client(FakeClient(ids=["a", "b", "c", "d"], fail_on=["deck_events"]))
-
-    # 2 of 5 call-slots failing is over the tolerance, so the run reports failure...
+    # 3 of 8 calls failing is over the tolerance, so the run reports failure...
     assert gold.run(_args()) == 1
     # ...but the later steps still ran to completion.
-    assert [batch for step, batch in client.calls if step == "matchups"] == [
-        ["a", "b"],
-        ["c", "d"],
-    ]
-    assert ("decks", None) in client.calls
+    assert [step for step, _ in client.calls].count("deck_stats") == 3
 
 
 def test_occasional_failure_is_tolerated(_client):
-    """Under a tenth of calls failing is expected and self-heals."""
+    """A single failed call is expected now and then and self-heals."""
+    _client(FakeClient(fail_on=["decks"]))
 
-    class FlakyOnce(FakeClient):
-        def __init__(self, ids):
-            super().__init__(ids)
-            self.blown = False
-
-        def request(self, method, url, **kwargs):
-            if method == "POST" and not self.blown:
-                self.blown = True
-                self.calls.append(("matchups", kwargs["json"].get("p_tournaments")))
-                raise RuntimeError("blip")
-            return super().request(method, url, **kwargs)
-
-    ids = [str(n) for n in range(40)]
-    _client(FlakyOnce(ids))
-
-    assert gold.run(_args(chunk_size=2)) == 0
+    assert gold.run(_args()) == 0
 
 
 def test_only_limits_the_steps(_client):
-    client = _client(FakeClient(ids=["a"]))
+    client = _client(FakeClient(periods=["all"]))
 
-    gold.run(_args(only=["matchups"]))
+    gold.run(_args(only=["deck_stats"]))
 
-    assert [step for step, _ in client.calls] == ["matchups"]
-
-
-def test_single_tournament_still_rolls_up_every_deck(_client):
-    """--tournament narrows the facts, but gold_decks has no per-tournament slice."""
-    client = _client(FakeClient(ids=["a", "b", "c"]))
-
-    gold.run(_args(tournament="b"))
-
-    assert client.calls == [
-        ("deck_events", ["b"]),
-        ("matchups", ["b"]),
-        ("decks", None),
-    ]
+    assert client.calls == [("deck_stats", {"p_period": "all"})]
 
 
 def test_dry_run_writes_nothing(_client):
-    client = _client(FakeClient(ids=["a", "b"]))
+    client = _client(FakeClient())
 
     assert gold.run(_args(dry_run=True)) == 0
     assert client.calls == []

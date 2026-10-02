@@ -1,3 +1,7 @@
+-- SUPERSEDED by sql/012_gold_finished.sql, which drops every table and function
+-- below except wilson_interval. Kept as the record of what was applied - do not
+-- re-apply it.
+--
 -- Run once in the Supabase SQL editor. Safe to re-run.
 --
 -- The gold layer: the deck-versus-deck question, answered. Silver is still one

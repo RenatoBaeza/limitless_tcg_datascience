@@ -17,7 +17,7 @@ standings into Supabase, then rebuilds two derived layers on top:
 | --- | --- | --- |
 | **bronze** | `bronze_tournaments`, `bronze_pairings`, `bronze_standings` | the API, mirrored verbatim |
 | **silver** | `silver_tournaments`, `silver_standings`, `silver_pairings` | one row per real match, as winner/loser with decks joined in |
-| **gold** | `gold_decks`, `gold_deck_events`, `gold_matchups` | one row per (event, deck, opponent deck) — the matrix, unsummed |
+| **gold** | `gold_periods`, `gold_decks`, `gold_deck_stats`, `gold_matchup_stats` | finished tables per period (30d / 90d / all) — the deck table and matrix cells, as drawn |
 
 The frontend reads gold and nothing else. Roughly 2,000 tournaments and 130,000
 head-to-head matches across ~200 archetypes.

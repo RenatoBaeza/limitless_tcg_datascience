@@ -18,14 +18,6 @@ export const record = (wins: number, losses: number, ties: number) =>
 export const spansEven = (low: number | null, high: number | null) =>
   low == null || high == null || (low <= 0.5 && high >= 0.5);
 
-export const isoDate = (date: Date) => date.toISOString().slice(0, 10);
-
-export function daysBefore(iso: string, days: number): string {
-  const date = new Date(`${iso}T00:00:00Z`);
-  date.setUTCDate(date.getUTCDate() - days);
-  return isoDate(date);
-}
-
 export function relativeTime(iso: string | null): string {
   if (!iso) return "never";
   const minutes = Math.round((Date.now() - new Date(iso).getTime()) / 60000);

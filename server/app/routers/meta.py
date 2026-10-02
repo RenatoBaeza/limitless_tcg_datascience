@@ -1,21 +1,19 @@
 """The metagame endpoints - everything the frontend reads.
 
 Thin by design: each route validates its query string and hands off to
-app/metagame.py, which calls the matching gold function. The interesting
-decisions all live in sql/006_gold.sql.
+app/metagame.py, which reads the matching gold table. Every number was computed
+by the refresh (sql/012_gold_finished.sql), so nothing here or there aggregates.
 
-Every route takes the same `from`/`to` window and scopes to it. They are
-declared `def` rather than `async def` so FastAPI runs them on the threadpool -
-the Supabase client underneath is synchronous, and awaiting it on the event
-loop would block every other request.
+Every route takes the same `period` - one of the windows in gold_periods - and
+scopes to it. They are declared `def` rather than `async def` so FastAPI runs
+them on the threadpool - the Supabase client underneath is synchronous, and
+awaiting it on the event loop would block every other request.
 """
-
-from datetime import date
 
 from fastapi import APIRouter, Query
 
 from app import metagame
-from app.models import Coverage, DeckMatchup, DeckSummary, MatchupCell
+from app.models import Coverage, DeckMatchup, DeckSummary, MatchupCell, Period, PeriodInfo
 
 router = APIRouter(tags=["metagame"])
 
@@ -24,32 +22,35 @@ router = APIRouter(tags=["metagame"])
 MAX_AXIS = 100
 MAX_DECKS = 500
 
+PERIOD = Query("all", description="One of the windows gold is computed for.")
+
 
 @router.get("/coverage")
 def get_coverage() -> Coverage:
-    """Date bounds and totals, so a client can pick a sensible default window."""
+    """What the whole dataset spans - the 'all' period's dates and totals."""
     return Coverage(**metagame.coverage())
+
+
+@router.get("/periods")
+def list_periods() -> list[PeriodInfo]:
+    """Every period, with the dates it resolved to on the last refresh."""
+    return [PeriodInfo(**row) for row in metagame.periods()]
 
 
 @router.get("/decks")
 def list_decks(
-    date_from: date | None = Query(None, alias="from"),
-    date_to: date | None = Query(None, alias="to"),
+    period: Period = PERIOD,
     limit: int = Query(50, ge=1, le=MAX_DECKS),
     include_other: bool = False,
 ) -> list[DeckSummary]:
-    """Most-played decks in the window, with meta share and overall record."""
-    return [
-        DeckSummary(**row)
-        for row in metagame.decks(date_from, date_to, limit, include_other)
-    ]
+    """Most-played decks in the period, with meta share and overall record."""
+    return [DeckSummary(**row) for row in metagame.decks(period, limit, include_other)]
 
 
 @router.get("/decks/{deck_id}/matchups")
 def get_deck_matchups(
     deck_id: str,
-    date_from: date | None = Query(None, alias="from"),
-    date_to: date | None = Query(None, alias="to"),
+    period: Period = PERIOD,
     min_matches: int = Query(1, ge=1),
     include_other: bool = False,
 ) -> list[DeckMatchup]:
@@ -60,14 +61,13 @@ def get_deck_matchups(
     """
     return [
         DeckMatchup(**row)
-        for row in metagame.deck_matchups(deck_id, date_from, date_to, min_matches, include_other)
+        for row in metagame.deck_matchups(deck_id, period, min_matches, include_other)
     ]
 
 
 @router.get("/matchups")
 def get_matchups(
-    date_from: date | None = Query(None, alias="from"),
-    date_to: date | None = Query(None, alias="to"),
+    period: Period = PERIOD,
     decks: list[str] | None = Query(None, description="Pin both axes to these deck ids."),
     limit: int = Query(20, ge=2, le=MAX_AXIS, description="Axis size when decks is unset."),
     min_matches: int = Query(1, ge=1),
@@ -80,5 +80,5 @@ def get_matchups(
     """
     return [
         MatchupCell(**row)
-        for row in metagame.matrix(date_from, date_to, decks, limit, min_matches, include_other)
+        for row in metagame.matrix(period, decks, limit, min_matches, include_other)
     ]

@@ -7,11 +7,10 @@ refreshes never re-add what this removes, because they enumerate only
 in-window tournaments. See app/limitless.py:retention_cutoff and
 sql/011_retention_window.sql.
 
-Two RPC calls, deliberately split: the delete cascades silver_tournaments to
-silver_pairings, gold_deck_events and gold_matchups, then refresh_gold_decks
-re-rolls the deck dimension that no cascade reaches. Run together they blow
-the PostgREST statement timeout, so the roll-up goes second and reports on its
-own.
+One RPC call: the delete cascades silver_tournaments to silver_pairings. Gold
+is not touched and needs nothing from this - it holds no per-tournament rows
+for a cascade to reach, and the gold refresh clamps every period to the same
+cutoff itself, so it never counted the tournaments being deleted here.
 
 Usage:
     uv run python scripts/prune_window.py [--dry-run]
@@ -51,8 +50,8 @@ def main() -> int:
         return 1
     hdrs = supabase.headers(secret_key)
 
-    # Generous, like app/silver.py and app/gold.py: the deck roll-up scans
-    # both fact tables plus silver_pairings, so a fresh build is the slow case.
+    # Generous, like app/silver.py: a big prune cascades through every
+    # silver_pairings row of the tournaments it drops.
     with httpx.Client(timeout=300.0) as client:
         before = supabase.count_rows(
             client, base, hdrs, "silver_tournaments",
@@ -68,9 +67,6 @@ def main() -> int:
             client, base, hdrs, "prune_derived_before", {"p_cutoff": cutoff.isoformat()}
         )
         print(f"prune_derived_before: {deleted} tournaments deleted (cascading)")
-
-        rolled = supabase.rpc(client, base, hdrs, "refresh_gold_decks")
-        print(f"refresh_gold_decks: {rolled} deck rows written")
 
         after = supabase.count_rows(client, base, hdrs, "silver_tournaments")
         print(f"silver_tournaments: {after} rows after")

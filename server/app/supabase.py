@@ -87,6 +87,36 @@ def count_rows(
     return int(response.headers.get("content-range", "*/0").split("/")[-1])
 
 
+PAGE_SIZE = 1000
+
+
+def select(
+    client: httpx.Client,
+    base: str,
+    hdrs: dict[str, str],
+    table: str,
+    params: dict[str, str],
+) -> list[dict[str, Any]]:
+    """Every row a filtered read matches, paged past PostgREST's 1000-row cap.
+
+    `params` must carry an `order`, or the pages are not guaranteed to line up.
+    """
+    rows: list[dict[str, Any]] = []
+    while True:
+        response = _send(
+            client,
+            "GET",
+            f"{base}/rest/v1/{table}",
+            params={**params, "offset": str(len(rows)), "limit": str(PAGE_SIZE)},
+            headers=hdrs,
+        )
+        response.raise_for_status()
+        page = response.json()
+        rows.extend(page)
+        if len(page) < PAGE_SIZE:
+            return rows
+
+
 def upsert(
     client: httpx.Client,
     base: str,

@@ -8,6 +8,12 @@
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
 
+/**
+ * The windows the server precomputes - the rows of gold_periods. Every panel is
+ * read for exactly one of them; there is no arbitrary date range.
+ */
+export type Period = "30d" | "90d" | "all";
+
 export type Coverage = {
   first_event: string | null;
   last_event: string | null;
@@ -35,10 +41,13 @@ type Rated = {
 export type DeckSummary = Rated & {
   deck_id: string;
   deck_name: string | null;
-  deck_icons: string[] | null;
+  /** 1 is the most played deck in the period. */
+  rank: number;
   entries: number;
   tournaments: number;
   meta_share: number | null;
+  /** Left out of every rate, counted here. */
+  mirror_matches: number;
   champions: number;
   top8: number;
 };
@@ -51,10 +60,7 @@ export type MatchupCell = Rated & {
 export type DeckMatchup = Rated & {
   deck_b: string;
   deck_name: string | null;
-  deck_icons: string[] | null;
 };
-
-export type Window = { from?: string; to?: string };
 
 type Param = string | number | boolean | undefined | string[];
 
@@ -76,17 +82,17 @@ async function get<T>(path: string, params: Record<string, Param> = {}): Promise
 
 export const fetchCoverage = () => get<Coverage>("/coverage");
 
-export const fetchDecks = (window: Window, limit: number, includeOther: boolean) =>
-  get<DeckSummary[]>("/decks", { ...window, limit, include_other: includeOther });
+export const fetchDecks = (period: Period, limit: number, includeOther: boolean) =>
+  get<DeckSummary[]>("/decks", { period, limit, include_other: includeOther });
 
 export const fetchMatrix = (
-  window: Window,
+  period: Period,
   limit: number,
   minMatches: number,
   includeOther: boolean,
 ) =>
   get<MatchupCell[]>("/matchups", {
-    ...window,
+    period,
     limit,
     min_matches: minMatches,
     include_other: includeOther,
@@ -94,12 +100,12 @@ export const fetchMatrix = (
 
 export const fetchDeckMatchups = (
   deckId: string,
-  window: Window,
+  period: Period,
   minMatches: number,
   includeOther: boolean,
 ) =>
   get<DeckMatchup[]>(`/decks/${encodeURIComponent(deckId)}/matchups`, {
-    ...window,
+    period,
     min_matches: minMatches,
     include_other: includeOther,
   });

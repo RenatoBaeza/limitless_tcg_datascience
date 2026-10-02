@@ -32,12 +32,13 @@ uv run python scripts/ingest_pairings.py --max-requests 400
 uv run python scripts/ingest_standings.py --tournament <id>
 ```
 
-Silver and gold refreshes (both take `--dry-run`, `--tournament <id>`,
-`--chunk-size N`, a repeatable `--only <step>`, and `--window-months N`):
+Silver and gold refreshes (both take `--dry-run`, a repeatable `--only <step>`
+and `--window-months N`; silver also takes `--tournament <id>` and
+`--chunk-size N`, gold a repeatable `--period <30d|90d|all>`):
 
 ```bash
 uv run python scripts/refresh_silver.py
-uv run python scripts/refresh_gold.py --only matchups
+uv run python scripts/refresh_gold.py --only matchup_stats --period 30d
 ```
 
 Retention prune (removes derived rows older than the window; `--dry-run`,
@@ -118,35 +119,40 @@ The database is three layers, and which one you want is rarely ambiguous:
   is a view over `bronze_standings`, not a table — the transform was a
   column-for-column copy, so materialising it bought nothing and cost 118k
   duplicated rows (`sql/007_shrink.sql`).
-- **Gold** (`gold_decks`, `gold_deck_events`, `gold_matchups`) is
-  question-shaped. It exists to answer *how does each deck do against each
-  other deck*, and it is what the frontend reads.
+- **Gold** (`gold_periods`, `gold_decks`, `gold_deck_stats`,
+  `gold_matchup_stats`) is finished tables: every number the frontend draws,
+  computed by the refresh for each of a fixed set of periods. The API reads
+  them with a primary-key filter and never aggregates (`sql/012_gold_finished.sql`).
 
 Silver and gold are both derived, so both are disposable — dropping and
 rebuilding either loses nothing.
 
 Each transform is **SQL, not Python**: `refresh_silver_*` in `sql/005_silver.sql`
-and `refresh_gold_*` in `sql/006_gold.sql`. `app/silver.py` and `app/gold.py`
-only drive them over PostgREST RPC, a batch of tournaments at a time. That split
-is deliberate — `silver_pairings` alone is ~290k bronze rows joined twice
-against standings, and pulling that through PostgREST to reshape it in Python
-would spend minutes of transfer on work Postgres does in place in seconds.
-Batching keeps any one statement inside the database's timeout; if a call ever
-times out, lower `--chunk-size` rather than reaching for a different design.
+and `refresh_gold_*` in `sql/012_gold_finished.sql`. `app/silver.py` and
+`app/gold.py` only drive them over PostgREST RPC — silver a batch of tournaments
+at a time, gold one period at a time. That split is deliberate —
+`silver_pairings` alone is ~290k bronze rows joined twice against standings,
+and pulling that through PostgREST to reshape it in Python would spend minutes
+of transfer on work Postgres does in place in seconds.
+Batching keeps any one statement inside the 8s PostgREST statement timeout; if
+a silver call ever times out, lower `--chunk-size` rather than reaching for a
+different design. Gold's slowest call is ~2.3s (the `all` period's matchups).
 
 Things about both refreshes that are easy to get wrong:
 
 - **Order matters.** In silver, `silver_pairings` inner-joins
   `silver_tournaments`, so a tournament missing from it yields no pairings rows
-  *silently*, not as a foreign-key error. In gold, `gold_decks` is a roll-up of
-  the other two and must run after them. `silver.STEPS` and `gold.STEPS` encode
-  the orders — silver has no standings step, since the view cannot fall behind.
+  *silently*, not as a foreign-key error. In gold, `periods` resolves the
+  dates every later step reads, and `deck_stats` rolls up `matchup_stats`, so
+  it runs last. `silver.STEPS` and `gold.STEPS` encode the orders — silver has
+  no standings step, since the view cannot fall behind.
 - **They re-read their whole source every run**, not just what is new. A
   pairing's deck columns come from a standings ingest that usually lands
   *after* the pairing did, so an incremental-by-timestamp refresh would leave
   decks permanently null.
-- **Each function is a full reconcile of its slice**, deleting rows that no
-  longer qualify before upserting the rest. Re-running is a no-op beyond
+- **Each function is a full reconcile of its slice** (a batch of tournaments
+  in silver, a period in gold), deleting rows that no longer qualify before
+  writing the rest, inside one call. Re-running is a no-op beyond
   `refreshed_at`.
 
 ### The ingest pipeline
@@ -162,19 +168,23 @@ errors and 5xx/408/429; a 4xx is surfaced immediately as a real bug).
 ### The FastAPI service
 
 `app/routers/meta.py` is the read API and is deliberately thin: it validates a
-query string and hands off to `app/metagame.py`, which calls the matching gold
-function. Four endpoints, one per gold read function:
+query string and hands off to `app/metagame.py`, which reads the matching gold
+table with a PostgREST filter (`supabase.select`, paged past the 1000-row cap).
+Nothing is summed at request time:
 
 ```
-GET /coverage                     date bounds and totals
-GET /decks                        deck list with meta share and record
-GET /decks/{deck_id}/matchups     one deck against the whole field
-GET /matchups                     the matrix, as a flat list of cells
+GET /coverage                     the 'all' period's dates and totals
+GET /periods                      every period and the dates it resolved to
+GET /decks                        gold_deck_stats, top N by rank
+GET /decks/{deck_id}/matchups     gold_matchup_stats, one deck_a slice
+GET /matchups                     gold_matchup_stats, top-N deck_a x deck_b
 ```
 
-All of them take the same `?from=&to=` window plus `include_other`. Results are
-memoed for 5 minutes in `metagame._cached` — gold only changes every six hours,
-so the memo costs nothing and makes filter-flipping instant.
+All of them take the same `?period=` (`30d`, `90d`, `all`; anything
+else is a 422) plus `include_other`. There is no arbitrary date range — a
+period is the unit gold is computed in. Results are memoed for 5 minutes in
+`metagame._cached` — gold only changes every six hours, so the memo costs
+nothing and makes filter-flipping instant.
 
 `app/routers/admin.py` exposes `GET /admin/ingest/{secret}` — the secret in the
 URL selects which job runs (`ADMIN_KEY_PAIRINGS` / `ADMIN_KEY_STANDINGS` /
@@ -193,13 +203,32 @@ computing win rates**.
 
 ### What gold decides
 
-Documented at the top of `sql/006_gold.sql`. `gold_matchups` is the fact table,
-one row per `(tournament_id, deck_a, deck_b)`. Five decisions everything
-downstream depends on:
+Documented at the top of `sql/012_gold_finished.sql`. Gold is finished tables,
+computed once per **period** — a row of `gold_periods` (`30d`, `90d`, `all`),
+each counted back from the last event in the data and clamped to the retention
+cutoff. (`all` is the six-month retention window, so a `180d` period duplicated
+it to within three days and was dropped in `sql/013`.)
+
+```
+gold_periods        one row per period: its resolved dates and totals
+gold_decks          the deck dimension (name, icons, first/last seen)
+gold_deck_stats     (period, include_other, deck_id): rank, entries, meta
+                    share, record, rates, Wilson interval — the deck table
+gold_matchup_stats  (period, deck_a, deck_b): one matrix cell, as drawn
+```
+
+~26k rows in all. It replaced a tournament-grain fact (`gold_matchups`, 312k
+rows) that every request re-summed: at 1.55 matches per row it was bigger than
+the silver it came from. The price is that only these periods can be asked
+for; adding one is a row in `gold_periods`, a member of `models.Period` and a
+preset in `client/src/filters.ts`.
+
+Five decisions everything downstream depends on:
 
 - **Every match is counted twice**, once from each side, so the matrix is
-  antisymmetric by construction and a deck's whole record is one row-slice.
-  `gold_coverage` halves the total to report distinct matches.
+  antisymmetric by construction and a deck's whole record is one deck_a slice.
+  Both directions are stored, so neither read has to flip a row.
+  `gold_periods.matches` halves the total to report distinct matches.
 - **Ties are their own column**, never folded into either side. Two rates come
   out of that: `win_rate` = wins/(wins+losses), and `score_rate` =
   (wins + ties/2)/matches. Ties are ~6% of matches, so they genuinely differ.
@@ -208,27 +237,35 @@ downstream depends on:
   wrongly.
 - **Mirrors are excluded.** A deck against itself is 50% by definition and the
   two-perspective fan-out would land a win and a loss in the same cell. The
-  count lives on `gold_decks.mirror_matches` instead, so a frontend can still
-  label the diagonal.
+  count lives on `gold_deck_stats.mirror_matches` instead, so a frontend can
+  still label the diagonal.
 - **Both decks must be known.** ~4% of `silver_pairings` rows still have a null
   deck on one side; a matchup against "unknown" is not a matchup.
 - **`deck_id = 'other'`** is Limitless's catch-all for unclassified lists, not
-  an archetype. It is flagged `gold_decks.is_other` and every read function
-  excludes it unless asked.
+  an archetype, and every read excludes it unless asked. It is the 7th most
+  played "deck", so leaving it out changes the meta-share denominator, every
+  rank below it and each deck's record — which is why `include_other` is a key
+  column of `gold_deck_stats` (both variants are computed) but only a row
+  filter on `gold_matchup_stats`, whose cells do not depend on it.
 
-The grain is the *tournament*, not an all-time sum, because an all-time matrix
-cannot be filtered and matchups shift with every set release. Read functions
-(`gold_matchup_matrix`, `gold_deck_matchups`, `gold_deck_summary`) sum it over
-whatever window they are given, and each returns a 95% Wilson interval beside
-every rate — a 3-match cell at 100% and a 300-match cell at 55% are not the same
-claim, and the interval is what stops them being drawn as if they were.
+Every rate is stored with a 95% Wilson interval beside it (`score_low`,
+`score_high`) — a 3-match cell at 100% and a 300-match cell at 55% are not the
+same claim, and the interval is what stops them being drawn as if they were.
+
+Each period total on `gold_periods` is written by the step that has just
+computed the rows it sums (matches by `matchup_stats`; entries, decks and
+tournaments by `deck_stats`), so it cannot disagree with the table beside it.
+`refresh_gold_periods` itself only resolves dates, through index probes: an
+earlier draft that scanned `silver_pairings` inside an `UPDATE` (which Postgres
+will not parallelise) ran 4-8s against the 8s timeout.
 
 ### Deck sprites
 
 `scripts/download_deck_sprites.py` builds `client/public/decks/`: one composited
 PNG per deck plus an `index.json`, and nothing else. Files are keyed on
 `deck_id`, not `deck_name` — names are not unique (two unrelated decks are both
-"Alakazam"), and `deck_id` is what `silver_pairings` and `gold_matchups` carry.
+"Alakazam"), and `deck_id` is what `silver_pairings` and `gold_matchup_stats`
+carry.
 The deck-to-sprite mapping comes from `silver_standings.deck_icons`, so nothing
 is scraped or name-matched; only the images themselves are fetched, from the
 same CDN limitlesstcg.com uses. See `app/sprites.py`.
@@ -280,24 +317,24 @@ time to rebuild), but `silver_*` and `gold_*` hold only the last
 `RETAIN_MONTHS` (default 6). Two halves, both reading the cutoff from
 `app/limitless.py:retention_cutoff` so they cannot drift:
 
-- **The refreshes enumerate only in-window tournaments.** `silver.py` and
-  `gold.py` filter their bronze listing to `date >= cutoff` via `--window-months`
-  (default `RETAIN_MONTHS`; `0` refreshes everything, the whole-database-rebuild
-  escape hatch). The refreshes are full reconciles of whatever slice they are
-  handed, so handing them only in-window tournaments is what stops them re-adding
-  rows the prune removed.
+- **The refreshes stay inside the window.** `silver.py` filters its bronze
+  listing to `date >= cutoff` via `--window-months` (default `RETAIN_MONTHS`;
+  `0` refreshes everything, the whole-database-rebuild escape hatch), and since
+  it is a full reconcile of whatever slice it is handed, that is what stops it
+  re-adding rows the prune removed. `gold.py` passes the same cutoff to
+  `refresh_gold_periods(p_since)`, which clamps every period to it — so gold
+  never counts an out-of-window tournament even before the prune has run.
 - **`scripts/prune_window.py` deletes what the window excludes.** It calls
   `prune_derived_before(cutoff)`, which deletes the out-of-window
-  `silver_tournaments` rows (cascading to `silver_pairings`, `gold_deck_events`
-  and `gold_matchups`), then calls `refresh_gold_decks()` to re-roll the deck
-  dimension no cascade reaches. The two calls are deliberately separate — the
-  delete and a full re-roll together blow the PostgREST statement timeout.
+  `silver_tournaments` rows, cascading to `silver_pairings`. Gold has no
+  per-tournament rows and no foreign key to silver, so nothing cascades into it
+  and nothing needs re-rolling.
 
-The six-hourly workflow runs the refresh then the prune, in that order. `sql/011`
-tunes autovacuum on the gold tables (the refresh rewrites them every six hours,
-so at the default 20% scale factor they accumulated 58k dead tuples) — and
-dropping rows does not return disk, so a one-off `vacuum full` on the pruned
-tables is what reclaims the space after a big prune.
+The six-hourly workflow runs the refresh then the prune, in that order.
+Dropping rows does not return disk, so a one-off `vacuum full` on the pruned
+tables is what reclaims the space after a big prune. (`sql/011` also tuned
+autovacuum on the old gold tables. `sql/012` dropped them, and the new ones are
+small and rewritten whole each run, so the default threshold is fine.)
 
 Semicolons inside SQL comments are safe over MCP: the file is handed to Postgres
 as one string and parsed properly, comments and all. The old ban on them was a
@@ -313,7 +350,7 @@ the real error and the transaction rolls back — but for a long file it is
 cheaper to catch a typo before touching production:
 
 ```bash
-uv run --with pglast python -c "import pglast,sys; pglast.parse_sql(open(sys.argv[1]).read())" sql/006_gold.sql
+uv run --with pglast python -c "import pglast,sys; pglast.parse_sql(open(sys.argv[1]).read())" sql/012_gold_finished.sql
 ```
 
 That parses the outer statements but treats each `$fn$ ... $fn$` body as an
@@ -396,10 +433,11 @@ library would cost more than it saved.
   stops, not an inversion — on a dark surface the neutral end has to recede
   toward the surface, which is the opposite direction of travel.
 - Filters live in one row above everything they scope, and every panel reads
-  the same window, so the numbers on screen always agree. Date presets count
-  back from the last event in the data rather than from today: results land
-  days after an event happens, so "last 30 days" from today's date would
-  quietly clip the most recent weekend.
+  the same period, so the numbers on screen always agree. The date presets are
+  the server's periods, passed as `?period=`. The server resolves their dates,
+  counting back from the last event in the data rather than from today —
+  results land days after an event happens, so "last 30 days" from today's
+  date would quietly clip the most recent weekend.
 - Every rate is drawn with its match count and Wilson interval reachable, and
   the matrix has a table-view twin, so nothing is encoded by colour alone.
 

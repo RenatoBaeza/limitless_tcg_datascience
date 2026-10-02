@@ -1,10 +1,12 @@
-import type { Filters, Preset, View } from "../filters";
+import type { Period } from "../api";
+import type { Filters, View } from "../filters";
 import { PRESETS } from "../filters";
 
 /**
  * One filter row, above everything it scopes. Date range comes first because
- * it is the control a reader reaches for first, and presets come before any
- * custom range because nobody fights a calendar grid for "last 30 days".
+ * it is the control a reader reaches for first. It is presets only: each is a
+ * period the server computed ahead of time, and nobody fights a calendar grid
+ * for "last 30 days" anyway.
  */
 export function FilterBar({
   filters,
@@ -27,14 +29,14 @@ export function FilterBar({
           Date range
         </span>
         <div className="segmented" role="group" aria-labelledby="range-label">
-          {(Object.keys(PRESETS) as Preset[]).map((preset) => (
+          {(Object.keys(PRESETS) as Period[]).map((period) => (
             <button
-              key={preset}
+              key={period}
               type="button"
-              aria-pressed={filters.preset === preset}
-              onClick={() => set("preset", preset)}
+              aria-pressed={filters.period === period}
+              onClick={() => set("period", period)}
             >
-              {PRESETS[preset].label}
+              {PRESETS[period].label}
             </button>
           ))}
         </div>

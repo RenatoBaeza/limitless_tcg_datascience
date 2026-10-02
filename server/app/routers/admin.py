@@ -61,9 +61,8 @@ def _run_gold(args: argparse.Namespace) -> None:
     # a silver refresh.
     gold.run(
         argparse.Namespace(
-            chunk_size=gold.CHUNK_SIZE,
-            tournament=None,
             only=None,
+            period=None,
             window_months=RETAIN_MONTHS,
             dry_run=False,
         )

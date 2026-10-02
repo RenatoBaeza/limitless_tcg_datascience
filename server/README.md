@@ -108,8 +108,8 @@ defensively. The API's `placing` is stored as `placement`. Unlike pairings, `pla
 ## Silver and gold
 
 Two derived layers sit on bronze, both rebuilt by SQL functions this repo only
-*calls* — see `sql/005_silver.sql` and `sql/006_gold.sql` for the transforms
-and the reasoning behind them.
+*calls* — see `sql/005_silver.sql` and `sql/012_gold_finished.sql` for the
+transforms and the reasoning behind them.
 
 ```bash
 uv run python scripts/refresh_silver.py     # bronze -> silver
@@ -117,28 +117,31 @@ uv run python scripts/refresh_gold.py       # silver -> gold
 ```
 
 Both are full reconciles rather than appends, so re-running is a no-op beyond
-`refreshed_at`, and both take `--dry-run`, `--tournament <id>`, `--chunk-size N`
-and a repeatable `--only <step>`. Run them in that order: gold reads silver, and
-silver reads bronze.
+`refreshed_at`, and both take `--dry-run` and a repeatable `--only <step>`.
+Silver also takes `--tournament <id>` and `--chunk-size N`; gold takes a
+repeatable `--period <30d|90d|all>`. Run them in that order: gold reads
+silver, and silver reads bronze.
 
 **Silver** is one row per real match, restated as winner/loser with each side's
-deck joined in from standings. **Gold** is one row per
-`(tournament, deck, opponent deck)` — the matchup matrix at event grain, so any
-date range can be summed out of it on demand.
+deck joined in from standings. **Gold** is finished tables, computed once per
+period (`gold_periods`: last 30 and 90 days, and all): `gold_deck_stats`
+is the deck table and `gold_matchup_stats` the matrix cells, each row exactly
+as the frontend draws it. Nothing is aggregated when the API reads them.
 
 The gold decisions that matter downstream: every match is counted from both
 sides, ties are their own column rather than folded into either, mirrors are
 excluded (50% by definition), a match needs both decks known to count, and
 `deck_id = 'other'` is a catch-all bucket rather than an archetype. The header
-of `sql/006_gold.sql` explains each.
+of `sql/012_gold_finished.sql` explains each.
 
 ## Read API
 
-Four endpoints, one per gold read function. All take `?from=&to=` and
-`include_other`.
+Each endpoint is a filtered read of one gold table. All take
+`?period=30d|90d|all` (default `all`) and `include_other`.
 
 ```
-GET /coverage                     date bounds and totals
+GET /coverage                     the 'all' period's dates and totals
+GET /periods                      every period and the dates it resolved to
 GET /decks                        deck list with meta share and record
 GET /decks/{deck_id}/matchups     one deck against the whole field
 GET /matchups                     the matrix, as a flat list of cells

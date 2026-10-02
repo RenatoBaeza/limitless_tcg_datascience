@@ -144,10 +144,10 @@ jobs:
             echo '```'
             echo '### Gold'
             echo '```'
-            grep -E 'rows after|failed batches' gold.log 2>/dev/null || echo '(step did not run)'
+            grep -E 'rows after|failed calls' gold.log 2>/dev/null || echo '(step did not run)'
             echo '```'
             echo '### Prune'
             echo '```'
-            grep -E 'rows written|rows after|retention window' prune.log 2>/dev/null || echo '(step did not run)'
+            grep -E 'deleted|rows after|retention window' prune.log 2>/dev/null || echo '(step did not run)'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

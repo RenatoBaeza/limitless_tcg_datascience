@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { DeckMatchup, DeckSummary, Window } from "../api";
+import type { DeckMatchup, DeckSummary, Period } from "../api";
 import { fetchDeckMatchups } from "../api";
 import { count, percentSign, record, spansEven } from "../format";
 import { DeckIcon } from "./DeckIcon";
@@ -20,20 +20,20 @@ const TICKS = [0.3, 0.4, 0.5, 0.6, 0.7];
  */
 export function DeckDetail({
   deck,
-  window: dateWindow,
+  period,
   minMatches,
   includeOther,
   onClose,
 }: {
   deck: DeckSummary;
-  window: Window;
+  period: Period;
   minMatches: number;
   includeOther: boolean;
   onClose: () => void;
 }) {
   const { data, isPending, isError, error, isPlaceholderData } = useQuery({
-    queryKey: ["deck-matchups", deck.deck_id, dateWindow, minMatches, includeOther],
-    queryFn: () => fetchDeckMatchups(deck.deck_id, dateWindow, minMatches, includeOther),
+    queryKey: ["deck-matchups", deck.deck_id, period, minMatches, includeOther],
+    queryFn: () => fetchDeckMatchups(deck.deck_id, period, minMatches, includeOther),
     placeholderData: (previous) => previous,
   });
 
