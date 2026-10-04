@@ -22,10 +22,9 @@ type Order = "matches" | "best" | "worst";
 /**
  * One deck against the whole field, in a drawer over the page.
  *
- * A dot plot with whiskers rather than bars: the value is a rate, not a
- * magnitude, so there is no meaningful zero for a bar to grow from — and the
- * whisker is the point. It shows at a glance which matchups are known and
- * which are three games and a shrug.
+ * A dot plot rather than bars: the value is a rate, not a magnitude, so there
+ * is no meaningful zero for a bar to grow from. A matchup too thin to call
+ * either way has its number muted rather than its uncertainty drawn.
  *
  * Each opponent that is itself on screen elsewhere is clickable, and opens
  * that deck in place - so the drawer doubles as a way to walk the metagame
@@ -194,8 +193,7 @@ function Hero({ deck }: { deck: DeckSummary }) {
           </div>
         </div>
         <div className="hero-record">
-          {record(deck.wins, deck.losses, deck.ties)} · {t("range")} {percentSign(deck.score_low, 0)}–
-          {percentSign(deck.score_high, 0)}
+          {record(deck.wins, deck.losses, deck.ties)}
         </div>
       </div>
     </header>
@@ -221,8 +219,6 @@ function DexBand() {
 function DotRow({ matchup, index, onOpen }: { matchup: DeckMatchup; index: number; onOpen?: () => void }) {
   const { t, count, percentSign, record } = useI18n();
   const rate = matchup.score_rate ?? 0.5;
-  const low = matchup.score_low ?? rate;
-  const high = matchup.score_high ?? rate;
   const inconclusive = spansEven(matchup.score_low, matchup.score_high);
   const favoured = !inconclusive && rate > 0.5;
   const unfavoured = !inconclusive && rate < 0.5;
@@ -230,7 +226,6 @@ function DotRow({ matchup, index, onOpen }: { matchup: DeckMatchup; index: numbe
   const label = t("matchupDescription", {
     name: matchup.deck_name ?? matchup.deck_b, rate: percentSign(rate),
     matches: t("matchCount", { count: matchup.matches }),
-    low: percentSign(low, 0), high: percentSign(high, 0),
   });
 
   const name = (
@@ -263,7 +258,6 @@ function DotRow({ matchup, index, onOpen }: { matchup: DeckMatchup; index: numbe
             style={{ left: `${position(tick)}%` }}
           />
         ))}
-        <div className="whisker" style={{ left: `${position(low)}%`, width: `${position(high) - position(low)}%` }} />
         <div className="dot" style={{ left: `${position(rate)}%` }} />
       </div>
 

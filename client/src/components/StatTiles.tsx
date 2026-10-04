@@ -9,8 +9,8 @@ import { DeckIcon } from "./DeckIcon";
  * Three headline numbers. Each is one figure, so it is a stat tile and not a
  * one-bar bar chart.
  *
- * "Best performing" and "most lopsided" both ignore anything whose interval
- * still spans 50%, because otherwise both would be won every time by whichever
+ * "Best performing" and "most lopsided" both ignore anything too thin to call
+ * (its Wilson interval still spans 50%), because otherwise both would be won every time by whichever
  * deck happened to go 3-0 somewhere.
  *
  * Drawn as Pokémon cards, because this is a card game and the tiles are the
@@ -64,7 +64,7 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
         sub={bestPerforming ? t("matchCount", { count: bestPerforming.matches }) : t("inconclusiveDecks")}
         art={bestPerforming && <DeckIcon deckId={bestPerforming.deck_id} alt="" />}
       >
-        {bestPerforming && <IntervalBar rated={bestPerforming} />}
+        {bestPerforming && <RateBar rate={bestPerforming.score_rate} />}
       </PokeCard>
 
       <PokeCard
@@ -90,7 +90,7 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
           )
         }
       >
-        {mostLopsided && <IntervalBar rated={mostLopsided} />}
+        {mostLopsided && <RateBar rate={mostLopsided.score_rate} />}
       </PokeCard>
     </div>
   );
@@ -169,23 +169,14 @@ function ShareBar({ decks }: { decks: DeckSummary[] }) {
   );
 }
 
-/** The rate and its 95% interval on the same 25-75% axis the matrix uses. */
-function IntervalBar({ rated }: { rated: { score_rate: number | null; score_low: number | null; score_high: number | null } }) {
-  const { t, percentSign } = useI18n();
+/** The rate against even, on the same 25-75% axis the matrix uses. */
+function RateBar({ rate }: { rate: number | null }) {
   const at = (v: number) => `${Math.max(0, Math.min(100, ((v - 0.25) / 0.5) * 100))}%`;
-  const rate = rated.score_rate ?? 0.5;
-  const low = rated.score_low ?? rate;
-  const high = rated.score_high ?? rate;
 
   return (
-    <div
-      className="interval-bar"
-      role="img"
-      aria-label={t("rangeDescription", { low: percentSign(low, 0), high: percentSign(high, 0) })}
-    >
+    <div className="rate-bar" aria-hidden="true">
       <span className="even" style={{ left: "50%" }} />
-      <span className="range" style={{ left: at(low), width: `calc(${at(high)} - ${at(low)})` }} />
-      <span className="point" style={{ left: at(rate) }} />
+      <span className="point" style={{ left: at(rate ?? 0.5) }} />
       <em style={{ left: "50%" }}>50</em>
     </div>
   );

@@ -455,10 +455,12 @@ library would cost more than it saved.
   every cell with at least one match is drawn, and 'other' never appears —
   all three are fixed on the server, so there is no deck-count, minimum-match,
   'other' or matrix/table toggle to add back on the client alone.
-- Every rate is drawn with its match count and Wilson interval reachable (the
-  cell's number, its tooltip, its aria-label), so nothing is encoded by colour
-  alone. With no minimum-match cutoff, the muted fill for an interval that
-  still spans 50% is what keeps a 2-match cell from reading like a finding.
+- Every rate is drawn with its match count reachable (the cell's number, its
+  tooltip, its aria-label), so nothing is encoded by colour alone. The Wilson
+  interval is **not shown** anywhere - readers found it confusing - but it still
+  decides things: with no minimum-match cutoff, the muted fill for an interval
+  that still spans 50% is what keeps a 2-match cell from reading like a finding,
+  and the stat tiles skip anything that inconclusive.
 - The look is Pokémon: yellow and navy chrome on warm card stock (a slate
   night in dark mode), the stat tiles drawn as TCG cards, tooltips as game
   dialog boxes, the deck drawer as a Pokédex entry. Poké Ball red appears only

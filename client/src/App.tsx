@@ -115,8 +115,6 @@ export default function App() {
           <span>{t("dataSource")}</span>
           <span className="sep" />
           <span>{t("refreshSchedule")}</span>
-          <span className="sep" />
-          <span>{t("intervalNote")}</span>
         </footer>
       </div>
 

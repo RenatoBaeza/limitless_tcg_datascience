@@ -72,9 +72,10 @@ things: a painted cell is a real record, the diagonal is a mirror (50% by
 construction, excluded from the data), and a blank cell means the two decks
 never met in the period — which is a different claim from 0%.
 
-Every meeting is drawn, however thin, so a muted cell is how the matrix says its
-95% interval still spans 50%: the point estimate is there, but the data cannot
-call the matchup either way yet. A longer period is how you firm those up.
+Every meeting is drawn, however thin, so a muted cell is how the matrix says it
+has too few matches to call: its 95% interval (computed, never shown) still
+spans 50%, so the point estimate is there but the data cannot call the matchup
+either way yet. A longer period is how you firm those up.
 
 **Date presets count back from the last event in the data**, not from today.
 Results land days after an event happens and the ingest runs every six hours, so
