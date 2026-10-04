@@ -86,7 +86,13 @@ class _NoopContext:
 
 
 def _args(**overrides):
-    defaults = dict(only=None, period=None, window_months=gold.RETAIN_MONTHS, dry_run=False)
+    defaults = dict(
+        only=None,
+        period=None,
+        window_months=gold.RETAIN_MONTHS,
+        min_matches=gold.MIN_TOURNAMENT_MATCHES,
+        dry_run=False,
+    )
     return argparse.Namespace(**{**defaults, **overrides})
 
 
@@ -123,7 +129,7 @@ def test_periods_are_clamped_to_the_retention_window(_client):
 
     gold.run(_args(window_months=3))
 
-    assert client.calls[0] == ("periods", {"p_since": gold.retention_cutoff(3).isoformat()})
+    assert client.calls[0][1]["p_since"] == gold.retention_cutoff(3).isoformat()
 
 
 def test_window_months_zero_uses_everything(_client):
@@ -132,7 +138,31 @@ def test_window_months_zero_uses_everything(_client):
 
     gold.run(_args(window_months=0))
 
-    assert client.calls[0] == ("periods", {"p_since": None})
+    assert client.calls[0][1]["p_since"] is None
+
+
+def test_min_matches_reaches_the_periods_step(_client):
+    """The threshold is resolved once, with the dates, so every later step
+    reads the same one."""
+    client = _client(FakeClient())
+
+    gold.run(_args(min_matches=25))
+
+    assert client.calls[0] == (
+        "periods",
+        {"p_since": gold.retention_cutoff().isoformat(), "p_min_matches": 25},
+    )
+    assert all("p_min_matches" not in payload for _, payload in client.calls[1:])
+
+
+def test_min_matches_defaults_and_floors_at_zero(_client):
+    client = _client(FakeClient())
+    gold.run(_args())
+    assert client.calls[0][1]["p_min_matches"] == gold.MIN_TOURNAMENT_MATCHES
+
+    client = _client(FakeClient())
+    gold.run(_args(min_matches=-3))
+    assert client.calls[0][1]["p_min_matches"] == 0
 
 
 def test_period_narrows_the_stats_without_listing(_client):

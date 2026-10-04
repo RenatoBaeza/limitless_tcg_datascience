@@ -30,7 +30,7 @@ export function Header({
         <div className="brand-text">
           <div className="kicker">{t("kicker")}</div>
           <h1 className="title">
-            <span className="logo-text">Limitless</span> {t("metagame")}
+            <span className="logo-text">PKTCG</span> DuelMeta
           </h1>
         </div>
       </div>
@@ -56,7 +56,12 @@ export function Header({
       <div className="coverage" aria-live="polite">
         {coverage ? (
           <>
-            <Chip value={coverage.tournaments} label={t("tournaments", { count: coverage.tournaments })} delay={0} />
+            <Chip
+              value={coverage.tournaments}
+              label={t("tournaments", { count: coverage.tournaments })}
+              title={coverage.min_matches > 0 ? t("minMatchesNote", { count: coverage.min_matches }) : undefined}
+              delay={0}
+            />
             <Chip value={coverage.matches} label={t("matches", { count: coverage.matches })} delay={1} />
             <Chip value={coverage.decks} label={t("decks", { count: coverage.decks })} delay={2} />
             <span className="chip chip-plain" style={{ "--i": 3 } as React.CSSProperties}>
@@ -80,11 +85,21 @@ export function Header({
   );
 }
 
-function Chip({ value, label, delay }: { value: number; label: string; delay: number }) {
+function Chip({
+  value,
+  label,
+  title,
+  delay,
+}: {
+  value: number;
+  label: string;
+  title?: string;
+  delay: number;
+}) {
   const { count } = useI18n();
   const shown = useCountUp(value, 1600);
   return (
-    <span className="chip" style={{ "--i": delay } as React.CSSProperties}>
+    <span className="chip" title={title} style={{ "--i": delay } as React.CSSProperties}>
       <strong className="num">{count(Math.round(shown))}</strong> {label}
     </span>
   );

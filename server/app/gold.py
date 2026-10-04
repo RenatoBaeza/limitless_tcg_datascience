@@ -8,8 +8,9 @@ Gold is finished tables - every number the frontend draws, computed here once
 per period rather than summed on every request - so the unit of work is the
 period, not the tournament:
 
-    periods         resolve each window's dates and totals. Runs once, first,
-                    because every step after it reads those dates.
+    periods         resolve each window's dates and the minimum matches a
+                    tournament needs to count. Runs once, first, because every
+                    step after it reads both.
     decks           the deck dimension (names, icons). Runs once.
     matchup_stats   one call per period.
     deck_stats      one call per period. Rolls up that period's matchup cells
@@ -35,6 +36,12 @@ STEPS = SETUP_STEPS + PERIOD_STEPS
 
 PERIODS_TABLE = "gold_periods"
 
+# A tournament needs at least this many matches (silver_pairings rows) to count
+# in gold at all. Below it an event is either a handful of players or one whose
+# pairings Limitless never finished recording, and its standings would count in
+# full against almost no matches. See sql/015_min_tournament_matches.sql.
+MIN_TOURNAMENT_MATCHES = 10
+
 
 def add_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
@@ -56,6 +63,13 @@ def add_arguments(parser: argparse.ArgumentParser) -> None:
         help="Clamp every period to tournaments from this many months back. "
              "Defaults to RETAIN_MONTHS so gold stays inside the retention "
              "window; pass 0 to use everything silver holds.",
+    )
+    parser.add_argument(
+        "--min-matches",
+        type=int,
+        default=MIN_TOURNAMENT_MATCHES,
+        help="Leave out tournaments with fewer matches than this. Defaults to "
+             "MIN_TOURNAMENT_MATCHES; pass 0 to count every tournament.",
     )
     parser.add_argument("--dry-run", action="store_true")
 
@@ -80,6 +94,7 @@ def run(args: argparse.Namespace) -> int:
     # cutoff clamps every period, so gold never reaches past the window even
     # before scripts/prune_window.py has trimmed silver.
     since = None if args.window_months <= 0 else retention_cutoff(args.window_months)
+    min_matches = max(args.min_matches, 0)
 
     try:
         base, secret_key = supabase.credentials()
@@ -93,6 +108,7 @@ def run(args: argparse.Namespace) -> int:
         print(f"periods: {', '.join(scope)}")
         if since is not None:
             print(f"retention window: tournaments on or after {since.isoformat()}")
+        print(f"minimum matches per tournament: {min_matches}")
 
         before = {step: supabase.count_rows(client, base, hdrs, f"gold_{step}") for step in steps}
         for step in steps:
@@ -106,7 +122,10 @@ def run(args: argparse.Namespace) -> int:
         attempted = 0
         for step in steps:
             if step == "periods":
-                calls = [(step, {"p_since": since.isoformat() if since else None})]
+                calls = [(step, {
+                    "p_since": since.isoformat() if since else None,
+                    "p_min_matches": min_matches,
+                })]
             elif step == "decks":
                 calls = [(step, {})]
             else:

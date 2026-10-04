@@ -4,6 +4,10 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Layout
 
+The product is **PKTCG DuelMeta**. "Limitless" in code and docs means the data
+source (the Limitless TCG API, `app/limitless.py`), never the product - keep
+that credit where it names the source.
+
 Two projects, one repo. They share nothing but the HTTP contract between them.
 
 ```
@@ -34,7 +38,8 @@ uv run python scripts/ingest_standings.py --tournament <id>
 
 Silver and gold refreshes (both take `--dry-run`, a repeatable `--only <step>`
 and `--window-months N`; silver also takes `--tournament <id>` and
-`--chunk-size N`, gold a repeatable `--period <3d|7d|30d|60d|90d|all>`):
+`--chunk-size N`, gold a repeatable `--period <3d|7d|30d|60d|90d|all>` and
+`--min-matches N`):
 
 ```bash
 uv run python scripts/refresh_silver.py
@@ -230,7 +235,7 @@ the silver it came from. The price is that only these periods can be asked
 for; adding one is a row in `gold_periods`, a member of `models.Period` and a
 preset in `client/src/filters.ts`.
 
-Five decisions everything downstream depends on:
+Six decisions everything downstream depends on:
 
 - **Every match is counted twice**, once from each side, so the matrix is
   antisymmetric by construction and a deck's whole record is one deck_a slice.
@@ -248,6 +253,18 @@ Five decisions everything downstream depends on:
   still label the diagonal.
 - **Both decks must be known.** ~4% of `silver_pairings` rows still have a null
   deck on one side; a matchup against "unknown" is not a matchup.
+- **A tournament needs at least `MIN_TOURNAMENT_MATCHES` matches to count**
+  (`app/gold.py`, default 10, `--min-matches`; `sql/015`). A match is a
+  `silver_pairings` row. Below it the tournament is out of everything at once -
+  entries, rank, meta share, matchup cells, period totals, and which event a
+  period counts back from - because dropping it from one table and not another
+  would let the deck table and the matrix disagree. The rule lives in one SQL
+  function, `gold_tournaments(from, to, min_matches)`, which every refresh
+  joins instead of `silver_tournaments`. The threshold is passed to
+  `refresh_gold_periods` and stored on each `gold_periods` row, where the later
+  steps read it beside the dates, and `/coverage` and `/periods` return it.
+  It catches both tiny locals and events whose pairings Limitless never
+  finished recording (30-player events with under 5 matches).
 - **`deck_id = 'other'` is excluded at the source.** It is Limitless's
   catch-all for unclassified lists, not an archetype, and the frontend never
   shows it, so every refresh function skips it (`sql/014`): it holds no rank or

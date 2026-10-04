@@ -48,9 +48,13 @@ DECK_COLUMNS = (
 )
 CELL_COLUMNS = f"deck_a,deck_b,{RATE_COLUMNS}"
 OPPONENT_COLUMNS = f"deck_b,deck_name:deck_b_name,{RATE_COLUMNS}"
-PERIOD_COLUMNS = "period,days,date_from,date_to,tournaments,entries,matches,decks,refreshed_at"
+PERIOD_COLUMNS = (
+    "period,days,date_from,date_to,tournaments,entries,matches,decks,min_matches,"
+    "refreshed_at"
+)
 COVERAGE_COLUMNS = (
-    "first_event:date_from,last_event:date_to,tournaments,decks,matches,refreshed_at"
+    "first_event:date_from,last_event:date_to,tournaments,decks,matches,min_matches,"
+    "refreshed_at"
 )
 
 # The longest window, which is what the header describes.

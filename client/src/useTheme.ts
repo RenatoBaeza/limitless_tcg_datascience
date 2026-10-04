@@ -3,14 +3,16 @@ import { flushSync } from "react-dom";
 import { reducedMotion } from "./fx/motion";
 import type { Mode } from "./scale";
 
-const STORAGE_KEY = "limitless-theme";
+const STORAGE_KEY = "duelmeta-theme";
+// The key from before the rebrand, read once so a saved choice survives it.
+const LEGACY_STORAGE_KEY = "limitless-theme";
 
 /** Where a theme switch was triggered from, so the reveal can grow out of it. */
 export type Origin = { x: number; y: number };
 
 const read = (): string | null => {
   try {
-    return localStorage.getItem(STORAGE_KEY);
+    return localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY);
   } catch {
     return null;
   }

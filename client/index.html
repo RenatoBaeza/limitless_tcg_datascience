@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/pokeball.svg" />
     <meta name="theme-color" content="#0e121b" />
-    <title>Limitless metagame</title>
+    <title>PKTCG DuelMeta</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,7 +18,7 @@
          white flash while React boots. Mirrors useTheme.ts. -->
     <script>
       try {
-        var stored = localStorage.getItem("limitless-theme");
+        var stored = localStorage.getItem("duelmeta-theme") || localStorage.getItem("limitless-theme");
         var dark = stored ? stored === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
         document.documentElement.dataset.theme = dark ? "dark" : "light";
       } catch (e) {}

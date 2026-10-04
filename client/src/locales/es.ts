@@ -2,12 +2,12 @@ import type { Catalog } from "./en.ts";
 
 export const es = {
   language: "Idioma",
-  pageTitle: "Limitless metajuego",
+  pageTitle: "PKTCG DuelMeta",
   kicker: "JCC Pokémon · metajuego competitivo",
-  metagame: "metajuego",
   tournaments: { one: "torneo", other: "torneos" },
   matches: { one: "partida", other: "partidas" },
   decks: { one: "mazo", other: "mazos" },
+  minMatchesNote: "Se excluyen los torneos con menos de {count} partidas registradas",
   refreshed: "actualizado {time}",
   never: "nunca",
   lightTheme: "Cambiar al tema claro",

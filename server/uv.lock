@@ -373,7 +373,7 @@ wheels = [
 ]
 
 [[package]]
-name = "limitless-tcg-api"
+name = "pktcg-duelmeta-api"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

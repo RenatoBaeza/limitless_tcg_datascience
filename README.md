@@ -1,4 +1,4 @@
-# Limitless TCG metagame
+# PKTCG DuelMeta
 
 Deck-versus-deck performance for the Pokémon TCG, built from
 [play.limitlesstcg.com](https://play.limitlesstcg.com) tournament data.

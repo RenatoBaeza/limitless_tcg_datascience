@@ -1,7 +1,7 @@
 [project]
-name = "limitless-tcg-api"
+name = "pktcg-duelmeta-api"
 version = "0.1.0"
-description = "FastAPI service for Limitless TCG data"
+description = "PKTCG DuelMeta: FastAPI service for Limitless TCG tournament data"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

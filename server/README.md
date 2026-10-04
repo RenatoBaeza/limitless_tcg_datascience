@@ -1,4 +1,4 @@
-# Limitless TCG server
+# PKTCG DuelMeta server
 
 The ingest pipeline and the read API. The frontend that consumes it lives in
 `../client`.

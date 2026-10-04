@@ -3,7 +3,9 @@ import { en, type Catalog, type MessageKey } from "./locales/en.ts";
 import { es } from "./locales/es.ts";
 
 export type Language = "en" | "es";
-export const LANGUAGE_STORAGE_KEY = "limitless-language";
+export const LANGUAGE_STORAGE_KEY = "duelmeta-language";
+// The key from before the rebrand, read once so a saved choice survives it.
+export const LEGACY_LANGUAGE_STORAGE_KEY = "limitless-language";
 export const isLanguage = (value: unknown): value is Language => value === "en" || value === "es";
 
 /** Prefer an explicit choice, then the first supported browser language. */

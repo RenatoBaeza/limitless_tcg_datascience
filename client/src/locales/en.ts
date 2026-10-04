@@ -2,12 +2,12 @@ export type Message = string | { one: string; other: string };
 
 export const en = {
   language: "Language",
-  pageTitle: "Limitless metagame",
+  pageTitle: "PKTCG DuelMeta",
   kicker: "Pokémon TCG · competitive metagame",
-  metagame: "metagame",
   tournaments: { one: "tournament", other: "tournaments" },
   matches: { one: "match", other: "matches" },
   decks: { one: "deck", other: "decks" },
+  minMatchesNote: "Tournaments with fewer than {count} recorded matches are left out",
   refreshed: "refreshed {time}",
   never: "never",
   lightTheme: "Switch to light theme",

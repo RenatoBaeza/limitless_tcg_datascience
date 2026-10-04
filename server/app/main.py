@@ -14,7 +14,7 @@ DEFAULT_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
 load_dotenv()
 
 app = FastAPI(
-    title="Limitless TCG API",
+    title="PKTCG DuelMeta API",
     version="0.2.0",
 )
 

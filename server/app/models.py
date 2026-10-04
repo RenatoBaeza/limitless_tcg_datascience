@@ -33,6 +33,8 @@ class Coverage(BaseModel):
     tournaments: int = 0
     decks: int = 0
     matches: int = 0
+    # Tournaments with fewer matches than this are left out of every number.
+    min_matches: int = 0
     refreshed_at: datetime | None = None
 
 
@@ -48,6 +50,8 @@ class PeriodInfo(BaseModel):
     entries: int = 0
     matches: int = 0
     decks: int = 0
+    # Tournaments with fewer matches than this are left out of every number.
+    min_matches: int = 0
     refreshed_at: datetime | None = None
 
 

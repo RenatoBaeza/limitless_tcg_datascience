@@ -1,4 +1,4 @@
-# Limitless TCG client
+# PKTCG DuelMeta client
 
 Vite + React + TypeScript. Reads the gold layer through the FastAPI service in
 `../server`.
@@ -29,7 +29,8 @@ confidence whiskers, sortable, with each opponent clickable through to its own.
 ## Languages
 
 The header's language selector supports English and Spanish. It remembers an
-explicit choice in `localStorage` (`limitless-language`); otherwise the first
+explicit choice in `localStorage` (`duelmeta-language`, falling back to the
+pre-rebrand `limitless-language`); otherwise the first
 supported browser language is used, with English as the fallback. If browser
 storage is blocked, switching still works for the current session.
 

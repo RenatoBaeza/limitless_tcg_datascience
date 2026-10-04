@@ -20,6 +20,8 @@ export type Coverage = {
   tournaments: number;
   decks: number;
   matches: number;
+  /** Tournaments with fewer matches than this are left out of every number. */
+  min_matches: number;
   refreshed_at: string | null;
 };
 
