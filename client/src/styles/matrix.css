@@ -1,0 +1,423 @@
+/* ── matrix ─────────────────────────────────────────────────────────────── */
+
+/* The matrix sits on an opaque board inside the glass panel: its headers are
+   sticky, and cells scrolling under a translucent header would bleed through. */
+.matrix-scroll {
+  position: relative;
+  overflow: auto;
+  max-height: 78vh;
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0 8px 8px 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.matrix {
+  /* max-content, or auto layout squeezes columns to fit the scroll box and
+     the cells come out at uneven widths. */
+  width: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.matrix th,
+.matrix td {
+  padding: 0;
+  margin: 0;
+}
+
+.matrix thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-solid);
+  border-bottom: 1px solid var(--grid);
+}
+
+.matrix tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--surface-solid);
+  border-right: 1px solid var(--grid);
+}
+
+.matrix thead th:first-child {
+  z-index: 3;
+  left: 0;
+}
+
+.corner {
+  min-width: 210px;
+  text-align: left;
+  padding: 0 10px 10px 14px !important;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: bottom;
+}
+
+.corner-arrow {
+  margin-left: 8px;
+  color: var(--accent);
+}
+
+/* --lit is 1 on the hovered row's and column's headers (set by the <style>
+   rule MatchupMatrix writes) and 0 everywhere else. */
+.col-head,
+.row-head {
+  --lit: 0;
+}
+
+.col-head {
+  width: 54px;
+  min-width: 54px;
+  height: 64px;
+  vertical-align: bottom;
+  padding: 8px 0 8px !important;
+  transition: background 250ms;
+}
+
+.col-head img {
+  display: block;
+  margin: 0 auto;
+  height: 32px;
+  max-width: 48px;
+  object-fit: contain;
+  transform: translateY(calc(var(--lit) * -4px)) scale(calc(1 + var(--lit) * 0.25));
+  filter: drop-shadow(0 calc(var(--lit) * 6px) calc(var(--lit) * 6px) var(--accent-glow));
+  transition: transform 350ms var(--ease-spring), filter 350ms;
+  animation: icon-in 600ms var(--ease-spring) backwards;
+  animation-delay: calc(var(--d) * 25ms);
+}
+
+.col-head::after,
+.row-head::after {
+  content: "";
+  position: absolute;
+  background: var(--foil);
+  opacity: var(--lit);
+  transition: opacity 250ms;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.col-head::after {
+  left: 14%;
+  right: 14%;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.row-head::after {
+  top: 18%;
+  bottom: 18%;
+  right: -1px;
+  width: 2px;
+  border-radius: 2px;
+}
+
+@keyframes icon-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.6);
+  }
+}
+
+.row-head {
+  height: 44px;
+}
+
+.row-head button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 12px 4px 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 8px;
+  transition: background 200ms, transform 300ms var(--ease-out);
+  animation: row-in 500ms var(--ease-out) backwards;
+  animation-delay: calc(var(--d) * 22ms);
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}
+
+.row-head button:hover {
+  background: var(--ghost);
+}
+
+.row-head button:hover .name {
+  color: var(--accent);
+}
+
+.row-head .rank {
+  width: 18px;
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+.row-head img {
+  height: 28px;
+  width: 40px;
+  object-fit: contain;
+  flex: none;
+  transform: scale(calc(1 + var(--lit) * 0.18));
+  transition: transform 350ms var(--ease-spring);
+}
+
+.row-head .name {
+  font-size: 12.5px;
+  font-weight: calc(500 + var(--lit) * 150);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 200ms;
+}
+
+/* 2px of surface between fills, never a border drawn around the marks. */
+.cell {
+  position: relative;
+  width: 54px;
+  min-width: 54px;
+  height: 44px;
+  padding: 1px !important;
+}
+
+.cell > * {
+  transition: opacity 260ms ease-out, filter 260ms ease-out;
+}
+
+.cell button {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition:
+    transform 260ms var(--ease-spring),
+    box-shadow 260ms,
+    border-radius 260ms,
+    opacity 260ms ease-out,
+    filter 260ms ease-out;
+  animation: cell-in 520ms var(--ease-out) backwards;
+  animation-delay: calc(var(--d) * 16ms);
+}
+
+/* The entrance: a wave from the top-left corner, each cell flipping up into
+   place along the anti-diagonals. */
+@keyframes cell-in {
+  from {
+    opacity: 0;
+    transform: perspective(300px) rotateX(-70deg) scale(0.6);
+  }
+}
+
+/* The lifted cell: grows, rounds off, and casts a glow in its own colour. */
+.cell button:hover,
+.cell button:focus-visible {
+  z-index: 2;
+  transform: scale(1.22);
+  border-radius: 9px;
+  box-shadow:
+    0 0 0 2px var(--surface-solid),
+    0 0 0 3.5px var(--c),
+    0 12px 28px -4px var(--c);
+}
+
+.cell button:focus-visible {
+  outline: none;
+}
+
+.cell button:active {
+  transform: scale(1.1);
+}
+
+/* A sheen that crosses the lifted cell once. */
+.cell button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cell button:hover::after {
+  opacity: 1;
+  animation: sheen 700ms ease-out;
+}
+
+@keyframes sheen {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+
+.cell button .value {
+  padding-bottom: 1px;
+}
+
+/* Interval spans 50%: the point estimate is not distinguishable from even. */
+.cell button .value.inconclusive {
+  border-bottom: 1.5px dotted currentColor;
+}
+
+.cell.mirror div,
+.cell.empty div {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  animation: fade-in 500ms ease-out backwards;
+  animation-delay: calc(var(--d) * 16ms);
+}
+
+.cell.mirror div {
+  background: repeating-linear-gradient(-45deg, var(--ghost) 0 4px, transparent 4px 8px), var(--ghost);
+  border: 1px solid var(--border);
+}
+
+.cell.empty div {
+  border: 1px solid var(--grid);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ── legend ─────────────────────────────────────────────────────────────── */
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 2px 2px 0;
+}
+
+.legend-end {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.legend-ramp {
+  position: relative;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 7px;
+  background: var(--ghost);
+  border: 1px solid var(--border);
+}
+
+.legend-ramp > span:not(.legend-marker) {
+  width: 24px;
+  height: 12px;
+  border-radius: 3px;
+  animation: pop 500ms var(--ease-spring) backwards;
+  animation-delay: calc(200ms + var(--i) * 45ms);
+}
+
+.legend-ramp > span:first-child {
+  border-radius: 4px 2px 2px 4px;
+}
+
+.legend-marker {
+  position: absolute;
+  top: -9px;
+  bottom: -9px;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--surface-solid), 0 0 12px var(--c);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition:
+    left 380ms var(--ease-spring),
+    opacity 200ms,
+    transform 300ms var(--ease-spring);
+}
+
+.legend-marker.is-on {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.legend-marker b {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--surface-solid);
+  background: var(--text-primary);
+  white-space: nowrap;
+}
+
+.legend-key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-key .swatch {
+  width: 16px;
+  height: 12px;
+  border-radius: 3px;
+  background: repeating-linear-gradient(-45deg, var(--ghost) 0 3px, transparent 3px 6px), var(--ghost);
+  border: 1px solid var(--border);
+}
+
+.legend-key .dotted {
+  border-bottom: 1.5px dotted var(--text-secondary);
+  padding: 0 2px;
+  font-weight: 600;
+}
+
+.matrix-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}

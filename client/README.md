@@ -21,8 +21,8 @@ The API has to be running, and the gold layer has to be populated — see
 One filter row (date range, how many decks, minimum matches, whether to include
 the unclassified "Other" bucket) scoping three things below it: headline stat
 tiles, the matchup matrix, and the deck table. Clicking any deck opens its
-detail panel — that deck against every opponent it faced, as a dot plot with
-confidence whiskers.
+detail drawer — that deck against every opponent it faced, as a dot plot with
+confidence whiskers, sortable, with each opponent clickable through to its own.
 
 ## Design notes
 
@@ -61,6 +61,27 @@ yet. Raising the minimum-matches filter is how you clear those out.
 **Date presets count back from the last event in the data**, not from today.
 Results land days after an event happens and the ingest runs every six hours, so
 counting from today would quietly clip the most recent weekend off the window.
+
+**Motion.** The page is meant to feel alive, but no effect carries
+information the static page does not, and none is allowed to cost
+smoothness:
+
+- An ambient backdrop (drifting aurora, a dot lattice lit around the cursor, a
+  canvas of slow particles that parallax on scroll and part around the
+  pointer, film grain), in a violet-to-amber palette that stays clear of the
+  data's blue and red.
+- The stat tiles are holo cards: they tilt toward the cursor, and a foil
+  sheen and glare slide with it.
+- The matrix enters as a wave along its anti-diagonals. Hovering a cell lights
+  its row and column, dims the rest, and slides a marker along the legend to
+  that cell's rate.
+- Numbers roll up, panels rise in as they scroll into view, re-sorted rows
+  glide to their new places, and the theme switch reveals through a circle
+  grown from the toggle (View Transitions, where the browser has them).
+
+All of it switches off under `prefers-reduced-motion`. The CSS and the JS
+check the same query, so the reduced page is the same page, not a page with
+parts missing. No dependency was added for any of it.
 
 ## Assets
 

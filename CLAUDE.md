@@ -440,6 +440,28 @@ library would cost more than it saved.
   date would quietly clip the most recent weekend.
 - Every rate is drawn with its match count and Wilson interval reachable, and
   the matrix has a table-view twin, so nothing is encoded by colour alone.
+- `src/fx/` is the motion layer, still with no dependency added: `Backdrop.tsx`
+  (aurora, lattice, a particle canvas, grain), `pointer.ts` (one global
+  `pointermove` writing CSS variables), `motion.ts` (count-up, scroll reveal,
+  the reduced-motion check) and `useFlip.ts` (rows glide on re-sort). The
+  stylesheet is split by area under `src/styles/`, imported in order by
+  `styles.css`. The chrome accent is a violet-to-amber "foil", kept outside
+  the data's blue and red. Rules that are easy to break:
+  - **Every effect honours `prefers-reduced-motion`**, in CSS (`motion.css`)
+    and in JS (`reducedMotion()`): same page, movement removed.
+  - **Pointer-driven CSS variables go on leaf elements**, never `:root` or a
+    card. Custom properties inherit, so setting one on the matrix panel
+    restyles all 1600 cells every frame. That is why each `.glow` card carries
+    an empty `.spot` child.
+  - **The matrix grid is memoised and never re-renders on hover.** The
+    crosshair is a two-selector `<style>` rule written from the hovered
+    indices, and hover is one delegated listener on the `<table>`.
+  - **Anything `position: fixed` inside a glass panel must be portalled.**
+    `backdrop-filter` makes an element the containing block for fixed
+    descendants. `Tooltip` and `DeckDetail` both use `createPortal`.
+  - **Entrance keyframes declare only `from` and run with fill-mode
+    `backwards`**, so a finished entrance never pins a `transform` that a
+    hover transition later needs.
 
 ## Conventions
 

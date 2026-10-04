@@ -1,8 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import type { DeckMatchup, DeckSummary, Period } from "../api";
 import { fetchDeckMatchups } from "../api";
 import { count, percentSign, record, spansEven } from "../format";
+import { reducedMotion, useCountUp } from "../fx/motion";
+import { useFlip } from "../fx/useFlip";
 import { DeckIcon } from "./DeckIcon";
+import { Segmented } from "./Segmented";
+import { Skeleton } from "./Panel";
 
 // The dot plot spans this range, matching the matrix scale so the two views
 // are read on the same footing.
@@ -10,25 +16,35 @@ const AXIS_LOW = 0.25;
 const AXIS_HIGH = 0.75;
 const TICKS = [0.3, 0.4, 0.5, 0.6, 0.7];
 
+type Order = "matches" | "best" | "worst";
+
 /**
- * One deck against the whole field.
+ * One deck against the whole field, in a drawer over the page.
  *
  * A dot plot with whiskers rather than bars: the value is a rate, not a
  * magnitude, so there is no meaningful zero for a bar to grow from — and the
  * whisker is the point. It shows at a glance which matchups are known and
  * which are three games and a shrug.
+ *
+ * Each opponent that is itself on screen elsewhere is clickable, and opens
+ * that deck in place - so the drawer doubles as a way to walk the metagame
+ * one matchup at a time.
  */
 export function DeckDetail({
   deck,
   period,
   minMatches,
   includeOther,
+  canOpen,
+  onSelect,
   onClose,
 }: {
   deck: DeckSummary;
   period: Period;
   minMatches: number;
   includeOther: boolean;
+  canOpen: (deckId: string) => boolean;
+  onSelect: (deckId: string) => void;
   onClose: () => void;
 }) {
   const { data, isPending, isError, error, isPlaceholderData } = useQuery({
@@ -37,76 +53,190 @@ export function DeckDetail({
     placeholderData: (previous) => previous,
   });
 
-  return (
-    <section className="panel">
-      <div className="panel-head">
-        <div className="detail-head">
-          <DeckIcon deckId={deck.deck_id} alt="" />
-          <div>
-            <h2>{deck.deck_name ?? deck.deck_id} vs. the field</h2>
-            <div className="panel-note">
-              {percentSign(deck.score_rate)} overall over {count(deck.matches)} matches ·{" "}
-              {record(deck.wins, deck.losses, deck.ties)} · {percentSign(deck.meta_share, 2)} of the
-              field
-            </div>
-          </div>
-        </div>
-        <button type="button" className="close" onClick={onClose}>
-          Close
+  const [leaving, setLeaving] = useState(false);
+  const left = useRef(false);
+  const [order, setOrder] = useState<Order>("matches");
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const list = useRef<HTMLDivElement>(null);
+
+  // A ref, not the state: the Escape listener below holds the first render's
+  // closure, and must still see a close that is already under way.
+  const close = () => {
+    if (left.current) return;
+    left.current = true;
+    setLeaving(true);
+    window.setTimeout(onClose, reducedMotion() ? 0 : 280);
+  };
+
+  // Escape closes, focus moves in and comes back out, and the page behind
+  // stops scrolling - without the scrollbar vanishing and shifting the layout.
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null;
+    closeButton.current?.focus();
+
+    const gutter = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${gutter}px`;
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKey);
+
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      previous?.focus?.();
+    };
+  }, []);
+
+  const rows = data ? sortRows(data, order) : [];
+  useFlip(list, `${deck.deck_id} ${rows.map((row) => row.deck_b).join(" ")}`);
+
+  return createPortal(
+    <div className={`drawer-root${leaving ? " is-leaving" : ""}`}>
+      <div className="drawer-backdrop" onClick={close} />
+      <aside className="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+        <button ref={closeButton} type="button" className="drawer-close" onClick={close} aria-label="Close">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+            <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
         </button>
-      </div>
 
-      {isError && <p className="error">{(error as Error).message}</p>}
-      {isPending && <p className="notice">Loading matchups…</p>}
+        <Hero key={deck.deck_id} deck={deck} />
 
-      {data && (
-        <div className={isPlaceholderData ? "stale" : undefined}>
-          <div className="dots">
-            {data.map((matchup) => (
-              <DotRow key={matchup.deck_b} matchup={matchup} />
-            ))}
+        <div className="drawer-body">
+          <div className="drawer-section-head">
+            <h3>Against the field</h3>
+            <Segmented
+              size="sm"
+              label="Order opponents by"
+              value={order}
+              onChange={setOrder}
+              options={[
+                { value: "matches", label: "Most played" },
+                { value: "best", label: "Best" },
+                { value: "worst", label: "Worst" },
+              ]}
+            />
           </div>
 
-          <div className="dot-axis">
-            <span />
-            <div className="ticks">
-              {TICKS.map((tick) => (
-                <span key={tick} style={{ left: `${position(tick)}%` }}>
-                  {Math.round(tick * 100)}%
-                </span>
-              ))}
+          {isError && <p className="error">{(error as Error).message}</p>}
+          {isPending && <Skeleton rows={8} height={28} />}
+
+          {data && (
+            <div className={isPlaceholderData ? "stale" : "fresh"}>
+              <div className="dots" ref={list} key={deck.deck_id}>
+                {rows.map((matchup, i) => (
+                  <DotRow
+                    key={matchup.deck_b}
+                    matchup={matchup}
+                    index={i}
+                    onOpen={canOpen(matchup.deck_b) ? () => onSelect(matchup.deck_b) : undefined}
+                  />
+                ))}
+              </div>
+
+              {rows.length > 0 && (
+                <div className="dot-axis">
+                  <span />
+                  <div className="ticks">
+                    {TICKS.map((tick) => (
+                      <span key={tick} style={{ left: `${position(tick)}%` }}>
+                        {Math.round(tick * 100)}%
+                      </span>
+                    ))}
+                  </div>
+                  <span />
+                </div>
+              )}
+
+              {!data.length && (
+                <p className="notice">
+                  No opponent reached {minMatches} matches in this window. Lower the minimum or widen the range.
+                </p>
+              )}
             </div>
-            <span />
-          </div>
-
-          {!data.length && (
-            <p className="notice">
-              No opponent reached {minMatches} matches in this window. Lower the minimum or widen
-              the range.
-            </p>
           )}
         </div>
-      )}
-    </section>
+      </aside>
+    </div>,
+    document.body,
   );
 }
 
-function DotRow({ matchup }: { matchup: DeckMatchup }) {
+function Hero({ deck }: { deck: DeckSummary }) {
+  const score = useCountUp((deck.score_rate ?? 0) * 1000, 1200) / 1000;
+  const inconclusive = spansEven(deck.score_low, deck.score_high);
+
+  return (
+    <header className="drawer-hero">
+      <div className="hero-art" aria-hidden="true">
+        <span className="hero-ring r1" />
+        <span className="hero-ring r2" />
+        <span className="hero-rays" />
+        <DeckIcon deckId={deck.deck_id} alt="" />
+      </div>
+      <div className="hero-text">
+        <span className="hero-rank">#{deck.rank} most played</span>
+        <h2 id="drawer-title">{deck.deck_name ?? deck.deck_id}</h2>
+        <div className="hero-stats">
+          <div className="hero-stat">
+            <strong className={`num${inconclusive ? " muted" : ""}`}>{percentSign(score)}</strong>
+            <span>score rate</span>
+          </div>
+          <div className="hero-stat">
+            <strong className="num">{count(deck.matches)}</strong>
+            <span>matches</span>
+          </div>
+          <div className="hero-stat">
+            <strong className="num">{percentSign(deck.meta_share, 2)}</strong>
+            <span>of the field</span>
+          </div>
+        </div>
+        <div className="hero-record">
+          {record(deck.wins, deck.losses, deck.ties)} · 95% range {percentSign(deck.score_low, 0)}–
+          {percentSign(deck.score_high, 0)}
+        </div>
+      </div>
+    </header>
+  );
+}
+
+function DotRow({ matchup, index, onOpen }: { matchup: DeckMatchup; index: number; onOpen?: () => void }) {
   const rate = matchup.score_rate ?? 0.5;
   const low = matchup.score_low ?? rate;
   const high = matchup.score_high ?? rate;
   const inconclusive = spansEven(matchup.score_low, matchup.score_high);
+  const favoured = !inconclusive && rate > 0.5;
+  const unfavoured = !inconclusive && rate < 0.5;
 
   const label = `${matchup.deck_name ?? matchup.deck_b}: ${percentSign(rate)} over ${
     matchup.matches
   } matches, 95% range ${percentSign(low, 0)} to ${percentSign(high, 0)}`;
 
+  const name = (
+    <>
+      <DeckIcon deckId={matchup.deck_b} />
+      <span>{matchup.deck_name ?? matchup.deck_b}</span>
+    </>
+  );
+
   return (
-    <div className="dot-row" title={label}>
-      <div className="dot-label">
-        <DeckIcon deckId={matchup.deck_b} />
-        <span>{matchup.deck_name ?? matchup.deck_b}</span>
-      </div>
+    <div
+      className={`dot-row${favoured ? " is-up" : ""}${unfavoured ? " is-down" : ""}`}
+      data-flip={matchup.deck_b}
+      title={label}
+      style={{ "--i": Math.min(index, 30) } as CSSProperties}
+    >
+      {onOpen ? (
+        <button type="button" className="dot-label" onClick={onOpen}>
+          {name}
+        </button>
+      ) : (
+        <div className="dot-label">{name}</div>
+      )}
 
       <div className="dot-track" role="img" aria-label={label}>
         {TICKS.map((tick) => (
@@ -116,10 +246,7 @@ function DotRow({ matchup }: { matchup: DeckMatchup }) {
             style={{ left: `${position(tick)}%` }}
           />
         ))}
-        <div
-          className="whisker"
-          style={{ left: `${position(low)}%`, width: `${position(high) - position(low)}%` }}
-        />
+        <div className="whisker" style={{ left: `${position(low)}%`, width: `${position(high) - position(low)}%` }} />
         <div className="dot" style={{ left: `${position(rate)}%` }} />
       </div>
 
@@ -131,6 +258,14 @@ function DotRow({ matchup }: { matchup: DeckMatchup }) {
       </div>
     </div>
   );
+}
+
+function sortRows(rows: DeckMatchup[], order: Order): DeckMatchup[] {
+  const sorted = [...rows];
+  if (order === "matches") sorted.sort((a, b) => b.matches - a.matches);
+  if (order === "best") sorted.sort((a, b) => (b.score_rate ?? 0) - (a.score_rate ?? 0));
+  if (order === "worst") sorted.sort((a, b) => (a.score_rate ?? 0) - (b.score_rate ?? 0));
+  return sorted;
 }
 
 const position = (value: number) =>

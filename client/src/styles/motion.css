@@ -1,0 +1,62 @@
+/* ── shared motion ──────────────────────────────────────────────────────── */
+
+/* Entrance keyframes only ever say where something comes *from*, and are run
+   with fill-mode `backwards`: they hold the start state through the delay and
+   then let go, so a finished entrance never pins a property that a hover
+   transition later wants to move. */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* Panels rise and sharpen the first time they scroll into view
+   (useReveal adds .is-in). */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px) scale(0.985);
+  filter: blur(8px);
+  transition:
+    opacity 800ms var(--ease-out),
+    transform 900ms var(--ease-out),
+    filter 800ms var(--ease-out);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+/* ── reduced motion ─────────────────────────────────────────────────────── */
+
+/* Same page, movement removed. The JS side checks the same query (fx/motion.ts):
+   no particles, no tilt, count-ups land on their final value. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .aurora .blob,
+  .grain,
+  .foil-text,
+  .logo-halo,
+  .hero-rays,
+  .hero-ring {
+    animation: none !important;
+  }
+}

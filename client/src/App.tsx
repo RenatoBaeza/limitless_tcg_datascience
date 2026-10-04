@@ -1,15 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { fetchCoverage, fetchDecks, fetchMatrix } from "./api";
 import { DeckDetail } from "./components/DeckDetail";
 import { DeckTable } from "./components/DeckTable";
 import { FilterBar } from "./components/FilterBar";
+import { Header } from "./components/Header";
 import { MatchupMatrix } from "./components/MatchupMatrix";
 import { MatchupTable } from "./components/MatchupTable";
-import { ScaleLegend } from "./components/ScaleLegend";
+import { GridIcon, Panel, Skeleton, StackIcon } from "./components/Panel";
 import { StatTiles } from "./components/StatTiles";
 import { DEFAULT_FILTERS, type Filters, type View } from "./filters";
-import { count, relativeTime } from "./format";
+import { Backdrop } from "./fx/Backdrop";
 import { useTheme } from "./useTheme";
 
 export default function App() {
@@ -39,95 +40,108 @@ export default function App() {
   const selectedDeck = decks.data?.find((deck) => deck.deck_id === selected) ?? null;
   const stale = decks.isPlaceholderData || matrix.isPlaceholderData;
   const failure = (coverage.error ?? decks.error ?? matrix.error) as Error | null;
+  const fade = stale ? "stale" : "fresh";
+
+  // Stable, so the memoised matrix grid and deck table skip re-rendering when
+  // only the hover or the drawer changes.
+  const select = useCallback((deckId: string) => setSelected(deckId), []);
+  const canOpen = (deckId: string) => decks.data?.some((deck) => deck.deck_id === deckId) ?? false;
 
   return (
-    <div className="app">
-      <header className="header">
-        <div>
-          <h1>Limitless metagame</h1>
-          <div className="header-meta">
-            {coverage.data ? (
-              <>
-                {count(coverage.data.tournaments)} tournaments
-                <span className="dot">·</span>
-                {count(coverage.data.matches)} matches
-                <span className="dot">·</span>
-                {count(coverage.data.decks)} decks
-                <span className="dot">·</span>
-                {coverage.data.first_event} to {coverage.data.last_event}
-                <span className="dot">·</span>
-                refreshed {relativeTime(coverage.data.refreshed_at)}
-              </>
-            ) : (
-              "Loading…"
-            )}
-          </div>
-        </div>
+    <>
+      <Backdrop mode={mode} />
+      <div className="scroll-progress" aria-hidden="true" />
 
-        <div className="segmented" role="group" aria-label="Colour theme">
-          <button
-            type="button"
-            aria-pressed={mode === "light"}
-            onClick={() => setMode("light")}
-          >
-            Light
-          </button>
-          <button type="button" aria-pressed={mode === "dark"} onClick={() => setMode("dark")}>
-            Dark
-          </button>
-        </div>
-      </header>
+      <div className="app">
+        <Header coverage={coverage.data} mode={mode} onMode={setMode} />
 
-      <FilterBar filters={filters} onChange={setFilters} view={view} onViewChange={setView} />
+        <FilterBar
+          filters={filters}
+          onChange={setFilters}
+          view={view}
+          onViewChange={setView}
+          busy={decks.isFetching || matrix.isFetching}
+        />
 
-      {failure && (
-        <p className="error">
-          {failure.message}. Is the API running? <code>uv run uvicorn app.main:app --reload</code>{" "}
-          in <code>server/</code>.
-        </p>
-      )}
+        {failure && (
+          <p className="error">
+            {failure.message}. Is the API running? <code>uv run uvicorn app.main:app --reload</code> in{" "}
+            <code>server/</code>.
+          </p>
+        )}
 
-      {coverage.data?.matches === 0 && (
-        <p className="notice">
-          The gold layer is empty. Apply <code>server/sql/012_gold_finished.sql</code>, then run{" "}
-          <code>uv run python scripts/refresh_gold.py</code> in <code>server/</code>.
-        </p>
-      )}
+        {coverage.data?.matches === 0 && (
+          <p className="notice">
+            The gold layer is empty. Apply <code>server/sql/012_gold_finished.sql</code>, then run{" "}
+            <code>uv run python scripts/refresh_gold.py</code> in <code>server/</code>.
+          </p>
+        )}
 
-      {decks.data && matrix.data && (
-        <div className={stale ? "stale" : undefined}>
-          <StatTiles decks={decks.data} cells={matrix.data} />
-        </div>
-      )}
-
-      <section className="panel">
-        <div className="panel-head">
-          <div>
-            <h2>Matchups</h2>
-            <p className="panel-note">
-              Each cell is the row deck&rsquo;s score rate against the column deck, counting a tie
-              as half a win. Cells under {filters.minMatches} matches are left blank.
-            </p>
-          </div>
-          {view === "matrix" && <ScaleLegend mode={mode} />}
-        </div>
-
-        <div className={stale ? "stale" : undefined}>
-          {!decks.data || !matrix.data ? (
-            <p className="notice">Loading matchups…</p>
-          ) : view === "matrix" ? (
-            <MatchupMatrix
-              decks={decks.data}
-              cells={matrix.data}
-              mode={mode}
-              minMatches={filters.minMatches}
-              onSelect={setSelected}
-            />
+        <div className={fade}>
+          {decks.data && matrix.data ? (
+            <StatTiles decks={decks.data} cells={matrix.data} />
           ) : (
-            <MatchupTable decks={decks.data} cells={matrix.data} onSelect={setSelected} />
+            <div className="tiles">
+              {[0, 1, 2].map((i) => (
+                <span key={i} className="skeleton" style={{ height: 132, borderRadius: 14 }} />
+              ))}
+            </div>
           )}
         </div>
-      </section>
+
+        <Panel
+          icon={<GridIcon />}
+          title="Matchups"
+          note={
+            <>
+              Each cell is the row deck&rsquo;s score rate against the column deck, counting a tie as half a win.
+              Cells under {filters.minMatches} matches are left blank. Click any deck to see it against the field.
+            </>
+          }
+        >
+          <div className={fade}>
+            {!decks.data || !matrix.data ? (
+              <Skeleton rows={8} height={40} />
+            ) : (
+              <div key={view} className="view-swap matrix-wrap">
+                {view === "matrix" ? (
+                  <MatchupMatrix
+                    decks={decks.data}
+                    cells={matrix.data}
+                    mode={mode}
+                    minMatches={filters.minMatches}
+                    onSelect={select}
+                  />
+                ) : (
+                  <MatchupTable decks={decks.data} cells={matrix.data} onSelect={select} mode={mode} />
+                )}
+              </div>
+            )}
+          </div>
+        </Panel>
+
+        <Panel
+          icon={<StackIcon />}
+          title="Decks"
+          note="Score rate counts a tie as half a win, so it and the excluding-ties column differ by a point or two. Both are over non-mirror matches only. Click a column to re-sort."
+        >
+          <div className={fade}>
+            {decks.data ? (
+              <DeckTable decks={decks.data} selected={selected} onSelect={select} />
+            ) : (
+              <Skeleton rows={10} height={34} />
+            )}
+          </div>
+        </Panel>
+
+        <footer className="footer">
+          <span>Data from the Limitless TCG API</span>
+          <span className="sep" />
+          <span>rebuilt every six hours</span>
+          <span className="sep" />
+          <span>score rates with 95% Wilson intervals</span>
+        </footer>
+      </div>
 
       {selectedDeck && (
         <DeckDetail
@@ -135,29 +149,11 @@ export default function App() {
           period={period}
           minMatches={filters.minMatches}
           includeOther={filters.includeOther}
+          canOpen={canOpen}
+          onSelect={select}
           onClose={() => setSelected(null)}
         />
       )}
-
-      <section className="panel">
-        <div className="panel-head">
-          <div>
-            <h2>Decks</h2>
-            <p className="panel-note">
-              Score rate counts a tie as half a win, so it and the excluding-ties column differ by
-              a point or two. Both are over non-mirror matches only.
-            </p>
-          </div>
-        </div>
-
-        <div className={stale ? "stale" : undefined}>
-          {decks.data ? (
-            <DeckTable decks={decks.data} selected={selected} onSelect={setSelected} />
-          ) : (
-            <p className="notice">Loading decks…</p>
-          )}
-        </div>
-      </section>
-    </div>
+    </>
   );
 }

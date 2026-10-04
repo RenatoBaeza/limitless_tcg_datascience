@@ -1,0 +1,153 @@
+/* ── tooltip ────────────────────────────────────────────────────────────── */
+
+/* The outer element only moves (a transform, eased slightly so it trails the
+   pointer instead of jittering with it); the inner one pops in once. */
+.tooltip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  width: 270px;
+  pointer-events: none;
+  transition: transform 90ms linear;
+  will-change: transform;
+}
+
+.tooltip-inner {
+  position: relative;
+  background: var(--surface-2);
+  backdrop-filter: blur(22px) saturate(1.6);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lift);
+  padding: 12px 14px;
+  font-size: 12px;
+  overflow: hidden;
+  transform-origin: 0 0;
+  animation: tip-in 280ms var(--ease-spring) backwards;
+}
+
+.tooltip-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--foil);
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(6px);
+    filter: blur(4px);
+  }
+}
+
+.tip-matchup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.tip-matchup img {
+  height: 30px;
+  max-width: 54px;
+  object-fit: contain;
+}
+
+.tip-vs {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tooltip .headline {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-shadow: 0 0 24px var(--c);
+}
+
+.tooltip .who {
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.tip-interval {
+  margin-bottom: 10px;
+}
+
+.tip-track {
+  position: relative;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--ghost);
+}
+
+.tip-track span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.tip-even {
+  left: 50%;
+  width: 1px;
+  top: -3px !important;
+  bottom: -3px !important;
+  background: var(--axis);
+}
+
+.tip-range {
+  border-radius: 4px;
+  opacity: 0.55;
+  transition: left 200ms var(--ease-out), width 200ms var(--ease-out);
+}
+
+.tip-point {
+  width: 12px;
+  height: 12px;
+  top: -2px !important;
+  margin-left: -6px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-solid);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transition: left 250ms var(--ease-spring);
+}
+
+.tip-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltip dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 12px;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.tooltip dt {
+  color: var(--text-muted);
+}
+
+.tooltip dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
