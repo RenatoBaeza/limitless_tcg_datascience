@@ -49,7 +49,7 @@ export default function App() {
 
   return (
     <>
-      <Backdrop mode={mode} />
+      <Backdrop />
       <div className="scroll-progress" aria-hidden="true" />
 
       <div className="app">
@@ -83,7 +83,7 @@ export default function App() {
           ) : (
             <div className="tiles">
               {[0, 1, 2].map((i) => (
-                <span key={i} className="skeleton" style={{ height: 132, borderRadius: 14 }} />
+                <span key={i} className="skeleton" style={{ height: 236, borderRadius: 16 }} />
               ))}
             </div>
           )}

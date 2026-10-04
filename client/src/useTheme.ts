@@ -39,7 +39,7 @@ export function useTheme(): [Mode, (mode: Mode, origin?: Origin) => void] {
     document.documentElement.dataset.theme = mode;
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute("content", mode === "dark" ? "#07070b" : "#f4f3f9");
+      ?.setAttribute("content", mode === "dark" ? "#0e121b" : "#f6f3ea");
     try {
       localStorage.setItem(STORAGE_KEY, mode);
     } catch {

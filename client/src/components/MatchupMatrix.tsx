@@ -218,7 +218,7 @@ const MatrixGrid = memo(function MatrixGrid({
                 <td key={column.deck_id} className="cell" data-r={r} data-c={c}>
                   <button
                     type="button"
-                    style={{ ...wave, background, color: ink, "--c": background } as CSSProperties}
+                    style={{ ...wave, background, color: ink } as CSSProperties}
                     aria-label={`${name(row)} vs ${name(column)}: ${percentSign(cell.score_rate)} over ${
                       cell.matches
                     } matches`}

@@ -1,24 +1,16 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The motion layer's small shared toolkit. Every effect on the page checks
  * `prefers-reduced-motion` through here, so a viewer who asked for less motion
  * gets the same page with the movement taken out - final values straight away,
- * no drift, no tilt - rather than a page with parts missing.
+ * no entrances, no gliding rows - rather than a page with parts missing.
  */
 
 const REDUCE = "(prefers-reduced-motion: reduce)";
 
 export const reducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia(REDUCE).matches;
-
-function subscribe(onChange: () => void) {
-  const media = window.matchMedia(REDUCE);
-  media.addEventListener("change", onChange);
-  return () => media.removeEventListener("change", onChange);
-}
-
-export const useReducedMotion = () => useSyncExternalStore(subscribe, reducedMotion, () => false);
 
 const easeOutExpo = (t: number) => (t >= 1 ? 1 : 1 - 2 ** (-10 * t));
 

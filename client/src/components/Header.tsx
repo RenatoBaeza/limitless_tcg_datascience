@@ -26,12 +26,9 @@ export function Header({
       <div className="brand">
         <PokeballLogo />
         <div className="brand-text">
-          <div className="kicker">
-            <span className="live-dot" aria-hidden="true" />
-            Pokémon TCG · competitive metagame
-          </div>
+          <div className="kicker">Pokémon TCG · competitive metagame</div>
           <h1 className="title">
-            <span className="foil-text">Limitless</span> metagame
+            <span className="logo-text">Limitless</span> metagame
           </h1>
         </div>
       </div>
@@ -91,13 +88,12 @@ function ThemeToggle({
   return (
     <button
       type="button"
-      className="theme-toggle glow"
+      className="theme-toggle"
       data-mode={mode}
       onClick={onClick}
       aria-label={`Switch to ${next} theme`}
       title={`Switch to ${next} theme`}
     >
-      <span className="spot" aria-hidden="true" />
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
         <mask id="moon-mask">
           <rect width="24" height="24" fill="#fff" />
@@ -125,13 +121,13 @@ function ThemeToggle({
 
 /**
  * The mark, drawn inline so it can move. On load it does what a Poké Ball
- * does after a throw - three wobbles, a click, a burst of sparks - then idles.
- * Colours match public/pokeball.svg, so the tab icon and the page agree.
+ * does after a throw - three wobbles, a click, a burst of sparks - and then
+ * stays put. Colours match public/pokeball.svg, so the tab icon and the page
+ * agree.
  */
 function PokeballLogo() {
   return (
     <div className="logo" aria-hidden="true">
-      <div className="logo-halo" />
       <svg className="logo-ball" viewBox="0 0 32 32" width="52" height="52">
         <defs>
           <clipPath id="logo-clip">

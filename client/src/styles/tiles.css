@@ -1,4 +1,4 @@
-/* ── holo stat tiles ────────────────────────────────────────────────────── */
+/* ── stat cards ─────────────────────────────────────────────────────────── */
 
 .tiles {
   display: grid;
@@ -6,286 +6,249 @@
   gap: 16px;
 }
 
-.holo {
-  --rx: 0deg;
-  --ry: 0deg;
-  --px: 50%;
-  --py: 50%;
-  --hyp: 0;
-  --tone: #8b5cf6;
-  --tone-glow: rgba(139, 92, 246, 0.45);
-  perspective: 900px;
-  animation: deal 800ms var(--ease-spring) backwards;
+/* One per energy type: the fill for symbols and the art window, and a deeper
+   shade for marks that have to hold up against a light card face. */
+.type-grass {
+  --type: #5fae4f;
+  --type-deep: #2f7d35;
+}
+
+.type-lightning {
+  --type: #f7c600;
+  --type-deep: #a87c00;
+}
+
+.type-fighting {
+  --type: #c47a44;
+  --type-deep: #8c4c22;
+}
+
+:root[data-theme="dark"] .type-grass {
+  --type-deep: #7bcf6a;
+}
+
+:root[data-theme="dark"] .type-lightning {
+  --type-deep: #ffd84a;
+}
+
+:root[data-theme="dark"] .type-fighting {
+  --type-deep: #e39a63;
+}
+
+/* The yellow border every Pokémon card has, in both themes - cards are
+   printed, they do not have a dark mode. */
+.pcard {
+  border-radius: 16px;
+  padding: 7px;
+  background: linear-gradient(150deg, #ffe46b 0%, #f6c81c 45%, #e8b10b 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    0 0 0 1.5px #b88a06,
+    var(--shadow);
+  animation: deal 700ms var(--ease-out) backwards;
   animation-delay: calc(700ms + var(--i) * 110ms);
 }
 
-.tone-amber {
-  --tone: #f59e0b;
-  --tone-glow: rgba(245, 158, 11, 0.42);
-}
-
-.tone-fuchsia {
-  --tone: #d946ef;
-  --tone-glow: rgba(217, 70, 239, 0.42);
-}
-
-/* Dealt onto the table: from above, rotated, landing flat. */
+/* Dealt onto the table: from above, slightly turned, landing flat. */
 @keyframes deal {
   from {
     opacity: 0;
-    transform: translateY(-30px) rotate(-6deg) scale(0.9);
+    transform: translateY(-24px) rotate(-4deg);
   }
 }
 
-.holo-card {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  min-height: 132px;
-  padding: 16px 18px;
-  border-radius: var(--radius);
-  background:
-    radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--tone) 18%, transparent), transparent 55%),
-    var(--surface-1);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  transform: rotateX(var(--rx)) rotateY(var(--ry));
-  transition:
-    transform 600ms var(--ease-out),
-    box-shadow 400ms,
-    border-color 400ms;
-  will-change: transform;
-}
-
-.holo:hover .holo-card {
-  transition:
-    transform 120ms linear,
-    box-shadow 400ms,
-    border-color 400ms;
-  border-color: color-mix(in srgb, var(--tone) 45%, transparent);
-  box-shadow: var(--shadow-lift), 0 0 40px -12px var(--tone-glow);
-}
-
-/* The foil: a rainbow band plus a fine diagonal etch, colour-dodged over the
-   card so it only lights up where there is something to light, and slid by
-   the pointer so it moves against the tilt like real holo stock. */
-.holo-foil {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      rgba(255, 255, 255, 0) 0px,
-      rgba(255, 255, 255, 0.07) 2px,
-      rgba(255, 255, 255, 0) 4px
-    ),
-    linear-gradient(
-      115deg,
-      transparent 20%,
-      #ff6ad5 32%,
-      #c774e8 40%,
-      #ad8cff 48%,
-      #8795e8 56%,
-      #94d0ff 64%,
-      #fbe89a 72%,
-      transparent 84%
-    );
-  background-size: 100% 100%, 260% 260%;
-  background-position: 0 0, calc(100% - var(--px)) calc(100% - var(--py));
-  mix-blend-mode: color-dodge;
-  opacity: 0;
-  transition: opacity 400ms;
-  filter: saturate(1.2);
-}
-
-:root:not([data-theme="dark"]) .holo-foil {
-  mix-blend-mode: soft-light;
-}
-
-.holo:hover .holo-foil {
-  opacity: calc(0.25 + var(--hyp) * 0.45);
-}
-
-.holo-glare {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at var(--px) var(--py),
-    rgba(255, 255, 255, 0.38) 0%,
-    rgba(255, 255, 255, 0.08) 25%,
-    transparent 55%
-  );
-  mix-blend-mode: overlay;
-  opacity: 0;
-  transition: opacity 400ms;
-}
-
-.holo:hover .holo-glare {
-  opacity: 1;
-}
-
-.holo-body {
-  position: relative;
-  z-index: 1;
+.pcard-face {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  min-width: 0;
-  flex: 1;
+  gap: 8px;
+  padding: 10px 12px 12px;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--type) 24%, var(--surface-solid)) 0%,
+    color-mix(in srgb, var(--type) 8%, var(--surface-solid)) 65%
+  );
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
 }
 
-.tile-label {
+.pcard-top {
   display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pcard-title {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pcard-stage {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
-.tile-gem {
-  width: 7px;
-  height: 7px;
-  transform: rotate(45deg);
-  border-radius: 2px;
-  background: var(--tone);
-  box-shadow: 0 0 10px var(--tone);
-}
-
-.tile-value {
-  font-family: var(--font-display);
-  font-size: 38px;
+.pcard-name {
+  font-size: 16px;
   font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -0.04em;
-  background: linear-gradient(180deg, var(--text-primary) 30%, color-mix(in srgb, var(--text-primary) 55%, var(--tone)));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.tile-sub {
-  font-size: 12.5px;
-  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.tile-glyph {
-  margin-top: auto;
-  padding-top: 10px;
+/* Where a card prints "HP 120": small unit, big number, energy symbol. */
+.pcard-hp {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  flex: none;
 }
 
-/* The deck art, big and floating, standing off the card in 3D. */
-.tile-art {
-  position: relative;
-  z-index: 1;
-  flex: none;
+.pcard-hp small {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--type-deep);
+}
+
+/* Inter, not the pixel face: at this size its 5 and S are one glyph apart,
+   and this is the number the card exists to show. */
+.pcard-value {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.energy {
+  align-self: center;
   display: grid;
   place-items: center;
-  min-width: 96px;
-  transform: translate(var(--dx, 0px), var(--dy, 0px));
-  transition: transform 600ms var(--ease-out);
+  width: 20px;
+  height: 20px;
+  margin-left: 2px;
+  border-radius: 50%;
+  color: #1b2236;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--type) 45%, #fff), var(--type) 65%);
+  box-shadow:
+    0 0 0 1.5px #fff,
+    0 0 0 2.5px rgba(0, 0, 0, 0.3);
 }
 
-.holo:hover .tile-art {
-  transition: transform 120ms linear;
+/* The art window: a gilt frame around the type's colour field, with the
+   sprite standing on a battle platform. */
+.pcard-art {
+  position: relative;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  border: 3px solid transparent;
+  border-radius: 4px;
+  background:
+    radial-gradient(120% 90% at 50% 40%, color-mix(in srgb, var(--type) 30%, #fff) 0%, var(--type) 100%)
+      padding-box,
+    linear-gradient(135deg, #f7ecb8, #b5922d 35%, #f4e6a8 60%, #a6842a) border-box;
+  overflow: hidden;
 }
 
-.tile-art::before {
+.pcard-art::before {
   content: "";
   position: absolute;
-  width: 78px;
-  height: 78px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--tone-glow), transparent 70%);
-  filter: blur(6px);
-  animation: breathe 4s ease-in-out infinite;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -55deg,
+    rgba(255, 255, 255, 0) 0 9px,
+    rgba(255, 255, 255, 0.14) 9px 11px
+  );
 }
 
-.tile-art img {
+.pcard-art::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 128px;
+  height: 22px;
+  margin-left: -64px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.pcard-art img {
   position: relative;
+  z-index: 1;
   height: 64px;
   max-width: 120px;
+  margin-bottom: 10px;
   object-fit: contain;
-  filter: drop-shadow(0 10px 12px rgba(0, 0, 0, 0.35));
-  animation: float 4.5s ease-in-out infinite;
-  animation-delay: calc(var(--i) * -1.3s);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.18));
+  animation: party-hop 1.6s steps(1) infinite;
+  animation-delay: calc(var(--i) * -0.5s);
+}
+
+/* The party screen's idle hop: two frames, a few pixels, nothing eased. */
+@keyframes party-hop {
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 .versus-art {
   position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
 }
 
 .versus-art img {
-  height: 40px;
-  max-width: 54px;
+  height: 44px;
+  max-width: 60px;
 }
 
 .versus-art img:last-child {
-  animation-delay: -2.2s;
-  opacity: 0.8;
-  filter: grayscale(0.5) drop-shadow(0 10px 12px rgba(0, 0, 0, 0.35));
+  animation-delay: -0.8s;
 }
 
 .versus-bolt {
+  position: relative;
+  z-index: 1;
   display: grid;
   place-items: center;
   width: 24px;
   height: 24px;
+  margin-bottom: 10px;
   border-radius: 50%;
-  color: #fff;
-  background: var(--foil);
-  box-shadow: 0 0 14px var(--tone-glow);
-  animation: zap 2.6s ease-in-out infinite;
+  color: var(--accent);
+  background: #1b2236;
+  box-shadow: 0 0 0 2px #fff;
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
-  }
+.pcard-sub {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
 }
 
-@keyframes breathe {
-  0%,
-  100% {
-    transform: scale(0.9);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.12);
-    opacity: 1;
-  }
-}
-
-@keyframes zap {
-  0%,
-  86%,
-  100% {
-    transform: scale(1) rotate(0);
-  }
-  90% {
-    transform: scale(1.35) rotate(-12deg);
-  }
-  94% {
-    transform: scale(0.95) rotate(8deg);
-  }
+.tile-glyph {
+  margin-top: auto;
+  padding-top: 14px;
 }
 
 /* ── tile glyphs ────────────────────────────────────────────────────────── */
@@ -297,6 +260,7 @@
   height: 8px;
   border-radius: 4px;
   background: var(--ghost);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
 .share-bar span {
@@ -309,8 +273,7 @@
 }
 
 .share-bar span.lead {
-  background: var(--foil);
-  box-shadow: 0 0 10px var(--tone-glow);
+  background: var(--type-deep);
 }
 
 .share-bar em {
@@ -344,7 +307,7 @@
 
 .interval-bar .range {
   border-radius: 4px;
-  background: color-mix(in srgb, var(--tone) 45%, transparent);
+  background: color-mix(in srgb, var(--type) 55%, transparent);
   transform-origin: 50% 50%;
   animation: grow-x 900ms var(--ease-out) 1200ms backwards;
 }
@@ -355,9 +318,8 @@
   top: -2px;
   margin-left: -6px;
   border-radius: 50%;
-  background: var(--tone);
+  background: var(--type-deep);
   border: 2px solid var(--surface-solid);
-  box-shadow: 0 0 12px var(--tone);
   animation: pop 600ms var(--ease-spring) 1500ms backwards;
 }
 

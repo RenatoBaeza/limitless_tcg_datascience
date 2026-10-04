@@ -20,62 +20,42 @@
 }
 
 .kicker {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
   animation: rise 700ms var(--ease-out) 150ms backwards;
 }
 
-.live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 0 var(--accent-glow);
-  animation: ping 2.4s var(--ease-out) infinite;
-}
-
 .title {
-  font-size: clamp(30px, 4.2vw, 48px);
+  font-size: clamp(32px, 4.6vw, 54px);
   font-weight: 700;
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: 0.01em;
   margin-top: 4px;
   animation: rise 800ms var(--ease-out) 250ms backwards;
 }
 
-/* A foil gradient that keeps moving: background twice as wide as the text,
-   sliding, with a white glint passing across every few seconds. */
-.foil-text {
-  background:
-    linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.85) 50%, transparent 60%) 0 0 /
-      250% 100% no-repeat,
-    linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent-2), var(--accent)) 0 0 /
-      300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: foil 9s linear 1.2s infinite;
-  filter: drop-shadow(0 4px 18px var(--accent-glow));
-}
-
-/* One animation for both layers - two on the same property would clobber
-   each other. The glint crosses in the first fifth, the foil slides throughout. */
-@keyframes foil {
-  0% {
-    background-position: 160% 0, 0 0;
-  }
-  18% {
-    background-position: -60% 0, 54% 0;
-  }
-  100% {
-    background-position: -60% 0, 300% 0;
-  }
+/* The Pokémon logo's treatment: yellow letters in a heavy navy outline with a
+   drop under them. Built from hard text-shadows rather than text-stroke, which
+   eats into the letterforms and goes ragged on a pixel face. */
+.logo-text {
+  --o: #263a7a;
+  color: var(--accent);
+  text-shadow:
+    2px 0 0 var(--o),
+    -2px 0 0 var(--o),
+    0 2px 0 var(--o),
+    0 -2px 0 var(--o),
+    2px 2px 0 var(--o),
+    -2px 2px 0 var(--o),
+    2px -2px 0 var(--o),
+    -2px -2px 0 var(--o),
+    0 5px 0 var(--o),
+    2px 5px 0 var(--o),
+    -2px 5px 0 var(--o);
 }
 
 /* ── logo ───────────────────────────────────────────────────────────────── */
@@ -89,31 +69,13 @@
   place-items: center;
 }
 
-.logo-halo {
-  position: absolute;
-  inset: -8px;
-  border-radius: 50%;
-  background: conic-gradient(from var(--angle), var(--accent), var(--accent-2), var(--accent-3), var(--accent));
-  filter: blur(16px);
-  opacity: 0.45;
-  animation: spin-angle 6s linear infinite;
-}
-
 .logo-ball {
   position: relative;
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 4px 0 rgba(27, 34, 54, 0.25));
   transform-origin: 50% 85%;
   animation:
     drop-in 600ms var(--ease-spring) backwards,
-    catch 1.9s ease-in-out 650ms backwards,
-    bob 5s ease-in-out 2.8s infinite;
-  cursor: pointer;
-  pointer-events: auto;
-  transition: transform 700ms var(--ease-out);
-}
-
-.logo:hover .logo-ball {
-  animation: spin-ball 900ms var(--ease-out);
+    catch 1.9s ease-in-out 650ms backwards;
 }
 
 .logo-button {
@@ -164,38 +126,19 @@
   }
 }
 
-@keyframes bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0);
-  }
-  50% {
-    transform: translateY(-4px) rotate(-4deg);
-  }
-}
-
-@keyframes spin-ball {
-  from {
-    transform: rotate(0);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes button-flash {
   0% {
     fill: #fcfcfb;
   }
   30% {
-    fill: #fde68a;
-    filter: drop-shadow(0 0 4px #fbbf24);
+    fill: #ffe066;
   }
   100% {
     fill: #fcfcfb;
   }
 }
 
+/* The click of a catch: a ring of little stars, once. */
 .sparks {
   position: absolute;
   inset: 0;
@@ -206,29 +149,27 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 4px;
-  height: 4px;
-  margin: -2px;
-  border-radius: 50%;
-  background: var(--accent-3);
-  box-shadow: 0 0 8px 2px var(--accent-3);
+  width: 5px;
+  height: 5px;
+  margin: -2.5px;
+  background: var(--accent);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
   opacity: 0;
   animation: spark 800ms var(--ease-out) 2.45s both;
 }
 
 .sparks span:nth-child(even) {
-  background: var(--accent-2);
-  box-shadow: 0 0 8px 2px var(--accent-2);
+  background: var(--text-primary);
 }
 
 @keyframes spark {
   0% {
     opacity: 1;
-    transform: rotate(var(--a)) translateX(10px) scale(1);
+    transform: rotate(var(--a)) translateX(10px) scale(1.4);
   }
   100% {
     opacity: 0;
-    transform: rotate(var(--a)) translateX(46px) scale(0.2);
+    transform: rotate(var(--a)) translateX(44px) scale(0.4);
   }
 }
 
@@ -240,44 +181,42 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--border-strong);
+  border: 2px solid var(--line);
   background: var(--surface-1);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   display: grid;
   place-items: center;
   cursor: pointer;
   color: var(--text-primary);
   box-shadow: var(--shadow);
-  transition: transform 300ms var(--ease-spring), box-shadow 300ms;
+  transition: background 150ms;
   animation: rise 700ms var(--ease-out) 400ms backwards;
 }
 
 .theme-toggle:hover {
-  transform: scale(1.08) rotate(-8deg);
-  box-shadow: var(--shadow), 0 0 0 4px var(--selected), 0 0 24px var(--accent-glow);
+  background: var(--surface-2);
 }
 
 .theme-toggle:active {
-  transform: scale(0.94);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(40, 51, 82, 0.14);
 }
 
 .theme-toggle svg {
   overflow: visible;
-  transition: transform 600ms var(--ease-spring);
+  transition: transform 500ms var(--ease-out);
 }
 
 .theme-toggle .sun-core {
-  transition: r 500ms var(--ease-spring);
+  transition: r 400ms var(--ease-out);
 }
 
 .theme-toggle .moon-bite {
-  transition: cx 500ms var(--ease-out), cy 500ms var(--ease-out);
+  transition: cx 400ms var(--ease-out), cy 400ms var(--ease-out);
 }
 
 .theme-toggle .sun-rays {
   transform-origin: 12px 12px;
-  transition: transform 500ms var(--ease-spring), opacity 300ms;
+  transition: transform 400ms var(--ease-out), opacity 250ms;
 }
 
 /* Dark: a crescent moon, rays tucked away. */
@@ -316,20 +255,12 @@
   padding: 0 12px;
   border-radius: 999px;
   background: var(--surface-1);
-  border: 1px solid var(--border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid var(--border-strong);
   font-size: 12.5px;
   color: var(--text-secondary);
   white-space: nowrap;
   animation: rise 600ms var(--ease-out) backwards;
   animation-delay: calc(500ms + var(--i, 0) * 70ms);
-  transition: border-color 200ms, transform 200ms var(--ease-out);
-}
-
-.chip:hover {
-  border-color: var(--border-strong);
-  transform: translateY(-1px);
 }
 
 .chip strong {
@@ -366,16 +297,6 @@
   100% {
     transform: scale(3.2);
     opacity: 0;
-  }
-}
-
-@keyframes ping {
-  0% {
-    box-shadow: 0 0 0 0 var(--accent-glow);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 8px transparent;
   }
 }
 

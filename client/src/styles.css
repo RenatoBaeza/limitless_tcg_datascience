@@ -1,10 +1,10 @@
 /*
- * The stylesheet, in layers. Tokens and base first, then the ambient backdrop,
+ * The stylesheet, in layers. Tokens and base first, then the static backdrop,
  * then each part of the page in the order it appears on screen.
  *
  * Data colours do not live here - the matrix ramp is in scale.ts, validated,
- * and nothing in this layer competes with it: the chrome accent is a violet to
- * amber "holo foil" gradient, deliberately outside the blue/red the data uses.
+ * and nothing in this layer competes with it: the chrome is Pokémon yellow and
+ * navy ink, deliberately outside the blue/red the data uses.
  */
 
 @import "./styles/base.css";

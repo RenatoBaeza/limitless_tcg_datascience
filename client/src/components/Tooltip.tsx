@@ -12,9 +12,9 @@ const HEIGHT = 250;
  * A floating readout, positioned beside the pointer and flipped when it would
  * run off the viewport.
  *
- * Portalled to <body>: the panels are glass (backdrop-filter), and a filtered
- * ancestor becomes the containing block for anything position: fixed inside
- * it, which would pin the tooltip to the panel instead of the viewport.
+ * Portalled to <body>: a panel mid-reveal carries a transform and a filter,
+ * and either makes it the containing block for anything position: fixed
+ * inside it, which would pin the tooltip to the panel instead of the viewport.
  *
  * `pointer-events: none` in the stylesheet keeps it from stealing the hover it
  * was opened by. Everything it shows is also in the table view, so a reader who

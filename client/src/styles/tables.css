@@ -13,10 +13,12 @@ table.data {
   font-variant-numeric: tabular-nums;
 }
 
+/* Inter, not the pixel face: "95% range" sits in this row, and the pixel 5
+   reads as an S. */
 table.data th {
   text-align: right;
   font-size: 10.5px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -37,7 +39,6 @@ table.data td {
   padding: 8px 10px;
   border-bottom: 1px solid var(--grid);
   white-space: nowrap;
-  transition: background 200ms;
 }
 
 table.data tbody tr {
@@ -57,16 +58,12 @@ table.data tbody tr:hover td {
   background: var(--ghost);
 }
 
-table.data tbody tr:hover td:first-child {
-  box-shadow: inset 3px 0 0 var(--accent);
-}
-
 table.data tbody tr[aria-selected="true"] td {
   background: var(--selected);
 }
 
 table.data tbody tr[aria-selected="true"] td:first-child {
-  box-shadow: inset 3px 0 0 var(--accent);
+  box-shadow: inset 4px 0 0 var(--accent-strong);
 }
 
 /* ── sortable headers ───────────────────────────────────────────────────── */
@@ -83,7 +80,6 @@ table.data th.sortable button {
   text-transform: inherit;
   color: inherit;
   cursor: pointer;
-  transition: color 200ms;
 }
 
 table.data th.sortable button:hover,
@@ -94,19 +90,15 @@ table.data th.is-sorted button {
 .sort-caret {
   display: inline-block;
   opacity: 0;
-  transform: translateY(-4px);
-  transition: opacity 250ms, transform 350ms var(--ease-spring);
 }
 
 th.sortable button:hover .sort-caret {
   opacity: 0.4;
-  transform: none;
 }
 
 th.is-sorted .sort-caret {
   opacity: 1 !important;
-  transform: none;
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 th.is-sorted {
@@ -119,11 +111,9 @@ th.is-sorted::after {
   left: 10px;
   right: 10px;
   bottom: -1px;
-  height: 2px;
+  height: 3px;
   border-radius: 2px;
-  background: var(--foil);
-  box-shadow: 0 0 8px var(--accent-glow);
-  animation: grow-x 400ms var(--ease-out);
+  background: var(--accent-strong);
 }
 
 /* ── cells ──────────────────────────────────────────────────────────────── */
@@ -140,11 +130,6 @@ th.is-sorted::after {
   width: 40px;
   object-fit: contain;
   flex: none;
-  transition: transform 350ms var(--ease-spring);
-}
-
-tr:hover .deck-cell img {
-  transform: scale(1.25) rotate(-6deg);
 }
 
 .deck-cell button {
@@ -154,26 +139,22 @@ tr:hover .deck-cell img {
   cursor: pointer;
   text-align: left;
   font-weight: 500;
-  background-image: var(--foil);
-  background-size: 0% 1.5px;
-  background-position: 0 100%;
-  background-repeat: no-repeat;
-  padding-bottom: 1px;
-  transition: background-size 350ms var(--ease-out), color 200ms;
 }
 
 .deck-cell button:hover {
-  background-size: 100% 1.5px;
-  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-strong);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 .rank-badge {
   display: grid;
   place-items: center;
-  width: 22px;
+  width: 24px;
   height: 22px;
   flex: none;
-  border-radius: 7px;
+  border-radius: 6px;
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
@@ -189,16 +170,18 @@ tr:hover .deck-cell img {
 }
 
 .rank-badge.podium-1 {
-  background: linear-gradient(135deg, #fde68a, #f59e0b 60%, #fcd34d);
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.45);
+  background: linear-gradient(135deg, #ffe680, #f6c000 60%, #ffd84a);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .rank-badge.podium-2 {
   background: linear-gradient(135deg, #f1f5f9, #a8b0bd 60%, #e2e8f0);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .rank-badge.podium-3 {
   background: linear-gradient(135deg, #fed7aa, #c2703d 60%, #fdba74);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .bar-cell {
@@ -215,6 +198,7 @@ tr:hover .deck-cell img {
   height: 6px;
   border-radius: 3px;
   background: var(--ghost);
+  box-shadow: inset 0 0 0 1px var(--border);
   overflow: hidden;
 }
 
@@ -222,7 +206,7 @@ tr:hover .deck-cell img {
   position: absolute;
   inset: 0 auto 0 0;
   border-radius: 3px;
-  background: var(--foil);
+  background: var(--accent-strong);
   transform-origin: 0 50%;
   animation: grow-x 900ms var(--ease-out) backwards;
   animation-delay: calc(200ms + var(--i, 0) * 28ms);
@@ -260,6 +244,5 @@ tr:hover .deck-cell img {
 }
 
 .trophy svg {
-  color: var(--accent-3);
-  filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.6));
+  color: var(--accent-strong);
 }

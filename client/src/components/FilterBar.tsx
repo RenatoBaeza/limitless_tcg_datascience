@@ -46,8 +46,7 @@ export function FilterBar({
   return (
     <>
       <div ref={sentinel} className="sticky-sentinel" aria-hidden="true" />
-      <div className={`filters glow${stuck ? " is-stuck" : ""}${busy ? " is-busy" : ""}`}>
-        <span className="spot" aria-hidden="true" />
+      <div className={`filters${stuck ? " is-stuck" : ""}${busy ? " is-busy" : ""}`}>
         <div className="field">
           <span className="label" id="range-label">
             Date range

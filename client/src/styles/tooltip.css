@@ -1,7 +1,8 @@
 /* ── tooltip ────────────────────────────────────────────────────────────── */
 
-/* The outer element only moves (a transform, eased slightly so it trails the
-   pointer instead of jittering with it); the inner one pops in once. */
+/* The outer element only moves, straight to the pointer; the inner one fades
+   in once. Styled as the games' dialog box: an ink frame with a second, inner
+   rule. */
 .tooltip {
   position: fixed;
   left: 0;
@@ -9,39 +10,27 @@
   z-index: 80;
   width: 270px;
   pointer-events: none;
-  transition: transform 90ms linear;
   will-change: transform;
 }
 
 .tooltip-inner {
   position: relative;
-  background: var(--surface-2);
-  backdrop-filter: blur(22px) saturate(1.6);
-  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  background: var(--surface-solid);
   color: var(--text-primary);
-  border: 1px solid var(--border-strong);
-  border-radius: 14px;
-  box-shadow: var(--shadow-lift);
-  padding: 12px 14px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  box-shadow:
+    inset 0 0 0 3px var(--surface-solid),
+    inset 0 0 0 4.5px var(--border-strong),
+    var(--shadow-lift);
+  padding: 13px 15px;
   font-size: 12px;
-  overflow: hidden;
-  transform-origin: 0 0;
-  animation: tip-in 280ms var(--ease-spring) backwards;
-}
-
-.tooltip-inner::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 2px;
-  background: var(--foil);
+  animation: tip-in 120ms ease-out backwards;
 }
 
 @keyframes tip-in {
   from {
     opacity: 0;
-    transform: scale(0.85) translateY(6px);
-    filter: blur(4px);
   }
 }
 
@@ -59,20 +48,32 @@
 }
 
 .tip-vs {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
+/* The swatch is the hovered cell's own fill, tying the number to the colour. */
 .tooltip .headline {
-  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 28px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  text-shadow: 0 0 24px var(--c);
+}
+
+.tooltip .headline::before {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--c);
+  box-shadow: 0 0 0 1.5px var(--border-strong);
 }
 
 .tooltip .who {
@@ -109,7 +110,6 @@
 .tip-range {
   border-radius: 4px;
   opacity: 0.55;
-  transition: left 200ms var(--ease-out), width 200ms var(--ease-out);
 }
 
 .tip-point {
@@ -119,8 +119,7 @@
   margin-left: -6px;
   border-radius: 50%;
   border: 2px solid var(--surface-solid);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  transition: left 250ms var(--ease-spring);
+  box-shadow: 0 0 0 1px var(--border-strong);
 }
 
 .tip-axis {

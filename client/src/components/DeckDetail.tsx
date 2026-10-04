@@ -29,6 +29,9 @@ type Order = "matches" | "best" | "worst";
  * Each opponent that is itself on screen elsewhere is clickable, and opens
  * that deck in place - so the drawer doubles as a way to walk the metagame
  * one matchup at a time.
+ *
+ * Dressed as a Pokédex entry: the red band with its lens and lights, the deck
+ * on a battle platform in the screen, its rank as the entry number.
  */
 export function DeckDetail({
   deck,
@@ -98,6 +101,7 @@ export function DeckDetail({
     <div className={`drawer-root${leaving ? " is-leaving" : ""}`}>
       <div className="drawer-backdrop" onClick={close} />
       <aside className="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+        <DexBand />
         <button ref={closeButton} type="button" className="drawer-close" onClick={close} aria-label="Close">
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
             <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -172,14 +176,13 @@ function Hero({ deck }: { deck: DeckSummary }) {
 
   return (
     <header className="drawer-hero">
-      <div className="hero-art" aria-hidden="true">
-        <span className="hero-ring r1" />
-        <span className="hero-ring r2" />
-        <span className="hero-rays" />
+      <div className="dex-screen" aria-hidden="true">
         <DeckIcon deckId={deck.deck_id} alt="" />
       </div>
       <div className="hero-text">
-        <span className="hero-rank">#{deck.rank} most played</span>
+        <span className="hero-rank">
+          No. {String(deck.rank).padStart(3, "0")} <span className="muted">· #{deck.rank} most played</span>
+        </span>
         <h2 id="drawer-title">{deck.deck_name ?? deck.deck_id}</h2>
         <div className="hero-stats">
           <div className="hero-stat">
@@ -201,6 +204,22 @@ function Hero({ deck }: { deck: DeckSummary }) {
         </div>
       </div>
     </header>
+  );
+}
+
+/** The Pokédex's top band: one big lens and three indicator lights. */
+function DexBand() {
+  return (
+    <div className="dex-band" aria-hidden="true">
+      <svg className="dex-shape" viewBox="0 0 100 62" preserveAspectRatio="none">
+        <path className="dex-fill" d="M0 0H100V44H62L54 60H0Z" />
+        <path className="dex-edge" d="M0 60H54L62 44H100" vectorEffect="non-scaling-stroke" />
+      </svg>
+      <span className="dex-lens" />
+      <span className="dex-led" />
+      <span className="dex-led" />
+      <span className="dex-led" />
+    </div>
   );
 }
 

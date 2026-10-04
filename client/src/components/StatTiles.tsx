@@ -1,7 +1,7 @@
-import type { CSSProperties, PointerEvent, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { DeckSummary, MatchupCell } from "../api";
 import { count, percentSign, spansEven } from "../format";
-import { reducedMotion, useCountUp } from "../fx/motion";
+import { useCountUp } from "../fx/motion";
 import { DeckIcon } from "./DeckIcon";
 
 /**
@@ -12,9 +12,9 @@ import { DeckIcon } from "./DeckIcon";
  * still spans 50%, because otherwise both would be won every time by whichever
  * deck happened to go 3-0 somewhere.
  *
- * Drawn as holo cards - they tilt toward the cursor and a foil sheen slides
- * across them - because this is a card game, and the tiles are the first thing
- * on the page that is about the decks rather than the data.
+ * Drawn as Pokémon cards, because this is a card game and the tiles are the
+ * first thing on the page that is about the decks rather than the data. They
+ * are printed cards, not toys: nothing tilts or shines under the cursor.
  */
 export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: MatchupCell[] }) {
   const mostPlayed = decks.reduce<DeckSummary | null>(
@@ -41,42 +41,42 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
 
   return (
     <div className="tiles">
-      <HoloTile
+      <PokeCard
         index={0}
-        tone="violet"
-        label="Most played"
+        type="grass"
+        stage="Most played"
+        name={mostPlayed?.deck_name ?? "—"}
+        unit="share"
         value={mostPlayed?.meta_share ?? null}
-        sub={mostPlayed ? `${mostPlayed.deck_name} · ${count(mostPlayed.entries)} entries` : "—"}
+        sub={mostPlayed ? `${count(mostPlayed.entries)} entries` : "—"}
         art={mostPlayed && <DeckIcon deckId={mostPlayed.deck_id} alt="" />}
       >
         <ShareBar decks={top} />
-      </HoloTile>
+      </PokeCard>
 
-      <HoloTile
+      <PokeCard
         index={1}
-        tone="amber"
-        label="Best score rate"
+        type="lightning"
+        stage="Best score rate"
+        name={bestPerforming?.deck_name ?? "—"}
+        unit="score"
         value={bestPerforming?.score_rate ?? null}
-        sub={
-          bestPerforming
-            ? `${bestPerforming.deck_name} · ${count(bestPerforming.matches)} matches`
-            : "no deck clears 50% conclusively"
-        }
+        sub={bestPerforming ? `${count(bestPerforming.matches)} matches` : "no deck clears 50% conclusively"}
         art={bestPerforming && <DeckIcon deckId={bestPerforming.deck_id} alt="" />}
       >
         {bestPerforming && <IntervalBar rated={bestPerforming} />}
-      </HoloTile>
+      </PokeCard>
 
-      <HoloTile
+      <PokeCard
         index={2}
-        tone="fuchsia"
-        label="Most lopsided matchup"
+        type="fighting"
+        stage="Most lopsided matchup"
+        name={mostLopsided ? name.get(mostLopsided.deck_a) ?? mostLopsided.deck_a : "—"}
+        unit="score"
         value={mostLopsided?.score_rate ?? null}
         sub={
           mostLopsided
-            ? `${name.get(mostLopsided.deck_a)} over ${name.get(mostLopsided.deck_b)} · ${count(
-                mostLopsided.matches,
-              )} matches`
+            ? `over ${name.get(mostLopsided.deck_b) ?? mostLopsided.deck_b} · ${count(mostLopsided.matches)} matches`
             : "—"
         }
         art={
@@ -92,23 +92,34 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
         }
       >
         {mostLopsided && <IntervalBar rated={mostLopsided} />}
-      </HoloTile>
+      </PokeCard>
     </div>
   );
 }
 
-function HoloTile({
+type Energy = "grass" | "lightning" | "fighting";
+
+/**
+ * One headline number laid out as a Pokémon card: the stat's name where a
+ * card puts its stage, the deck where it puts the Pokémon's name, the number
+ * where it puts HP, then the art window and a one-line "attack" beneath.
+ */
+function PokeCard({
   index,
-  tone,
-  label,
+  type,
+  stage,
+  name,
+  unit,
   value,
   sub,
   art,
   children,
 }: {
   index: number;
-  tone: "violet" | "amber" | "fuchsia";
-  label: string;
+  type: Energy;
+  stage: string;
+  name: string;
+  unit: string;
   value: number | null;
   sub: string;
   art: ReactNode;
@@ -117,59 +128,48 @@ function HoloTile({
   // Rolled in tenths of a percent so the last digit settles, not just jumps.
   const shown = useCountUp(value == null ? 0 : value * 1000, 1400) / 1000;
 
-  // Tilt is written straight to CSS variables: a re-render per pointer move
-  // would be pure waste for something only the compositor needs to know.
-  const onMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (reducedMotion() || event.pointerType === "touch") return;
-    const card = event.currentTarget;
-    const box = card.getBoundingClientRect();
-    const px = (event.clientX - box.left) / box.width;
-    const py = (event.clientY - box.top) / box.height;
-    card.style.setProperty("--px", `${px * 100}%`);
-    card.style.setProperty("--py", `${py * 100}%`);
-    card.style.setProperty("--rx", `${(0.5 - py) * 14}deg`);
-    card.style.setProperty("--ry", `${(px - 0.5) * 18}deg`);
-    card.style.setProperty("--hyp", `${Math.min(Math.hypot(px - 0.5, py - 0.5) * 2, 1)}`);
-    // The art drifts further than the card tilts, which reads as depth.
-    card.style.setProperty("--dx", `${(px - 0.5) * 14}px`);
-    card.style.setProperty("--dy", `${(py - 0.5) * 10}px`);
-  };
-
-  const onLeave = (event: PointerEvent<HTMLDivElement>) => {
-    const card = event.currentTarget;
-    for (const prop of ["--rx", "--ry", "--hyp"]) card.style.setProperty(prop, "0");
-    for (const prop of ["--dx", "--dy"]) card.style.setProperty(prop, "0px");
-    card.style.setProperty("--px", "50%");
-    card.style.setProperty("--py", "50%");
-  };
-
   return (
-    <div
-      className={`holo tone-${tone}`}
-      style={{ "--i": index } as CSSProperties}
-      onPointerMove={onMove}
-      onPointerLeave={onLeave}
-    >
-      <div className="holo-card">
-        <div className="holo-body">
-          <span className="tile-label">
-            <span className="tile-gem" aria-hidden="true" />
-            {label}
-          </span>
-          <span className="tile-value num">{value == null ? "—" : percentSign(shown)}</span>
-          <span className="tile-sub">{sub}</span>
-          {children && <div className="tile-glyph">{children}</div>}
+    <div className={`pcard type-${type}`} style={{ "--i": index } as CSSProperties}>
+      <div className="pcard-face">
+        <div className="pcard-top">
+          <div className="pcard-title">
+            <span className="pcard-stage">{stage}</span>
+            <span className="pcard-name">{name}</span>
+          </div>
+          <div className="pcard-hp">
+            <small>{unit}</small>
+            <span className="pcard-value num">{value == null ? "—" : percentSign(shown)}</span>
+            <EnergyIcon type={type} />
+          </div>
         </div>
-        {art && <div className="tile-art">{art}</div>}
-        <span className="holo-foil" aria-hidden="true" />
-        <span className="holo-glare" aria-hidden="true" />
+        <div className="pcard-art">{art}</div>
+        <span className="pcard-sub">{sub}</span>
+        {children && <div className="tile-glyph">{children}</div>}
       </div>
     </div>
   );
 }
 
-/** The top decks' slices of the field, the leader in foil. The track is the
-    whole field, so the empty remainder is everyone else. */
+/** The card's energy symbol, so the three tiles read as three types. */
+function EnergyIcon({ type }: { type: Energy }) {
+  return (
+    <span className="energy" aria-hidden="true">
+      <svg viewBox="0 0 16 16" width="12" height="12">
+        {type === "grass" && <path d="M2.5 13.5C2.5 7 7 2.5 13.5 2.5c0 6.5-4.5 11-11 11Z" fill="currentColor" />}
+        {type === "lightning" && <path d="M9.5 1 3 9h4l-1 6 6.5-8h-4z" fill="currentColor" />}
+        {type === "fighting" && (
+          <path
+            d="M4 6.5a1.5 1.5 0 0 1 3 0V5a1.5 1.5 0 0 1 3 0v.5a1.5 1.5 0 0 1 3 0V10a4 4 0 0 1-4 4H7.5A3.5 3.5 0 0 1 4 10.5Zm0 2.5H2.5a1 1 0 0 1 0-2H4"
+            fill="currentColor"
+          />
+        )}
+      </svg>
+    </span>
+  );
+}
+
+/** The top decks' slices of the field, the leader in the card's colour. The
+    track is the whole field, so the empty remainder is everyone else. */
 function ShareBar({ decks }: { decks: DeckSummary[] }) {
   const total = decks.reduce((sum, deck) => sum + (deck.meta_share ?? 0), 0);
   return (

@@ -33,7 +33,7 @@
 /* ── reduced motion ─────────────────────────────────────────────────────── */
 
 /* Same page, movement removed. The JS side checks the same query (fx/motion.ts):
-   no particles, no tilt, count-ups land on their final value. */
+   count-ups land on their final value, rows stop gliding on re-sort. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -51,12 +51,9 @@
     filter: none;
   }
 
-  .aurora .blob,
-  .grain,
-  .foil-text,
-  .logo-halo,
-  .hero-rays,
-  .hero-ring {
+  .pcard-art img,
+  .dex-screen img,
+  .busy-bar {
     animation: none !important;
   }
 }

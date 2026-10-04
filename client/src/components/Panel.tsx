@@ -2,9 +2,8 @@ import type { ReactNode } from "react";
 import { useReveal } from "../fx/motion";
 
 /**
- * A glass card with a heading. Rises into place the first time it scrolls into
- * view, and its border catches a spotlight that follows the cursor (`.glow`,
- * driven by fx/pointer.ts).
+ * A framed card with a heading, drawn like a game menu window. Rises into
+ * place the first time it scrolls into view, and otherwise holds still.
  */
 export function Panel({
   title,
@@ -24,8 +23,7 @@ export function Panel({
   const ref = useReveal<HTMLElement>();
 
   return (
-    <section ref={ref} className={`panel glow reveal${className ? ` ${className}` : ""}`}>
-      <span className="spot" aria-hidden="true" />
+    <section ref={ref} className={`panel reveal${className ? ` ${className}` : ""}`}>
       <div className="panel-head">
         <div className="panel-title">
           {icon && (

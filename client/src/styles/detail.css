@@ -9,10 +9,8 @@
 .drawer-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(8, 6, 18, 0.45);
-  backdrop-filter: blur(6px) saturate(0.8);
-  -webkit-backdrop-filter: blur(6px) saturate(0.8);
-  animation: fade-in 300ms ease-out backwards;
+  background: rgba(14, 18, 27, 0.5);
+  animation: fade-in 250ms ease-out backwards;
 }
 
 .drawer {
@@ -23,33 +21,17 @@
   width: min(680px, calc(100vw - 20px));
   display: flex;
   flex-direction: column;
-  background: var(--surface-2);
-  backdrop-filter: blur(28px) saturate(1.5);
-  -webkit-backdrop-filter: blur(28px) saturate(1.5);
-  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+  border: 2px solid var(--line);
   border-radius: 18px;
-  box-shadow: -30px 0 80px -20px rgba(0, 0, 0, 0.5), var(--shadow-lift);
+  box-shadow: var(--shadow-lift);
   overflow: hidden;
-  animation: drawer-in 520ms var(--ease-out) backwards;
-}
-
-/* A foil edge down the drawer's leading side. */
-.drawer::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2), var(--accent-3));
-  box-shadow: 0 0 18px var(--accent-glow);
-  z-index: 2;
+  animation: drawer-in 420ms var(--ease-out) backwards;
 }
 
 @keyframes drawer-in {
   from {
-    transform: translateX(105%) scale(0.98);
-    opacity: 0.4;
+    transform: translateX(105%);
   }
 }
 
@@ -64,7 +46,6 @@
 @keyframes drawer-out {
   to {
     transform: translateX(105%);
-    opacity: 0.6;
   }
 }
 
@@ -74,27 +55,89 @@
   }
 }
 
+/* ── Pokédex band ───────────────────────────────────────────────────────── */
+
+/* Hardware, so the same red in both themes. The stepped lower edge is the
+   Pokédex's own silhouette. */
+.dex-band {
+  position: relative;
+  flex: none;
+  height: 62px;
+}
+
+.dex-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.dex-fill {
+  fill: #dc0a2d;
+}
+
+.dex-edge {
+  fill: none;
+  stroke: #1b2236;
+  stroke-width: 2.5;
+}
+
+.dex-lens {
+  position: absolute;
+  left: 18px;
+  top: 9px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6c4 0 12%, #ffd84a 30%, #d9a400 100%);
+  box-shadow:
+    0 0 0 4px #fff,
+    0 0 0 6px #1b2236;
+}
+
+.dex-led {
+  position: absolute;
+  top: 10px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #1b2236;
+}
+
+.dex-led:nth-of-type(2) {
+  left: 76px;
+  background: #ff6b6b;
+}
+
+.dex-led:nth-of-type(3) {
+  left: 94px;
+  background: #ffd84a;
+}
+
+.dex-led:nth-of-type(4) {
+  left: 112px;
+  background: #5cc565;
+}
+
 .drawer-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 6px;
+  right: 12px;
   z-index: 3;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  background: var(--surface-1);
-  color: var(--text-secondary);
+  border: 2px solid #1b2236;
+  background: #fff;
+  color: #1b2236;
   cursor: pointer;
-  transition: transform 350ms var(--ease-spring), color 200ms, background 200ms;
 }
 
 .drawer-close:hover {
-  transform: rotate(90deg) scale(1.08);
-  color: var(--text-primary);
-  background: var(--surface-solid);
+  background: #ffe680;
 }
 
 /* ── hero ───────────────────────────────────────────────────────────────── */
@@ -104,77 +147,54 @@
   display: flex;
   align-items: center;
   gap: 22px;
-  padding: 28px 28px 22px;
-  border-bottom: 1px solid var(--border);
-  background:
-    radial-gradient(90% 140% at 0% 0%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
-    radial-gradient(60% 120% at 100% 100%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 60%);
-  overflow: hidden;
+  padding: 14px 28px 22px;
+  border-bottom: 2px solid var(--border);
 }
 
-.hero-art {
+/* The Pokédex screen: a grey bezel with the clipped corner, and inside it the
+   deck standing on a battle platform. */
+.dex-screen {
   position: relative;
   flex: none;
-  width: 124px;
-  height: 124px;
+  width: 140px;
+  height: 116px;
   display: grid;
   place-items: center;
+  padding: 10px;
+  border-radius: 10px 10px 10px 30px;
+  background: #dfe0e6;
+  box-shadow:
+    0 0 0 2px #1b2236,
+    inset 0 -3px 0 rgba(0, 0, 0, 0.12);
 }
 
-.hero-ring {
+.dex-screen::before {
+  content: "";
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
+  inset: 10px;
+  border-radius: 4px;
+  background:
+    radial-gradient(70% 22% at 50% 82%, #b9d98a 0 60%, #8fbf5d 61% 72%, transparent 73%),
+    linear-gradient(180deg, #e9f4ff 0%, #fdfbea 70%);
+  box-shadow: inset 0 0 0 2px #1b2236;
 }
 
-.hero-ring.r1 {
-  background: conic-gradient(from var(--angle), var(--accent), var(--accent-2), var(--accent-3), var(--accent));
-  -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 63%, transparent 64%);
-  mask: radial-gradient(circle, transparent 60%, #000 61%, #000 63%, transparent 64%);
-  animation: spin-angle 5s linear infinite, pop 700ms var(--ease-spring) backwards;
-}
-
-.hero-ring.r2 {
-  inset: 14px;
-  background: radial-gradient(circle, var(--accent-glow), transparent 70%);
-  animation: breathe 3.6s ease-in-out infinite;
-}
-
-.hero-rays {
-  position: absolute;
-  inset: -30px;
-  background: repeating-conic-gradient(from 0deg, transparent 0deg 12deg, var(--selected) 12deg 15deg);
-  -webkit-mask: radial-gradient(circle, #000 20%, transparent 68%);
-  mask: radial-gradient(circle, #000 20%, transparent 68%);
-  animation: spin 40s linear infinite;
-  opacity: 0.8;
-}
-
-.hero-art img {
+.dex-screen img {
   position: relative;
-  height: 72px;
-  max-width: 112px;
+  height: 64px;
+  max-width: 108px;
+  margin-bottom: 8px;
   object-fit: contain;
-  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.4));
-  animation: hero-pop 700ms var(--ease-spring) 120ms backwards, float 4.5s ease-in-out 900ms infinite;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.2));
+  animation:
+    hero-pop 450ms var(--ease-out) 120ms backwards,
+    party-hop 1.6s steps(1) 600ms infinite;
 }
 
 @keyframes hero-pop {
   from {
-    transform: scale(0.2) rotate(-25deg);
+    transform: translateY(10px);
     opacity: 0;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spin-angle {
-  to {
-    --angle: 360deg;
   }
 }
 
@@ -184,19 +204,21 @@
 }
 
 .hero-rank {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent-ink);
+}
+
+.hero-rank .muted {
+  font-weight: 500;
 }
 
 .hero-text h2 {
   font-size: 26px;
   font-weight: 700;
-  letter-spacing: -0.03em;
   line-height: 1.15;
-  margin: 2px 40px 12px 0;
+  margin: 2px 0 12px;
 }
 
 .hero-stats {
@@ -211,9 +233,8 @@
 }
 
 .hero-stat strong {
-  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
 }
 
@@ -244,7 +265,7 @@
 }
 
 .drawer-section-head h3 {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .segmented-sm button {
@@ -268,7 +289,6 @@
   gap: 12px;
   padding: 3px 6px;
   border-radius: 8px;
-  transition: background 200ms;
   animation: row-rise 500ms var(--ease-out) backwards;
   animation-delay: calc(200ms + var(--i) * 30ms);
 }
@@ -295,7 +315,10 @@ button.dot-label {
 }
 
 button.dot-label:hover span {
-  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-strong);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 .dot-label img {
@@ -303,18 +326,12 @@ button.dot-label:hover span {
   width: 36px;
   object-fit: contain;
   flex: none;
-  transition: transform 300ms var(--ease-spring);
-}
-
-.dot-row:hover .dot-label img {
-  transform: scale(1.2);
 }
 
 .dot-label span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: color 200ms;
 }
 
 .dot-track {
@@ -356,22 +373,17 @@ button.dot-label:hover span {
   border-radius: 50%;
   background: var(--series-1);
   /* 2px surface ring so overlapping marks stay separable. */
-  box-shadow: 0 0 0 2px var(--surface-solid), 0 0 12px color-mix(in srgb, var(--series-1) 70%, transparent);
-  transition: transform 300ms var(--ease-spring);
-  animation: dot-slide 900ms var(--ease-spring) backwards;
+  box-shadow: 0 0 0 2px var(--surface-solid);
+  animation: dot-slide 800ms var(--ease-out) backwards;
   animation-delay: calc(300ms + var(--i) * 30ms);
 }
 
-/* Every dot starts at even and springs out to its rate. */
+/* Every dot starts at even and slides out to its rate. */
 @keyframes dot-slide {
   from {
     left: 50%;
     transform: scale(0);
   }
-}
-
-.dot-row:hover .dot {
-  transform: scale(1.4);
 }
 
 .dot-axis {
@@ -420,8 +432,8 @@ button.dot-label:hover span {
     align-items: flex-start;
     padding: 20px;
   }
-  .hero-art {
-    width: 92px;
-    height: 92px;
+  .dex-screen {
+    width: 120px;
+    height: 100px;
   }
 }

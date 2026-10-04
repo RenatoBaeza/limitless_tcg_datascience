@@ -440,28 +440,36 @@ library would cost more than it saved.
   date would quietly clip the most recent weekend.
 - Every rate is drawn with its match count and Wilson interval reachable, and
   the matrix has a table-view twin, so nothing is encoded by colour alone.
+- The look is Pokémon: yellow and navy chrome on warm card stock (a slate
+  night in dark mode), the stat tiles drawn as TCG cards, tooltips as game
+  dialog boxes, the deck drawer as a Pokédex entry. Poké Ball red appears only
+  on literal Poké Ball / Pokédex hardware (the mark, the switch thumb, the
+  drawer's band), never beside a matchup cell. No purple anywhere.
+- Two faces: Pixelify Sans for headings and wordy labels, Inter for body text
+  and **anything with a digit in it** - the pixel 5 reads as an S, which is
+  why the stat values, the table headers ("95% range") and the Pokédex number
+  are Inter.
 - `src/fx/` is the motion layer, still with no dependency added: `Backdrop.tsx`
-  (aurora, lattice, a particle canvas, grain), `pointer.ts` (one global
-  `pointermove` writing CSS variables), `motion.ts` (count-up, scroll reveal,
-  the reduced-motion check) and `useFlip.ts` (rows glide on re-sort). The
-  stylesheet is split by area under `src/styles/`, imported in order by
-  `styles.css`. The chrome accent is a violet-to-amber "foil", kept outside
-  the data's blue and red. Rules that are easy to break:
+  (a static dot grid and Poké Ball watermark - nothing moves), `motion.ts`
+  (count-up, scroll reveal, the reduced-motion check) and `useFlip.ts` (rows
+  glide on re-sort). The stylesheet is split by area under `src/styles/`,
+  imported in order by `styles.css`. Rules that are easy to break:
+  - **Hover changes a colour, an underline or an outline - it never moves,
+    scales, tilts, spins or plays an animation.** No cursor spotlights, no
+    sheens, no pointer-tracking CSS variables. The matrix crosshair dims the
+    rest of the grid, which is the one hover effect that earns its keep.
   - **Every effect honours `prefers-reduced-motion`**, in CSS (`motion.css`)
     and in JS (`reducedMotion()`): same page, movement removed.
-  - **Pointer-driven CSS variables go on leaf elements**, never `:root` or a
-    card. Custom properties inherit, so setting one on the matrix panel
-    restyles all 1600 cells every frame. That is why each `.glow` card carries
-    an empty `.spot` child.
   - **The matrix grid is memoised and never re-renders on hover.** The
     crosshair is a two-selector `<style>` rule written from the hovered
     indices, and hover is one delegated listener on the `<table>`.
-  - **Anything `position: fixed` inside a glass panel must be portalled.**
-    `backdrop-filter` makes an element the containing block for fixed
-    descendants. `Tooltip` and `DeckDetail` both use `createPortal`.
+  - **Anything `position: fixed` inside a panel must be portalled.** A panel
+    mid-reveal carries a `transform` and a `filter`, and either makes it the
+    containing block for fixed descendants. `Tooltip` and `DeckDetail` both
+    use `createPortal`.
   - **Entrance keyframes declare only `from` and run with fill-mode
     `backwards`**, so a finished entrance never pins a `transform` that a
-    hover transition later needs.
+    later state (an `:active` press, a re-sort glide) needs.
 
 ## Conventions
 
