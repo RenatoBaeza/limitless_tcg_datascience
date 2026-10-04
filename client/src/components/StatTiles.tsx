@@ -43,7 +43,6 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
     <div className="tiles">
       <PokeCard
         index={0}
-        type="grass"
         stage="Most played"
         name={mostPlayed?.deck_name ?? "—"}
         unit="share"
@@ -56,7 +55,6 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
 
       <PokeCard
         index={1}
-        type="lightning"
         stage="Best score rate"
         name={bestPerforming?.deck_name ?? "—"}
         unit="score"
@@ -69,7 +67,6 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
 
       <PokeCard
         index={2}
-        type="fighting"
         stage="Most lopsided matchup"
         name={mostLopsided ? name.get(mostLopsided.deck_a) ?? mostLopsided.deck_a : "—"}
         unit="score"
@@ -97,8 +94,6 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
   );
 }
 
-type Energy = "grass" | "lightning" | "fighting";
-
 /**
  * One headline number laid out as a Pokémon card: the stat's name where a
  * card puts its stage, the deck where it puts the Pokémon's name, the number
@@ -106,7 +101,6 @@ type Energy = "grass" | "lightning" | "fighting";
  */
 function PokeCard({
   index,
-  type,
   stage,
   name,
   unit,
@@ -116,7 +110,6 @@ function PokeCard({
   children,
 }: {
   index: number;
-  type: Energy;
   stage: string;
   name: string;
   unit: string;
@@ -129,7 +122,7 @@ function PokeCard({
   const shown = useCountUp(value == null ? 0 : value * 1000, 1400) / 1000;
 
   return (
-    <div className={`pcard type-${type}`} style={{ "--i": index } as CSSProperties}>
+    <div className="pcard" style={{ "--i": index } as CSSProperties}>
       <div className="pcard-face">
         <div className="pcard-top">
           <div className="pcard-title">
@@ -139,7 +132,6 @@ function PokeCard({
           <div className="pcard-hp">
             <small>{unit}</small>
             <span className="pcard-value num">{value == null ? "—" : percentSign(shown)}</span>
-            <EnergyIcon type={type} />
           </div>
         </div>
         <div className="pcard-art">{art}</div>
@@ -147,24 +139,6 @@ function PokeCard({
         {children && <div className="tile-glyph">{children}</div>}
       </div>
     </div>
-  );
-}
-
-/** The card's energy symbol, so the three tiles read as three types. */
-function EnergyIcon({ type }: { type: Energy }) {
-  return (
-    <span className="energy" aria-hidden="true">
-      <svg viewBox="0 0 16 16" width="12" height="12">
-        {type === "grass" && <path d="M2.5 13.5C2.5 7 7 2.5 13.5 2.5c0 6.5-4.5 11-11 11Z" fill="currentColor" />}
-        {type === "lightning" && <path d="M9.5 1 3 9h4l-1 6 6.5-8h-4z" fill="currentColor" />}
-        {type === "fighting" && (
-          <path
-            d="M4 6.5a1.5 1.5 0 0 1 3 0V5a1.5 1.5 0 0 1 3 0v.5a1.5 1.5 0 0 1 3 0V10a4 4 0 0 1-4 4H7.5A3.5 3.5 0 0 1 4 10.5Zm0 2.5H2.5a1 1 0 0 1 0-2H4"
-            fill="currentColor"
-          />
-        )}
-      </svg>
-    </span>
   );
 }
 

@@ -6,35 +6,6 @@
   gap: 16px;
 }
 
-/* One per energy type: the fill for symbols and the art window, and a deeper
-   shade for marks that have to hold up against a light card face. */
-.type-grass {
-  --type: #5fae4f;
-  --type-deep: #2f7d35;
-}
-
-.type-lightning {
-  --type: #f7c600;
-  --type-deep: #a87c00;
-}
-
-.type-fighting {
-  --type: #c47a44;
-  --type-deep: #8c4c22;
-}
-
-:root[data-theme="dark"] .type-grass {
-  --type-deep: #7bcf6a;
-}
-
-:root[data-theme="dark"] .type-lightning {
-  --type-deep: #ffd84a;
-}
-
-:root[data-theme="dark"] .type-fighting {
-  --type-deep: #e39a63;
-}
-
 /* The yellow border every Pokémon card has, in both themes - cards are
    printed, they do not have a dark mode. */
 .pcard {
@@ -66,8 +37,8 @@
   border-radius: 10px;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--type) 24%, var(--surface-solid)) 0%,
-    color-mix(in srgb, var(--type) 8%, var(--surface-solid)) 65%
+    color-mix(in srgb, var(--accent) 24%, var(--surface-solid)) 0%,
+    color-mix(in srgb, var(--accent) 8%, var(--surface-solid)) 65%
   );
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
 }
@@ -105,7 +76,7 @@
   white-space: nowrap;
 }
 
-/* Where a card prints "HP 120": small unit, big number, energy symbol. */
+/* Where a card prints "HP 120": small unit, big number. */
 .pcard-hp {
   display: flex;
   align-items: baseline;
@@ -118,7 +89,7 @@
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--type-deep);
+  color: var(--accent-ink);
 }
 
 /* Inter, not the pixel face: at this size its 5 and S are one glyph apart,
@@ -131,23 +102,8 @@
   color: var(--text-primary);
 }
 
-.energy {
-  align-self: center;
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  margin-left: 2px;
-  border-radius: 50%;
-  color: #1b2236;
-  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--type) 45%, #fff), var(--type) 65%);
-  box-shadow:
-    0 0 0 1.5px #fff,
-    0 0 0 2.5px rgba(0, 0, 0, 0.3);
-}
-
-/* The art window: a gilt frame around the type's colour field, with the
-   sprite standing on a battle platform. */
+/* The art window: a gilt frame around a yellow field, with the sprite
+   standing on a battle platform. */
 .pcard-art {
   position: relative;
   height: 96px;
@@ -156,7 +112,7 @@
   border: 3px solid transparent;
   border-radius: 4px;
   background:
-    radial-gradient(120% 90% at 50% 40%, color-mix(in srgb, var(--type) 30%, #fff) 0%, var(--type) 100%)
+    radial-gradient(120% 90% at 50% 40%, color-mix(in srgb, var(--accent) 30%, #fff) 0%, var(--accent) 100%)
       padding-box,
     linear-gradient(135deg, #f7ecb8, #b5922d 35%, #f4e6a8 60%, #a6842a) border-box;
   overflow: hidden;
@@ -273,7 +229,7 @@
 }
 
 .share-bar span.lead {
-  background: var(--type-deep);
+  background: var(--accent-ink);
 }
 
 .share-bar em {
@@ -307,7 +263,7 @@
 
 .interval-bar .range {
   border-radius: 4px;
-  background: color-mix(in srgb, var(--type) 55%, transparent);
+  background: color-mix(in srgb, var(--accent) 55%, transparent);
   transform-origin: 50% 50%;
   animation: grow-x 900ms var(--ease-out) 1200ms backwards;
 }
@@ -318,7 +274,7 @@
   top: -2px;
   margin-left: -6px;
   border-radius: 50%;
-  background: var(--type-deep);
+  background: var(--accent-ink);
   border: 2px solid var(--surface-solid);
   animation: pop 600ms var(--ease-spring) 1500ms backwards;
 }
