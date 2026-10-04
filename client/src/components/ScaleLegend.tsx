@@ -40,13 +40,34 @@ export function ScaleLegend({ mode, marker = null }: { mode: Mode; marker?: numb
       <span className="muted">score rate</span>
 
       <span className="legend-key">
-        <span className="swatch" />
+        <Chip rate={0.62} mode={mode} />
+        clear of 50%
+      </span>
+      <span className="legend-key">
+        <Chip rate={0.62} mode={mode} muted />
+        could still be even
+      </span>
+      <span className="legend-key">
+        <span className="swatch mirror" />
         mirror
       </span>
       <span className="legend-key">
-        <span className="dotted">56</span>
-        range still spans 50%
+        <span className="swatch empty" />
+        too few matches
       </span>
     </div>
+  );
+}
+
+/** A miniature matrix cell, drawn exactly as the grid draws one. */
+function Chip({ rate, mode, muted = false }: { rate: number; mode: Mode; muted?: boolean }) {
+  const { background, ink, edge } = scoreColor(rate, mode, muted);
+  return (
+    <span
+      className={`legend-chip${muted ? " muted" : ""}`}
+      style={{ backgroundColor: background, color: ink, "--edge": edge } as CSSProperties}
+    >
+      {percent(rate)}
+    </span>
   );
 }

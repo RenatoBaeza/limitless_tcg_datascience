@@ -18,13 +18,15 @@ import { IntervalReadout, Tooltip, type Anchor } from "./Tooltip";
  *             diverging scale and the number is the same rate, so the value is
  *             never carried by colour alone.
  *   mirror    the diagonal. A deck against itself is 50% by construction, so
- *             the gold layer does not store it and the cell says "mirror"
- *             rather than a number that would look like a finding.
- *   empty     they never met, or not often enough. Left blank rather than
- *             drawn as 0%, which is a different claim entirely.
+ *             the gold layer does not store it and the cell shows the deck's
+ *             own sprite rather than a number that would look like a finding.
+ *   empty     they never met, or not often enough. A dot rather than 0%,
+ *             which is a different claim entirely.
  *
- * Cells whose confidence interval still spans 50% get a dotted underline: the
- * point estimate is there, but the data cannot yet call the matchup either way.
+ * Cells whose confidence interval still spans 50% are drawn muted: the colour
+ * pulled most of the way back to the board, the full-strength colour kept as a
+ * thin outline. The point estimate is there, but the data cannot yet call the
+ * matchup either way, so it should not shout as loud as one it can.
  *
  * Hovering a cell lights its row and column and dims the rest, so the reader
  * can follow one deck across and its opponent down. That crosshair is a two-
@@ -192,8 +194,8 @@ const MatrixGrid = memo(function MatrixGrid({
               if (row.deck_id === column.deck_id) {
                 return (
                   <td key={column.deck_id} className="cell mirror" data-r={r} data-c={c}>
-                    <div title="Mirror match — 50% by definition" style={wave}>
-                      –
+                    <div title={`${name(row)} mirror — 50% by definition`} style={wave}>
+                      <DeckIcon deckId={row.deck_id} />
                     </div>
                   </td>
                 );
@@ -211,20 +213,21 @@ const MatrixGrid = memo(function MatrixGrid({
                 );
               }
 
-              const { background, ink } = scoreColor(cell.score_rate, mode);
               const inconclusive = spansEven(cell.score_low, cell.score_high);
+              const { background, ink, edge } = scoreColor(cell.score_rate, mode, inconclusive);
 
               return (
                 <td key={column.deck_id} className="cell" data-r={r} data-c={c}>
                   <button
                     type="button"
-                    style={{ ...wave, background, color: ink } as CSSProperties}
+                    className={inconclusive ? "muted" : undefined}
+                    style={{ ...wave, backgroundColor: background, color: ink, "--edge": edge } as CSSProperties}
                     aria-label={`${name(row)} vs ${name(column)}: ${percentSign(cell.score_rate)} over ${
                       cell.matches
-                    } matches`}
+                    } matches${inconclusive ? ", range still spans 50%" : ""}`}
                     onClick={() => onSelect(row.deck_id)}
                   >
-                    <span className={`value${inconclusive ? " inconclusive" : ""}`}>{percent(cell.score_rate)}</span>
+                    {percent(cell.score_rate)}
                   </button>
                 </td>
               );

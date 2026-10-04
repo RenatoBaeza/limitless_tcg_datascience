@@ -27,6 +27,9 @@
   --border-strong: rgba(27, 34, 54, 0.2);
   --ghost: rgba(27, 34, 54, 0.045);
   --selected: rgba(255, 203, 5, 0.22);
+  /* The hairline inside every matrix tile. */
+  --cell-edge: rgba(27, 34, 54, 0.07);
+  --cell-light: rgba(255, 255, 255, 0.16);
 
   /* The game-UI frame: a solid ink outline and a hard, unblurred drop. */
   --line: #283352;
@@ -70,6 +73,8 @@
   --border-strong: rgba(255, 255, 255, 0.16);
   --ghost: rgba(255, 255, 255, 0.05);
   --selected: rgba(255, 203, 5, 0.14);
+  --cell-edge: rgba(255, 255, 255, 0.05);
+  --cell-light: rgba(255, 255, 255, 0.09);
 
   --line: #343d54;
   --shadow: 0 4px 0 rgba(0, 0, 0, 0.4);

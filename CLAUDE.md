@@ -432,6 +432,11 @@ library would cost more than it saved.
   is exactly what a matchup chart cannot afford. Dark mode is a separate set of
   stops, not an inversion — on a dark surface the neutral end has to recede
   toward the surface, which is the opposite direction of travel.
+  A cell whose interval still spans 50% is drawn **muted**:
+  `scoreColor(rate, mode, true)` mixes it toward the matrix board and returns
+  ink measured against the mixed colour. The full-strength colour survives
+  only as its outline (`edge`). So set a cell's background from `scoreColor`,
+  never with a CSS opacity or `color-mix`, or the ink stops being measured.
 - Filters live in one row above everything they scope, and every panel reads
   the same period, so the numbers on screen always agree. The date presets are
   the server's periods, passed as `?period=`. The server resolves their dates,
