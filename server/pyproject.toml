@@ -13,6 +13,10 @@ dependencies = [
 ]
 
 [dependency-groups]
+analysis = [
+    "numpy>=2.5.3",
+    "scipy>=1.18.1",
+]
 dev = [
     "httpx2>=2.9.1",
     "pytest>=9.1.1",

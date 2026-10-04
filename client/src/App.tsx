@@ -12,11 +12,15 @@ import type { Period } from "./api";
 import { DEFAULT_PERIOD } from "./filters";
 import { Backdrop } from "./fx/Backdrop";
 import { useI18n } from "./i18n";
+import { Insights } from "./insights/Insights";
+import { ViewTabs } from "./components/ViewTabs";
 import { useTheme } from "./useTheme";
+import { useView } from "./useView";
 
 export default function App() {
   const { t } = useI18n();
   const [mode, setMode] = useTheme();
+  const [view, setView] = useView();
   const [period, setPeriod] = useState<Period>(DEFAULT_PERIOD);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -55,61 +59,69 @@ export default function App() {
       <div className="app">
         <Header coverage={coverage.data} mode={mode} onMode={setMode} />
 
-        <FilterBar period={period} onChange={setPeriod} busy={decks.isFetching || matrix.isFetching} />
+        <ViewTabs view={view} onView={setView} />
 
-        {failure && (
-          <p className="error">
-            {t("loadError")}
-          </p>
-        )}
+        {view === "insights" ? (
+          <Insights mode={mode} />
+        ) : (
+          <>
+            <FilterBar period={period} onChange={setPeriod} busy={decks.isFetching || matrix.isFetching} />
 
-        {coverage.data?.matches === 0 && (
-          <p className="notice">
-            {t("emptyData")}
-          </p>
-        )}
+            {failure && (
+              <p className="error">
+                {t("loadError")}
+              </p>
+            )}
 
-        <div className={fade}>
-          {decks.data && matrix.data ? (
-            <StatTiles decks={decks.data} cells={matrix.data} />
-          ) : (
-            <div className="tiles">
-              {[0, 1, 2].map((i) => (
-                <span key={i} className="skeleton" style={{ height: 236, borderRadius: 16 }} />
-              ))}
+            {coverage.data?.matches === 0 && (
+              <p className="notice">
+                {t("emptyData")}
+              </p>
+            )}
+
+            <div className={fade}>
+              {decks.data && matrix.data ? (
+                <StatTiles decks={decks.data} cells={matrix.data} />
+              ) : (
+                <div className="tiles">
+                  {[0, 1, 2].map((i) => (
+                    <span key={i} className="skeleton" style={{ height: 236, borderRadius: 16 }} />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <Panel
-          icon={<GridIcon />}
-          title={t("matchups")}
-          note={t("matchupNote")}
-        >
-          <div className={fade}>
-            {!decks.data || !matrix.data ? (
-              <Skeleton rows={8} height={40} />
-            ) : (
-              <div className="matrix-wrap">
-                <MatchupMatrix decks={decks.data} cells={matrix.data} mode={mode} onSelect={select} />
+            <Panel
+              icon={<GridIcon />}
+              title={t("matchups")}
+              note={t("matchupNote")}
+            >
+              <div className={fade}>
+                {!decks.data || !matrix.data ? (
+                  <Skeleton rows={8} height={40} />
+                ) : (
+                  <div className="matrix-wrap">
+                    <MatchupMatrix decks={decks.data} cells={matrix.data} mode={mode} onSelect={select} />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </Panel>
+            </Panel>
 
-        <Panel
-          icon={<StackIcon />}
-          title={t("decksTitle")}
-          note={t("deckNote")}
-        >
-          <div className={fade}>
-            {decks.data ? (
-              <DeckTable decks={decks.data} selected={selected} onSelect={select} />
-            ) : (
-              <Skeleton rows={10} height={34} />
-            )}
-          </div>
-        </Panel>
+            <Panel
+              icon={<StackIcon />}
+              title={t("decksTitle")}
+              note={t("deckNote")}
+            >
+              <div className={fade}>
+                {decks.data ? (
+                  <DeckTable decks={decks.data} selected={selected} onSelect={select} />
+                ) : (
+                  <Skeleton rows={10} height={34} />
+                )}
+              </div>
+            </Panel>
+          </>
+        )}
 
         <footer className="footer">
           <span>{t("dataSource")}</span>
@@ -118,7 +130,7 @@ export default function App() {
         </footer>
       </div>
 
-      {selectedDeck && (
+      {view === "metagame" && selectedDeck && (
         <DeckDetail
           deck={selectedDeck}
           period={period}

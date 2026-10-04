@@ -1,0 +1,964 @@
+/* ── view tabs ──────────────────────────────────────────────────────────── */
+
+/* Game-menu tabs: ink-framed cards, the current one yellow. Hover changes the
+   colour and nothing else. */
+.view-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: -6px;
+  animation: rise 600ms var(--ease-out) 450ms backwards;
+}
+
+.view-tabs a {
+  padding: 8px 18px;
+  font-family: var(--font-pixel);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: var(--surface-1);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+.view-tabs a:hover {
+  color: var(--text-primary);
+  background: var(--surface-2);
+}
+
+.view-tabs a[aria-current="page"] {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+/* ── cluster palette ────────────────────────────────────────────────────────
+   Orange and aqua, validated as a pair in both modes for an all-pairs chart
+   (CVD dE 9.2 light / 9.4 dark, normal-vision 27.6 / 26.5). Light aqua is
+   under 3:1 on the surface, so every marker also has a shape and every group
+   a printed name. A third group and beyond take neutral ink and lean on shape. */
+
+:root {
+  --cluster-1: #eb6834;
+  --cluster-2: #1baf7a;
+  --cluster-other: #6c7287;
+}
+
+:root[data-theme="dark"] {
+  --cluster-1: #d95926;
+  --cluster-2: #199e70;
+  --cluster-other: #868ca0;
+}
+
+/* ── snapshot strip ─────────────────────────────────────────────────────── */
+
+.snapshot {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding: 12px 16px;
+  background: var(--surface-1);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  color: var(--text-secondary);
+  animation: rise 600ms var(--ease-out) 500ms backwards;
+}
+
+.snapshot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-pixel);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.insight-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .insight-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sub-title {
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.sub-title + .panel-note {
+  margin-top: -10px;
+}
+
+.link-button {
+  background: none;
+  border: 0;
+  padding: 2px 0;
+  color: var(--accent-ink);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-button:hover {
+  color: var(--text-primary);
+}
+
+/* ── composition ────────────────────────────────────────────────────────── */
+
+.composition {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.composition-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+/* Inter, not the pixel face: the pixel 5 reads as an S. */
+.hero-number {
+  font-family: var(--font);
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.composition-hero > div {
+  flex: 1;
+  min-width: 240px;
+}
+
+.hero-label {
+  margin: 0;
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.hero-verdict {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+
+/* A 2px surface gap between segments, and rounded ends on the outside. */
+.composition-bar {
+  display: flex;
+  gap: 2px;
+  height: 22px;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--surface-solid);
+  box-shadow: inset 0 0 0 1.5px var(--border);
+}
+
+.segment {
+  flex-basis: 0;
+  min-width: 4px;
+  border-radius: 2px;
+  transform-origin: left;
+  animation: grow-segment 900ms var(--ease-out) backwards;
+  animation-delay: calc(200ms + var(--i) * 150ms);
+}
+
+.segment:first-child {
+  border-radius: 6px 2px 2px 6px;
+}
+
+.segment:last-child {
+  border-radius: 2px 6px 6px 2px;
+}
+
+.segment-cyclic {
+  background: var(--series-1);
+}
+
+.segment-transitive {
+  background: var(--text-muted);
+}
+
+/* Noise is texture, not a colour: it is what the data cannot tell apart. */
+.segment-noise {
+  background: repeating-linear-gradient(135deg, var(--axis) 0 2px, transparent 2px 6px);
+}
+
+@keyframes grow-segment {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.composition-labels {
+  display: flex;
+  gap: 8px 2px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.composition-label {
+  flex-basis: 0;
+  min-width: max-content;
+}
+
+.composition-label strong {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+/* ── ring ───────────────────────────────────────────────────────────────── */
+
+.ring-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 600px;
+  overflow: visible;
+}
+
+.ring-svg image {
+  image-rendering: pixelated;
+}
+
+.ring-track {
+  fill: none;
+  stroke: var(--grid);
+  stroke-width: 14;
+}
+
+.ring-arcs path {
+  fill: none;
+  stroke: var(--axis);
+  stroke-width: 2;
+}
+
+.ring-arrowhead {
+  fill: none;
+  stroke: var(--text-muted);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ring-node {
+  cursor: pointer;
+  outline: none;
+}
+
+.ring-disc {
+  fill: var(--surface-solid);
+  stroke: var(--line);
+  stroke-width: 2.5;
+  transition: stroke 150ms, opacity 150ms;
+}
+
+.ring-node:focus-visible .ring-disc {
+  stroke: var(--text-primary);
+  stroke-width: 4;
+}
+
+.ring-node.is-focus .ring-disc {
+  fill: var(--accent);
+  stroke: var(--line);
+  stroke-width: 3.5;
+}
+
+.ring-node.has-result .ring-disc {
+  stroke-width: 4.5;
+}
+
+.ring-node.is-unmet {
+  opacity: 0.35;
+}
+
+.ring-label {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  fill: var(--text-secondary);
+}
+
+.ring-node.is-focus .ring-label {
+  fill: var(--text-primary);
+}
+
+.ring-badge text {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.ring-badge rect {
+  stroke-width: 1.5;
+}
+
+.ring-order {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  gap: 4px 2px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ring-order li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ring-order li:not(:last-child)::after {
+  content: "→";
+  margin: 0 4px;
+  color: var(--text-muted);
+}
+
+.ring-order li:last-child::after {
+  content: "↺";
+  margin-left: 6px;
+  color: var(--text-muted);
+}
+
+.ring-order img {
+  height: 20px;
+  width: 30px;
+  object-fit: contain;
+}
+
+@media (max-width: 640px) {
+  .ring-label {
+    display: none;
+  }
+
+  .ring-order {
+    display: flex;
+  }
+}
+
+.ring-readout {
+  margin: 0;
+  min-height: 42px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ── strength ladder ────────────────────────────────────────────────────── */
+
+.ladder-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ladder-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1.2fr) minmax(80px, 1fr) 52px;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.ladder-row:hover {
+  background: var(--ghost);
+}
+
+.ladder-rank {
+  color: var(--text-muted);
+  text-align: right;
+  font-size: 12px;
+}
+
+.ladder-deck {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ladder-deck img {
+  height: 24px;
+  width: 36px;
+  object-fit: contain;
+  flex: none;
+}
+
+.ladder-deck span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ladder-track {
+  position: relative;
+  height: 14px;
+}
+
+/* The even line every bar grows from. */
+.ladder-track::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  bottom: -3px;
+  width: 1.5px;
+  background: var(--axis);
+}
+
+.ladder-bar {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: var(--from);
+  width: var(--width);
+  min-width: 2px;
+  border-radius: 4px;
+  background: var(--c);
+  animation: fade-in 500ms var(--ease-out) backwards;
+  animation-delay: calc(var(--i) * 25ms);
+}
+
+.ladder-value {
+  text-align: right;
+  font-weight: 600;
+}
+
+.ladder-foot {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1.2fr) minmax(80px, 1fr) 52px;
+  gap: 10px;
+  padding: 6px 6px 0;
+  align-items: center;
+}
+
+.ladder-axis {
+  grid-column: 3;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.ladder-foot .link-button {
+  grid-column: 1 / 3;
+  grid-row: 1;
+  justify-self: start;
+}
+
+/* ── triangles ──────────────────────────────────────────────────────────── */
+
+.triangles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.triangle-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px 14px;
+  background: var(--surface-2);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  animation: rise 500ms var(--ease-out) backwards;
+  animation-delay: calc(var(--i) * 60ms);
+}
+
+.triangle-svg {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.triangle-svg image {
+  image-rendering: pixelated;
+}
+
+.triangle-edge {
+  stroke: var(--text-muted);
+  stroke-width: 2;
+}
+
+.triangle-rate {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  fill: var(--text-primary);
+}
+
+.triangle-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ── archetypes ─────────────────────────────────────────────────────────── */
+
+.archetypes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.archetype-verdict {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 2px solid var(--border-strong);
+  color: var(--text-secondary);
+}
+
+.archetype-verdict.is-weak {
+  border-left: 6px solid var(--accent-strong);
+}
+
+.archetype-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-item .muted {
+  font-weight: 400;
+}
+
+.cluster-swatch {
+  flex: none;
+  overflow: visible;
+}
+
+.cluster-swatch * {
+  stroke: var(--surface-solid);
+  stroke-width: 1.5;
+}
+
+.scatter-wrap {
+  border-radius: var(--radius-sm);
+  background: var(--surface-solid);
+  border: 1.5px solid var(--border);
+}
+
+.scatter {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* A 2px surface ring keeps overlapping markers apart. */
+.point > * {
+  stroke: var(--surface-solid);
+  stroke-width: 2;
+  opacity: 0.92;
+  transition: stroke 120ms;
+}
+
+.point.is-hover > * {
+  stroke: var(--text-primary);
+  opacity: 1;
+}
+
+.point-label {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--text-secondary);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: var(--surface-solid);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.axis-line {
+  stroke: var(--axis);
+  stroke-width: 1;
+}
+
+.axis-label {
+  font-family: var(--font);
+  font-size: 11.5px;
+  fill: var(--text-muted);
+}
+
+.cluster-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.cluster-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  animation: rise 500ms var(--ease-out) backwards;
+  animation-delay: calc(var(--i) * 90ms);
+}
+
+.cluster-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+}
+
+.cluster-card header p {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+}
+
+.cluster-members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cluster-members li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px 2px 4px;
+  border-radius: 999px;
+  background: var(--surface-1);
+  border: 1.5px solid var(--border);
+  font-size: 12px;
+}
+
+.cluster-members li.muted {
+  padding-left: 9px;
+}
+
+.cluster-members img {
+  height: 20px;
+  width: 30px;
+  object-fit: contain;
+}
+
+.cluster-matchups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.cluster-matchups h4,
+.trend-column h4 {
+  margin: 0 0 6px;
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.cluster-matchups ul,
+.trend-column ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cluster-matchups li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+}
+
+.cluster-matchups img {
+  height: 20px;
+  width: 30px;
+  object-fit: contain;
+  flex: none;
+}
+
+.cluster-opponent {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── meta shifts ────────────────────────────────────────────────────────── */
+
+.shifts {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.weekly-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.week-bar {
+  fill: var(--border-strong);
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: grow-bar 700ms var(--ease-out) backwards;
+  animation-delay: calc(var(--i) * 18ms);
+  transition: fill 120ms;
+}
+
+.week-bar.is-flag {
+  fill: var(--series-1);
+}
+
+.week-bar.is-hover {
+  fill: var(--text-secondary);
+}
+
+.week-bar.is-flag.is-hover {
+  fill: var(--text-primary);
+}
+
+@keyframes grow-bar {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+.hit {
+  fill: transparent;
+}
+
+.typical-line {
+  stroke: var(--axis);
+  stroke-width: 1;
+}
+
+/* Drawn over the bars, so it carries a surface halo to stay legible. */
+.typical-label {
+  paint-order: stroke;
+  stroke: var(--surface-1);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.flag-mark {
+  font-size: 13px;
+  fill: var(--accent-ink);
+}
+
+.tooltip dd {
+  white-space: nowrap;
+}
+
+.tip-big {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.tip-big .muted {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.trends {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.trend-column {
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 2px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.trend-column h4 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.trend-glyph {
+  color: var(--accent-ink);
+}
+
+.trend-column li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.trend-column img {
+  height: 22px;
+  width: 32px;
+  object-fit: contain;
+  flex: none;
+}
+
+.trend-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.trend-name .muted {
+  font-size: 11px;
+}
+
+.trend-change {
+  white-space: nowrap;
+}
+
+.timelines {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.timeline {
+  position: relative;
+  margin: 0;
+  padding: 10px 12px 8px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.timeline figcaption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  margin-bottom: 6px;
+}
+
+.timeline figcaption img {
+  height: 20px;
+  width: 30px;
+  object-fit: contain;
+}
+
+.timeline-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.timeline-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.timeline-dot {
+  fill: var(--text-muted);
+  opacity: 0.55;
+}
+
+.timeline-level {
+  fill: none;
+  stroke: var(--series-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.flag-band {
+  fill: var(--selected);
+}
+
+.crosshair {
+  stroke: var(--text-primary);
+  stroke-width: 1;
+}
+
+/* The card's own scale, printed above the plot rather than inside it, where
+   a line running high would cross it. */
+.timeline-peak {
+  display: block;
+  text-align: right;
+  font-size: 10.5px;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 640px) {
+  .hero-number {
+    font-size: 48px;
+  }
+
+  .cluster-matchups {
+    grid-template-columns: 1fr;
+  }
+
+  .ladder-row,
+  .ladder-foot {
+    grid-template-columns: 22px minmax(0, 1fr) 70px 48px;
+    gap: 6px;
+  }
+}

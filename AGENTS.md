@@ -60,6 +60,24 @@ Deck sprite assets, written into `client/public/decks/` (`--dry-run`,
 uv run python scripts/download_deck_sprites.py
 ```
 
+Metagame analysis - archetype clustering, rock-paper-scissors cycle detection
+and meta-shift detection - written to `exports/meta_analysis.md` and `.json`.
+Offline and read-only: it writes nothing to the database. Needs the opt-in
+`analysis` dependency group (numpy, scipy), which the API does not carry
+(`--period`, `--only <archetypes|cycles|shifts>`, `--refresh`; see `--help`):
+
+```bash
+uv run --group analysis python scripts/analyze_meta.py
+uv run --group analysis pytest tests/test_analysis.py   # skips without the group
+```
+
+The first run pulls all of silver (~2.5 min) into `cache/analysis/`, which is
+gitignored; later runs read the cache until `--refresh`. A full run (no
+`--only`) also publishes `client/public/analysis.json`, the static snapshot the
+client's Insights view draws - commit it alongside the code, like the deck
+sprites. The methods are
+documented at the top of `analysis/archetypes.py`, `cycles.py` and `shifts.py`.
+
 Requires `SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `server/.env` (repo
 secrets in CI).
 
@@ -447,6 +465,15 @@ library would cost more than it saved.
 - `src/api.ts` types the four endpoints. Base URL is `/api` in dev, which
   `vite.config.ts` proxies to the FastAPI service so the browser stays on one
   origin; set `VITE_API_URL` to point at a deployed API instead.
+- Two views, switched by `ViewTabs` and kept in the URL hash (`#/`,
+  `#/insights`; `src/useView.ts`), since the static build has no server-side
+  routing. **Metagame** is everything below. **Insights** (`src/insights/`)
+  draws the offline analysis from `public/analysis.json`, typed in
+  `src/analysis.ts` against `report.as_json` - change both together. It is a
+  snapshot, not live gold, so it has no period filter and says when it was
+  computed. Its archetype groups use their own two-hue palette
+  (`--cluster-1/2` in `styles/insights.css`, orange/aqua, validated all-pairs
+  in both modes) plus a shape per group, kept clear of the matrix's blue/red.
 - `src/scale.ts` is the diverging colour scale, and it is the file to read
   before changing any colour. Blue is favourable, red unfavourable, neutral
   gray at 50%, saturating at 25%/75% because real matchups between decks anyone
