@@ -119,25 +119,29 @@ uv run python scripts/refresh_gold.py       # silver -> gold
 Both are full reconciles rather than appends, so re-running is a no-op beyond
 `refreshed_at`, and both take `--dry-run` and a repeatable `--only <step>`.
 Silver also takes `--tournament <id>` and `--chunk-size N`; gold takes a
-repeatable `--period <30d|90d|all>`. Run them in that order: gold reads
+repeatable `--period <3d|7d|30d|60d|90d|all>`. Run them in that order: gold reads
 silver, and silver reads bronze.
 
 **Silver** is one row per real match, restated as winner/loser with each side's
 deck joined in from standings. **Gold** is finished tables, computed once per
-period (`gold_periods`: last 30 and 90 days, and all): `gold_deck_stats`
+period (`gold_periods`: last 3, 7, 30, 60 and 90 days, and all):
+`gold_deck_stats`
 is the deck table and `gold_matchup_stats` the matrix cells, each row exactly
 as the frontend draws it. Nothing is aggregated when the API reads them.
 
 The gold decisions that matter downstream: every match is counted from both
 sides, ties are their own column rather than folded into either, mirrors are
 excluded (50% by definition), a match needs both decks known to count, and
-`deck_id = 'other'` is a catch-all bucket rather than an archetype. The header
-of `sql/012_gold_finished.sql` explains each.
+`deck_id = 'other'` is a catch-all bucket rather than an archetype, so gold
+leaves it out entirely. The headers of `sql/012_gold_finished.sql` and
+`sql/014_fixed_view.sql` explain each.
 
 ## Read API
 
 Each endpoint is a filtered read of one gold table. All take
-`?period=30d|90d|all` (default `all`) and `include_other`.
+`?period=3d|7d|30d|60d|90d|all` (default `all`) and nothing else: the deck list
+and the matrix axis are always the top 50 decks, every cell with a match is
+returned, and 'other' is never in the data.
 
 ```
 GET /coverage                     the 'all' period's dates and totals

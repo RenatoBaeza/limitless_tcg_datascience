@@ -19,9 +19,10 @@ The API has to be running, and the gold layer has to be populated — see
 
 ## What's on screen
 
-One filter row (date range, how many decks, minimum matches, whether to include
-the unclassified "Other" bucket) scoping three things below it: headline stat
-tiles, the matchup matrix, and the deck table. Clicking any deck opens its
+One control — the period: last 3, 7, 30, 60 or 90 days, or all six months —
+scoping three things below it: headline stat tiles, the matchup matrix, and the
+deck table. Everything else is fixed: the top 50 decks, every pairing that met
+at least once, and never the unclassified "Other" bucket. Clicking any deck opens its
 detail drawer — that deck against every opponent it faced, as a dot plot with
 confidence whiskers, sortable, with each opponent clickable through to its own.
 
@@ -66,15 +67,14 @@ live between roughly 35% and 65%, so mapping the full 0–100% would spend most 
 the ramp on rates that never occur.
 
 **Reading the cells.** Every cell carries its number as well as its colour, so
-nothing is encoded by colour alone, and the matrix has a table view twin. Three
-kinds of cell mean three different things: a painted cell is a real record, the
-diagonal is a mirror (50% by construction, excluded from the data), and a blank
-cell means the two decks never met often enough to clear the minimum-matches
-filter — which is a different claim from 0%.
+nothing is encoded by colour alone. Three kinds of cell mean three different
+things: a painted cell is a real record, the diagonal is a mirror (50% by
+construction, excluded from the data), and a blank cell means the two decks
+never met in the period — which is a different claim from 0%.
 
-A dotted underline under a cell's number means its 95% interval still spans 50%:
-the point estimate is there, but the data cannot call the matchup either way
-yet. Raising the minimum-matches filter is how you clear those out.
+Every meeting is drawn, however thin, so a muted cell is how the matrix says its
+95% interval still spans 50%: the point estimate is there, but the data cannot
+call the matchup either way yet. A longer period is how you firm those up.
 
 **Date presets count back from the last event in the data**, not from today.
 Results land days after an event happens and the ingest runs every six hours, so

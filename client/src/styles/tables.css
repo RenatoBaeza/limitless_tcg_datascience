@@ -191,8 +191,7 @@ th.is-sorted::after {
   gap: 10px;
 }
 
-.share-track,
-.score-track {
+.share-track {
   position: relative;
   width: 48px;
   height: 6px;
@@ -211,29 +210,6 @@ th.is-sorted::after {
   animation: grow-x 900ms var(--ease-out) backwards;
   animation-delay: calc(200ms + var(--i, 0) * 28ms);
   transition: width 500ms var(--ease-out);
-}
-
-.score-track {
-  overflow: visible;
-}
-
-.score-track::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: -2px;
-  bottom: -2px;
-  width: 1px;
-  background: var(--axis);
-}
-
-.score-track span {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: 3px;
-  animation: grow-x 800ms var(--ease-out) backwards;
-  animation-delay: calc(250ms + var(--i, 0) * 28ms);
 }
 
 .trophy {

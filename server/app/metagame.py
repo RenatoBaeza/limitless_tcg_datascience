@@ -1,10 +1,15 @@
 """Read side of the gold layer - the questions the frontend asks.
 
-Every answer is already a row in gold (sql/012_gold_finished.sql): the refresh
+Every answer is already a row in gold (sql/012_gold_finished.sql, reshaped by
+sql/014_fixed_view.sql): the refresh
 computes each period's deck table and matchup cells once, so a read here is a
 PostgREST filter on a primary key and nothing is summed, ranked or rated at
 request time. The columns are selected under the names the response models use,
 so rows pass straight through.
+
+The view is fixed apart from the period. Gold holds no 'other' rows at all
+(sql/014), every cell with at least one match is returned - a thin cell is
+told apart by its Wilson interval, not hidden - and the axis is TOP_DECKS.
 
 Two things this module owns that the router should not:
 
@@ -26,9 +31,14 @@ from app import supabase
 
 CACHE_TTL_SECONDS = 300
 
-# Small because the key space is small: three periods times a handful of deck
-# counts. Well past that, evicting everything beats tracking ages.
+# Small because the key space is small: six periods, three reads each, plus
+# whichever decks get opened. Well past that, evicting everything beats
+# tracking ages.
 CACHE_MAX_ENTRIES = 256
+
+# The matrix axis and the deck table are always the period's top 50 decks by
+# entries. It is fixed, not a parameter: the frontend offers no other size.
+TOP_DECKS = 50
 
 RATE_COLUMNS = "matches,wins,losses,ties,win_rate,score_rate,score_low,score_high"
 
@@ -110,35 +120,24 @@ def periods() -> list[dict[str, Any]]:
     return _cached("gold_periods", {"select": PERIOD_COLUMNS, "order": "days.asc.nullslast"})
 
 
-def decks(period: str, limit: int, include_other: bool) -> list[dict[str, Any]]:
-    """The `limit` most-played decks in a period, with meta share and record."""
+def decks(period: str) -> list[dict[str, Any]]:
+    """The period's TOP_DECKS most-played decks, with meta share and record."""
     return _cached(
         "gold_deck_stats",
         {
             "select": DECK_COLUMNS,
             "period": f"eq.{period}",
-            "include_other": f"eq.{_bool(include_other)}",
-            "rank": f"lte.{limit}",
+            "rank": f"lte.{TOP_DECKS}",
             "order": "rank",
         },
     )
 
 
-def matrix(
-    period: str,
-    deck_ids: list[str] | None,
-    limit: int,
-    min_matches: int,
-    include_other: bool,
-) -> list[dict[str, Any]]:
-    """The matchup grid over one deck set on both axes: `deck_ids` if given,
-    else the period's `limit` most-played decks. Only cells with data come
-    back - a missing (a, b) pair means those two never met, not that the result
-    was 0."""
-    if deck_ids is None:
-        axis = [row["deck_id"] for row in decks(period, limit, include_other)]
-    else:
-        axis = [d for d in deck_ids if include_other or d != "other"]
+def matrix(period: str) -> list[dict[str, Any]]:
+    """The matchup grid with the period's top decks on both axes. Only cells
+    with data come back - a missing (a, b) pair means those two never met, not
+    that the result was 0."""
+    axis = [row["deck_id"] for row in decks(period)]
     if not axis:
         return []
 
@@ -150,33 +149,22 @@ def matrix(
             "period": f"eq.{period}",
             "deck_a": members,
             "deck_b": members,
-            "matches": f"gte.{min_matches}",
             "order": "deck_a,deck_b",
         },
     )
 
 
-def deck_matchups(
-    deck_id: str,
-    period: str,
-    min_matches: int,
-    include_other: bool,
-) -> list[dict[str, Any]]:
+def deck_matchups(deck_id: str, period: str) -> list[dict[str, Any]]:
     """One deck against every opponent it faced, most-played opponent first."""
-    params = {
-        "select": OPPONENT_COLUMNS,
-        "period": f"eq.{period}",
-        "deck_a": f"eq.{deck_id}",
-        "matches": f"gte.{min_matches}",
-        "order": "matches.desc,deck_b",
-    }
-    if not include_other:
-        params["deck_b"] = "neq.other"
-    return _cached("gold_matchup_stats", params)
-
-
-def _bool(value: bool) -> str:
-    return "true" if value else "false"
+    return _cached(
+        "gold_matchup_stats",
+        {
+            "select": OPPONENT_COLUMNS,
+            "period": f"eq.{period}",
+            "deck_a": f"eq.{deck_id}",
+            "order": "matches.desc,deck_b",
+        },
+    )
 
 
 def _in(values: list[str]) -> str:

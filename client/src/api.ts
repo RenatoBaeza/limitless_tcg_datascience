@@ -12,7 +12,7 @@ const API_BASE = import.meta.env.VITE_API_URL ?? "/api";
  * The windows the server precomputes - the rows of gold_periods. Every panel is
  * read for exactly one of them; there is no arbitrary date range.
  */
-export type Period = "30d" | "90d" | "all";
+export type Period = "3d" | "7d" | "30d" | "60d" | "90d" | "all";
 
 export type Coverage = {
   first_event: string | null;
@@ -82,33 +82,15 @@ async function get<T>(path: string, params: Record<string, Param> = {}): Promise
 
 export const fetchCoverage = () => get<Coverage>("/coverage");
 
-export const fetchDecks = (period: Period, limit: number, includeOther: boolean) =>
-  get<DeckSummary[]>("/decks", { period, limit, include_other: includeOther });
+// The period is the only parameter. The server fixes the rest: the top 50
+// decks, every cell with at least one match, and never 'other'.
 
-export const fetchMatrix = (
-  period: Period,
-  limit: number,
-  minMatches: number,
-  includeOther: boolean,
-) =>
-  get<MatchupCell[]>("/matchups", {
-    period,
-    limit,
-    min_matches: minMatches,
-    include_other: includeOther,
-  });
+export const fetchDecks = (period: Period) => get<DeckSummary[]>("/decks", { period });
 
-export const fetchDeckMatchups = (
-  deckId: string,
-  period: Period,
-  minMatches: number,
-  includeOther: boolean,
-) =>
-  get<DeckMatchup[]>(`/decks/${encodeURIComponent(deckId)}/matchups`, {
-    period,
-    min_matches: minMatches,
-    include_other: includeOther,
-  });
+export const fetchMatrix = (period: Period) => get<MatchupCell[]>("/matchups", { period });
+
+export const fetchDeckMatchups = (deckId: string, period: Period) =>
+  get<DeckMatchup[]>(`/decks/${encodeURIComponent(deckId)}/matchups`, { period });
 
 /** Composited deck image, written by server/scripts/download_deck_sprites.py. */
 export const deckImage = (deckId: string) => `/decks/${encodeURIComponent(deckId)}.png`;

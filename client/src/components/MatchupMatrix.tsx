@@ -15,16 +15,18 @@ import { IntervalReadout, Tooltip, type Anchor } from "./Tooltip";
  *
  * Three kinds of cell, and the difference between them matters:
  *
- *   painted   they met at least `minMatches` times. The fill is the rate on a
- *             diverging scale and the number is the same rate, so the value is
- *             never carried by colour alone.
+ *   painted   they met at least once. The fill is the rate on a diverging
+ *             scale and the number is the same rate, so the value is never
+ *             carried by colour alone.
  *   mirror    the diagonal. A deck against itself is 50% by construction, so
  *             the gold layer does not store it and the cell shows the deck's
  *             own sprite rather than a number that would look like a finding.
- *   empty     they never met, or not often enough. A dot rather than 0%,
- *             which is a different claim entirely.
+ *   empty     they never met. A dot rather than 0%, which is a different
+ *             claim entirely.
  *
- * Cells whose confidence interval still spans 50% are drawn muted: the colour
+ * Every meeting is drawn, however few matches, so the interval does the work
+ * a minimum-match cutoff used to: cells whose confidence interval still spans
+ * 50% are drawn muted: the colour
  * pulled most of the way back to the board, the full-strength colour kept as a
  * thin outline. The point estimate is there, but the data cannot yet call the
  * matchup either way, so it should not shout as loud as one it can.
@@ -32,20 +34,18 @@ import { IntervalReadout, Tooltip, type Anchor } from "./Tooltip";
  * Hovering a cell lights its row and column and dims the rest, so the reader
  * can follow one deck across and its opponent down. That crosshair is a two-
  * selector <style> rule written from the hovered indices, not a prop: the grid
- * itself is memoised and never re-renders on hover, which is what keeps a
- * 40 x 40 matrix smooth.
+ * itself is memoised and never re-renders on hover, which is what keeps the
+ * 50 x 50 matrix smooth.
  */
 export function MatchupMatrix({
   decks,
   cells,
   mode,
-  minMatches,
   onSelect,
 }: {
   decks: DeckSummary[];
   cells: MatchupCell[];
   mode: Mode;
-  minMatches: number;
   onSelect: (deckId: string) => void;
 }) {
   const { t } = useI18n();
@@ -93,7 +93,6 @@ export function MatchupMatrix({
           decks={decks}
           cells={cells}
           mode={mode}
-          minMatches={minMatches}
           onHover={onHover}
           onLeave={onLeave}
           onSelect={onSelect}
@@ -113,7 +112,6 @@ const MatrixGrid = memo(function MatrixGrid({
   decks,
   cells,
   mode,
-  minMatches,
   onHover,
   onLeave,
   onSelect,
@@ -121,7 +119,6 @@ const MatrixGrid = memo(function MatrixGrid({
   decks: DeckSummary[];
   cells: MatchupCell[];
   mode: Mode;
-  minMatches: number;
   onHover: (r: number, c: number, anchor: Anchor) => void;
   onLeave: () => void;
   onSelect: (deckId: string) => void;
@@ -210,7 +207,7 @@ const MatrixGrid = memo(function MatrixGrid({
                   <td key={column.deck_id} className="cell empty" data-r={r} data-c={c}>
                     <div
                       style={wave}
-                      title={t("noCellData", { row: name(row), column: name(column), count: minMatches })}
+                      title={t("noCellData", { row: name(row), column: name(column) })}
                     />
                   </td>
                 );

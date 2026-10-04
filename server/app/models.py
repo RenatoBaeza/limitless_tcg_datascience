@@ -1,6 +1,7 @@
 """Response shapes for the metagame endpoints.
 
-These mirror the gold tables in sql/012_gold_finished.sql, one field per
+These mirror the gold tables in sql/012_gold_finished.sql (reshaped by
+sql/014_fixed_view.sql), one field per
 column, and app/metagame.py selects each column under the field name used here.
 Two conventions run through all of them:
 
@@ -21,7 +22,7 @@ from pydantic import BaseModel
 
 # The windows gold is computed for - the rows of gold_periods. Adding one means
 # a row there, a member here, and a preset in client/src/filters.ts.
-Period = Literal["30d", "90d", "all"]
+Period = Literal["3d", "7d", "30d", "60d", "90d", "all"]
 
 
 class Coverage(BaseModel):

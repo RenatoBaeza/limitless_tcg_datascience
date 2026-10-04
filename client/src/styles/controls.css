@@ -76,10 +76,6 @@
   color: var(--text-muted);
 }
 
-.spacer {
-  flex: 1;
-}
-
 /* ── segmented ──────────────────────────────────────────────────────────── */
 
 /* The selection is a yellow key that slides between options, pressed into a
@@ -183,78 +179,10 @@ select option {
   color: var(--text-primary);
 }
 
-/* ── switch ─────────────────────────────────────────────────────────────── */
-
-.switch {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  height: 38px;
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-weight: 500;
-  user-select: none;
-}
-
-.switch input {
-  position: absolute;
-  opacity: 0;
-  width: 1px;
-  height: 1px;
-}
-
-.switch-track {
-  position: relative;
-  width: 42px;
-  height: 24px;
-  border-radius: 999px;
-  background: var(--ghost);
-  border: 2px solid var(--border-strong);
-  transition: background 200ms, border-color 200ms;
-}
-
-/* The thumb is a Poké Ball, and it rolls - rotated by the distance it travels
-   over its circumference - rather than sliding. */
-.switch-thumb {
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, #fff 0 2.2px, #1b2236 2.4px 4px, transparent 4.2px),
-    linear-gradient(180deg, var(--pokeball) 0 44%, #1b2236 44% 56%, #fff 56%);
-  box-shadow: 0 0 0 1.5px #1b2236;
-  transition: transform 350ms var(--ease-out);
-}
-
-.switch input:checked + .switch-track {
-  background: var(--accent);
-  border-color: var(--accent-strong);
-}
-
-.switch input:checked + .switch-track .switch-thumb {
-  transform: translateX(18px) rotate(115deg);
-}
-
-.switch input:focus-visible + .switch-track {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 2px;
-}
-
-.switch:hover {
-  color: var(--text-primary);
-}
-
 @media (max-width: 720px) {
   .filters {
     position: relative;
     top: 0;
-  }
-  .spacer {
-    display: none;
   }
 }
 

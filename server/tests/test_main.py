@@ -66,17 +66,38 @@ def test_health():
     assert response.json() == {"status": "ok"}
 
 
-def test_decks_read_the_top_ranks_of_one_period(reads):
+def test_decks_read_the_top_50_of_one_period(reads):
     calls, _ = reads
 
-    client.get("/decks?period=30d&limit=8")
+    client.get("/decks?period=30d")
 
     table, params = calls[0]
     assert table == "gold_deck_stats"
     assert params["period"] == "eq.30d"
-    assert params["include_other"] == "eq.false"
-    assert params["rank"] == "lte.8"
+    assert params["rank"] == "lte.50"
     assert params["order"] == "rank"
+    # 'other' is not in gold at all (sql/014), so there is nothing to filter.
+    assert "include_other" not in params
+
+
+@pytest.mark.parametrize("period", ["3d", "7d", "30d", "60d", "90d", "all"])
+def test_every_period_is_accepted(reads, period):
+    calls, _ = reads
+
+    assert client.get(f"/decks?period={period}").status_code == 200
+    assert calls[0][1]["period"] == f"eq.{period}"
+
+
+def test_the_retired_knobs_change_nothing(reads):
+    """Size, minimum and 'other' are fixed now. An old client still sending them
+    gets the fixed view rather than an error."""
+    calls, _ = reads
+
+    client.get("/decks?period=30d&limit=8&include_other=true")
+    client.get("/decks?period=30d")
+
+    assert len(calls) == 1
+    assert calls[0][1]["rank"] == "lte.50"
 
 
 def test_an_absent_period_means_all(reads):
@@ -95,39 +116,21 @@ def test_an_unknown_period_is_rejected(reads):
     assert client.get("/decks?period=180d").status_code == 422
 
 
-def test_matrix_axis_is_the_period_top_n(reads):
-    """The axis is read from the deck ranking, then both axes filter the cells."""
+def test_matrix_axis_is_the_period_top_50(reads):
+    """The axis is read from the deck ranking, then both axes filter the cells.
+    Every cell comes back, however few matches it has."""
     calls, replies = reads
     replies["gold_deck_stats"] = [_deck("dragapult-ex", 1), _deck("n-zoroark", 2)]
 
-    response = client.get("/matchups?period=90d&limit=2&min_matches=25")
+    response = client.get("/matchups?period=90d")
 
     assert response.status_code == 200
     assert [table for table, _ in calls] == ["gold_deck_stats", "gold_matchup_stats"]
-    assert calls[0][1]["rank"] == "lte.2"
+    assert calls[0][1]["rank"] == "lte.50"
     cells = calls[1][1]
     assert cells["period"] == "eq.90d"
     assert cells["deck_a"] == cells["deck_b"] == 'in.("dragapult-ex","n-zoroark")'
-    assert cells["matches"] == "gte.25"
-
-
-def test_matrix_pins_both_axes_when_decks_are_given(reads):
-    calls, _ = reads
-
-    client.get("/matchups?decks=dragapult-ex&decks=n-zoroark")
-
-    assert [table for table, _ in calls] == ["gold_matchup_stats"]
-    assert calls[0][1]["deck_a"] == 'in.("dragapult-ex","n-zoroark")'
-
-
-def test_pinned_axes_drop_other_unless_asked(reads):
-    calls, _ = reads
-
-    client.get("/matchups?decks=dragapult-ex&decks=other")
-    client.get("/matchups?decks=dragapult-ex&decks=other&include_other=true")
-
-    assert calls[0][1]["deck_a"] == 'in.("dragapult-ex")'
-    assert calls[1][1]["deck_a"] == 'in.("dragapult-ex","other")'
+    assert "matches" not in cells
 
 
 def test_an_empty_axis_reads_no_cells(reads):
@@ -178,23 +181,16 @@ def test_a_null_rate_stays_null(reads):
 def test_deck_matchups_scopes_to_the_deck(reads):
     calls, _ = reads
 
-    client.get("/decks/n-zoroark/matchups?period=30d&min_matches=50")
+    client.get("/decks/n-zoroark/matchups?period=30d")
 
     table, params = calls[0]
     assert table == "gold_matchup_stats"
+    assert params["period"] == "eq.30d"
     assert params["deck_a"] == "eq.n-zoroark"
-    assert params["matches"] == "gte.50"
-    assert params["deck_b"] == "neq.other"
+    assert "matches" not in params
+    assert "deck_b" not in params
     # The opponent's display name is stored on the cell, under its own column.
     assert "deck_name:deck_b_name" in params["select"]
-
-
-def test_deck_matchups_keep_other_when_asked(reads):
-    calls, _ = reads
-
-    client.get("/decks/n-zoroark/matchups?include_other=true")
-
-    assert "deck_b" not in calls[0][1]
 
 
 def test_an_unknown_deck_is_an_empty_list_not_a_404(reads):
@@ -245,16 +241,11 @@ def test_periods_list_every_window(reads):
     assert body[1]["days"] is None
 
 
-def test_a_bad_limit_is_rejected(reads):
-    assert client.get("/matchups?limit=1").status_code == 422
-    assert client.get("/matchups?limit=101").status_code == 422
-
-
 def test_results_are_memoed_across_requests(reads):
     calls, _ = reads
 
-    client.get("/decks?limit=10")
-    client.get("/decks?limit=10")
+    client.get("/decks")
+    client.get("/decks")
 
     assert len(calls) == 1
 

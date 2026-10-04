@@ -59,18 +59,6 @@
   transition: opacity 300ms ease-out, filter 300ms ease-out;
 }
 
-/* Swapping between the matrix and the table view. */
-.view-swap {
-  animation: view-in 350ms var(--ease-out) backwards;
-}
-
-@keyframes view-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
 /* ── loading ────────────────────────────────────────────────────────────── */
 
 .skeleton-stack {

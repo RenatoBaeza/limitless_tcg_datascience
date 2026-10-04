@@ -34,7 +34,7 @@ uv run python scripts/ingest_standings.py --tournament <id>
 
 Silver and gold refreshes (both take `--dry-run`, a repeatable `--only <step>`
 and `--window-months N`; silver also takes `--tournament <id>` and
-`--chunk-size N`, gold a repeatable `--period <30d|90d|all>`):
+`--chunk-size N`, gold a repeatable `--period <3d|7d|30d|60d|90d|all>`):
 
 ```bash
 uv run python scripts/refresh_silver.py
@@ -175,14 +175,19 @@ Nothing is summed at request time:
 ```
 GET /coverage                     the 'all' period's dates and totals
 GET /periods                      every period and the dates it resolved to
-GET /decks                        gold_deck_stats, top N by rank
+GET /decks                        gold_deck_stats, top 50 by rank
 GET /decks/{deck_id}/matchups     gold_matchup_stats, one deck_a slice
-GET /matchups                     gold_matchup_stats, top-N deck_a x deck_b
+GET /matchups                     gold_matchup_stats, top-50 deck_a x deck_b
 ```
 
-All of them take the same `?period=` (`30d`, `90d`, `all`; anything
-else is a 422) plus `include_other`. There is no arbitrary date range — a
-period is the unit gold is computed in. Results are memoed for 5 minutes in
+All of them take the same `?period=` (`3d`, `7d`, `30d`, `60d`, `90d`, `all`;
+anything else is a 422), and **nothing else**. The view is otherwise fixed:
+the axis is always the top 50 decks (`metagame.TOP_DECKS`), every cell with at
+least one match is returned (a thin cell is told apart by its Wilson interval,
+not hidden by a cutoff), and `'other'` is not in gold at all. The retired
+`limit` / `min_matches` / `include_other` parameters are simply ignored if an
+old client still sends them. There is no arbitrary date range — a period is the
+unit gold is computed in. Results are memoed for 5 minutes in
 `metagame._cached` — gold only changes every six hours, so the memo costs
 nothing and makes filter-flipping instant.
 
@@ -203,21 +208,23 @@ computing win rates**.
 
 ### What gold decides
 
-Documented at the top of `sql/012_gold_finished.sql`. Gold is finished tables,
-computed once per **period** — a row of `gold_periods` (`30d`, `90d`, `all`),
-each counted back from the last event in the data and clamped to the retention
-cutoff. (`all` is the six-month retention window, so a `180d` period duplicated
-it to within three days and was dropped in `sql/013`.)
+Documented at the top of `sql/012_gold_finished.sql`, reshaped by
+`sql/014_fixed_view.sql`. Gold is finished tables, computed once per **period**
+— a row of `gold_periods` (`3d`, `7d`, `30d`, `60d`, `90d`, `all`), each
+counted back from the last event in the data and clamped to the retention
+cutoff. (`all` is the six-month retention window, shown as "All time" / "Todo
+el período", so a `180d` period duplicated it to within three days and was
+dropped in `sql/013`.)
 
 ```
 gold_periods        one row per period: its resolved dates and totals
 gold_decks          the deck dimension (name, icons, first/last seen)
-gold_deck_stats     (period, include_other, deck_id): rank, entries, meta
-                    share, record, rates, Wilson interval — the deck table
+gold_deck_stats     (period, deck_id): rank, entries, meta share, record,
+                    rates, Wilson interval — the deck table
 gold_matchup_stats  (period, deck_a, deck_b): one matrix cell, as drawn
 ```
 
-~26k rows in all. It replaced a tournament-grain fact (`gold_matchups`, 312k
+~40k rows in all. It replaced a tournament-grain fact (`gold_matchups`, 312k
 rows) that every request re-summed: at 1.55 matches per row it was bigger than
 the silver it came from. The price is that only these periods can be asked
 for; adding one is a row in `gold_periods`, a member of `models.Period` and a
@@ -241,12 +248,13 @@ Five decisions everything downstream depends on:
   still label the diagonal.
 - **Both decks must be known.** ~4% of `silver_pairings` rows still have a null
   deck on one side; a matchup against "unknown" is not a matchup.
-- **`deck_id = 'other'`** is Limitless's catch-all for unclassified lists, not
-  an archetype, and every read excludes it unless asked. It is the 7th most
-  played "deck", so leaving it out changes the meta-share denominator, every
-  rank below it and each deck's record — which is why `include_other` is a key
-  column of `gold_deck_stats` (both variants are computed) but only a row
-  filter on `gold_matchup_stats`, whose cells do not depend on it.
+- **`deck_id = 'other'` is excluded at the source.** It is Limitless's
+  catch-all for unclassified lists, not an archetype, and the frontend never
+  shows it, so every refresh function skips it (`sql/014`): it holds no rank or
+  meta share, a match against it counts in neither deck's record, it has no
+  matchup cells, and the period totals leave it out too. Until `sql/014` both
+  variants were computed under an `include_other` key column; that column is
+  gone, and bringing 'other' back means re-adding it to every refresh step.
 
 Every rate is stored with a 95% Wilson interval beside it (`score_low`,
 `score_high`) — a 3-match cell at 100% and a 300-match cell at 55% are not the
@@ -443,13 +451,19 @@ library would cost more than it saved.
   counting back from the last event in the data rather than from today —
   results land days after an event happens, so "last 30 days" from today's
   date would quietly clip the most recent weekend.
-- Every rate is drawn with its match count and Wilson interval reachable, and
-  the matrix has a table-view twin, so nothing is encoded by colour alone.
+- The period is the only control. The matrix is always the top 50 decks,
+  every cell with at least one match is drawn, and 'other' never appears —
+  all three are fixed on the server, so there is no deck-count, minimum-match,
+  'other' or matrix/table toggle to add back on the client alone.
+- Every rate is drawn with its match count and Wilson interval reachable (the
+  cell's number, its tooltip, its aria-label), so nothing is encoded by colour
+  alone. With no minimum-match cutoff, the muted fill for an interval that
+  still spans 50% is what keeps a 2-match cell from reading like a finding.
 - The look is Pokémon: yellow and navy chrome on warm card stock (a slate
   night in dark mode), the stat tiles drawn as TCG cards, tooltips as game
   dialog boxes, the deck drawer as a Pokédex entry. Poké Ball red appears only
-  on literal Poké Ball / Pokédex hardware (the mark, the switch thumb, the
-  drawer's band), never beside a matchup cell. No purple anywhere.
+  on literal Poké Ball / Pokédex hardware (the mark, the drawer's band),
+  never beside a matchup cell. No purple anywhere.
 - Two faces: Pixelify Sans for headings and wordy labels, Inter for body text
   and **anything with a digit in it** - the pixel 5 reads as an S, which is
   why the stat values, the table headers ("95% range") and the Pokédex number

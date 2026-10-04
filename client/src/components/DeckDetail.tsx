@@ -37,24 +37,20 @@ type Order = "matches" | "best" | "worst";
 export function DeckDetail({
   deck,
   period,
-  minMatches,
-  includeOther,
   canOpen,
   onSelect,
   onClose,
 }: {
   deck: DeckSummary;
   period: Period;
-  minMatches: number;
-  includeOther: boolean;
   canOpen: (deckId: string) => boolean;
   onSelect: (deckId: string) => void;
   onClose: () => void;
 }) {
   const { t, percentSign } = useI18n();
   const { data, isPending, isError, isPlaceholderData } = useQuery({
-    queryKey: ["deck-matchups", deck.deck_id, period, minMatches, includeOther],
-    queryFn: () => fetchDeckMatchups(deck.deck_id, period, minMatches, includeOther),
+    queryKey: ["deck-matchups", deck.deck_id, period],
+    queryFn: () => fetchDeckMatchups(deck.deck_id, period),
     placeholderData: (previous) => previous,
   });
 
@@ -158,11 +154,7 @@ export function DeckDetail({
                 </div>
               )}
 
-              {!data.length && (
-                <p className="notice">
-                  {t("noOpponents", { count: minMatches })}
-                </p>
-              )}
+              {!data.length && <p className="notice">{t("noOpponents")}</p>}
             </div>
           )}
         </div>

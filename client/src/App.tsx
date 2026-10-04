@@ -6,10 +6,10 @@ import { DeckTable } from "./components/DeckTable";
 import { FilterBar } from "./components/FilterBar";
 import { Header } from "./components/Header";
 import { MatchupMatrix } from "./components/MatchupMatrix";
-import { MatchupTable } from "./components/MatchupTable";
 import { GridIcon, Panel, Skeleton, StackIcon } from "./components/Panel";
 import { StatTiles } from "./components/StatTiles";
-import { DEFAULT_FILTERS, type Filters, type View } from "./filters";
+import type { Period } from "./api";
+import { DEFAULT_PERIOD } from "./filters";
 import { Backdrop } from "./fx/Backdrop";
 import { useI18n } from "./i18n";
 import { useTheme } from "./useTheme";
@@ -17,25 +17,23 @@ import { useTheme } from "./useTheme";
 export default function App() {
   const { t } = useI18n();
   const [mode, setMode] = useTheme();
-  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
-  const [view, setView] = useState<View>("matrix");
+  const [period, setPeriod] = useState<Period>(DEFAULT_PERIOD);
   const [selected, setSelected] = useState<string | null>(null);
 
   const coverage = useQuery({ queryKey: ["coverage"], queryFn: fetchCoverage });
 
   // Every panel below scopes to this one period, so their numbers always agree.
   // The server resolves its dates, so nothing here waits on coverage first.
-  const { period } = filters;
-
+  // It is the only choice: both reads are the period's top 50 decks.
   const decks = useQuery({
-    queryKey: ["decks", period, filters.axis, filters.includeOther],
-    queryFn: () => fetchDecks(period, filters.axis, filters.includeOther),
+    queryKey: ["decks", period],
+    queryFn: () => fetchDecks(period),
     placeholderData: (previous) => previous,
   });
 
   const matrix = useQuery({
-    queryKey: ["matrix", period, filters.axis, filters.minMatches, filters.includeOther],
-    queryFn: () => fetchMatrix(period, filters.axis, filters.minMatches, filters.includeOther),
+    queryKey: ["matrix", period],
+    queryFn: () => fetchMatrix(period),
     placeholderData: (previous) => previous,
   });
 
@@ -57,13 +55,7 @@ export default function App() {
       <div className="app">
         <Header coverage={coverage.data} mode={mode} onMode={setMode} />
 
-        <FilterBar
-          filters={filters}
-          onChange={setFilters}
-          view={view}
-          onViewChange={setView}
-          busy={decks.isFetching || matrix.isFetching}
-        />
+        <FilterBar period={period} onChange={setPeriod} busy={decks.isFetching || matrix.isFetching} />
 
         {failure && (
           <p className="error">
@@ -92,24 +84,14 @@ export default function App() {
         <Panel
           icon={<GridIcon />}
           title={t("matchups")}
-          note={t("matchupNote", { count: filters.minMatches })}
+          note={t("matchupNote")}
         >
           <div className={fade}>
             {!decks.data || !matrix.data ? (
               <Skeleton rows={8} height={40} />
             ) : (
-              <div key={view} className="view-swap matrix-wrap">
-                {view === "matrix" ? (
-                  <MatchupMatrix
-                    decks={decks.data}
-                    cells={matrix.data}
-                    mode={mode}
-                    minMatches={filters.minMatches}
-                    onSelect={select}
-                  />
-                ) : (
-                  <MatchupTable decks={decks.data} cells={matrix.data} onSelect={select} mode={mode} />
-                )}
+              <div className="matrix-wrap">
+                <MatchupMatrix decks={decks.data} cells={matrix.data} mode={mode} onSelect={select} />
               </div>
             )}
           </div>
@@ -142,8 +124,6 @@ export default function App() {
         <DeckDetail
           deck={selectedDeck}
           period={period}
-          minMatches={filters.minMatches}
-          includeOther={filters.includeOther}
           canOpen={canOpen}
           onSelect={select}
           onClose={() => setSelected(null)}
