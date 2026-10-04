@@ -6,7 +6,6 @@ import { useVersion } from "../fx/motion";
 import type { Mode } from "../scale";
 import { scoreColor } from "../scale";
 import { DeckIcon } from "./DeckIcon";
-import { ScaleLegend } from "./ScaleLegend";
 import { IntervalReadout, Tooltip, type Anchor } from "./Tooltip";
 
 /**
@@ -78,8 +77,6 @@ export function MatchupMatrix({
 
   return (
     <>
-      <ScaleLegend mode={mode} marker={hovered?.cell?.score_rate ?? null} />
-
       {hovered && (
         <style>{`
           .matrix-scroll td.cell:not([data-r="${hovered.r}"]):not([data-c="${hovered.c}"]) > * { opacity: 0.22; filter: saturate(0.4); }

@@ -91,8 +91,7 @@ smoothness:
 - The stat tiles are holo cards: they tilt toward the cursor, and a foil
   sheen and glare slide with it.
 - The matrix enters as a wave along its anti-diagonals. Hovering a cell lights
-  its row and column, dims the rest, and slides a marker along the legend to
-  that cell's rate.
+  its row and column and dims the rest.
 - Numbers roll up, panels rise in as they scroll into view, re-sorted rows
   glide to their new places, and the theme switch reveals through a circle
   grown from the toggle (View Transitions, where the browser has them).

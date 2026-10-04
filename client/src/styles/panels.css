@@ -21,6 +21,8 @@
 }
 
 .panel-title {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -45,7 +47,6 @@
   margin: 3px 0 0;
   color: var(--text-muted);
   font-size: 12.5px;
-  max-width: 64ch;
 }
 
 /* Refetch holds the previous render rather than flashing a skeleton. */
