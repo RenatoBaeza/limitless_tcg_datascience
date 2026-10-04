@@ -241,34 +241,27 @@
   color: var(--text-muted);
 }
 
-.interval-bar {
+.rate-bar {
   position: relative;
   height: 8px;
   border-radius: 4px;
   background: var(--ghost);
 }
 
-.interval-bar span {
+.rate-bar span {
   position: absolute;
   top: 0;
   bottom: 0;
 }
 
-.interval-bar .even {
+.rate-bar .even {
   width: 1px;
   top: -3px;
   bottom: -3px;
   background: var(--axis);
 }
 
-.interval-bar .range {
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--accent) 55%, transparent);
-  transform-origin: 50% 50%;
-  animation: grow-x 900ms var(--ease-out) 1200ms backwards;
-}
-
-.interval-bar .point {
+.rate-bar .point {
   width: 12px;
   height: 12px;
   top: -2px;
@@ -279,7 +272,7 @@
   animation: pop 600ms var(--ease-spring) 1500ms backwards;
 }
 
-.interval-bar em {
+.rate-bar em {
   position: absolute;
   top: -17px;
   transform: translateX(-50%);

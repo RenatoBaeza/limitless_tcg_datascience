@@ -7,7 +7,7 @@ import type { Mode } from "../scale";
 import { scoreColor } from "../scale";
 import { DeckIcon } from "./DeckIcon";
 import { ScaleLegend } from "./ScaleLegend";
-import { IntervalReadout, Tooltip, type Anchor } from "./Tooltip";
+import { Tooltip, type Anchor } from "./Tooltip";
 
 /**
  * The matchup grid. A row is a deck, a column is its opponent, and the cell is
@@ -24,9 +24,9 @@ import { IntervalReadout, Tooltip, type Anchor } from "./Tooltip";
  *   empty     they never met. A dot rather than 0%, which is a different
  *             claim entirely.
  *
- * Every meeting is drawn, however few matches, so the interval does the work
- * a minimum-match cutoff used to: cells whose confidence interval still spans
- * 50% are drawn muted: the colour
+ * Every meeting is drawn, however few matches, so fading does the work a
+ * minimum-match cutoff used to: cells too thin to call either way (their
+ * Wilson interval still spans 50%, never shown) are drawn muted: the colour
  * pulled most of the way back to the board, the full-strength colour kept as a
  * thin outline. The point estimate is there, but the data cannot yet call the
  * matchup either way, so it should not shout as loud as one it can.
@@ -257,7 +257,6 @@ function CellReadout({ cell, names, mode }: { cell: MatchupCell; names: Map<stri
         {names.get(cell.deck_a) ?? cell.deck_a} <span className="muted">vs</span>{" "}
         {names.get(cell.deck_b) ?? cell.deck_b}
       </div>
-      <IntervalReadout rate={cell.score_rate} low={cell.score_low} high={cell.score_high} color={background} />
       <dl>
         <dt>{t("recordTitle")}</dt>
         <dd>{record(cell.wins, cell.losses, cell.ties)}</dd>
@@ -265,10 +264,6 @@ function CellReadout({ cell, names, mode }: { cell: MatchupCell; names: Map<stri
         <dd>{count(cell.matches)}</dd>
         <dt>{t("excludingTies")}</dt>
         <dd>{percentSign(cell.win_rate)}</dd>
-        <dt>{t("range")}</dt>
-        <dd>
-          {percentSign(cell.score_low, 0)}–{percentSign(cell.score_high, 0)}
-        </dd>
       </dl>
     </>
   );

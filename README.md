@@ -56,6 +56,7 @@ both are easy to get wrong:
 - **Mirrors are excluded.** A deck against itself is 50% by definition, so it
   is left out of every rate and counted separately as `mirror_matches`.
 
-Every rate ships with its match count and a 95% Wilson interval. A matchup whose
-interval still spans 50% is drawn with a dotted underline: the point estimate is
-there, but the data cannot call it yet.
+Every rate ships from the API with its match count and a 95% Wilson interval.
+The frontend does not show the interval itself; a matchup whose interval still
+spans 50% is simply drawn faded: the point estimate is there, but the data
+cannot call it yet.

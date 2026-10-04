@@ -13,7 +13,7 @@ table.data {
   font-variant-numeric: tabular-nums;
 }
 
-/* Inter, not the pixel face: "95% range" sits in this row, and the pixel 5
+/* Inter, not the pixel face: "Top 8" sits in this row, and the pixel 5
    reads as an S. */
 table.data th {
   text-align: right;

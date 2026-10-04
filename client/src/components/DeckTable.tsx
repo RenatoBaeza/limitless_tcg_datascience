@@ -39,12 +39,6 @@ function columns({ t, count, percentSign, record }: ReturnType<typeof useI18n>):
       label: t("scoreRate"),
       render: (d) => <strong>{percentSign(d.score_rate)}</strong>,
     },
-    {
-      key: "score_low",
-      label: t("range"),
-      className: "muted",
-      render: (d) => `${percentSign(d.score_low, 0)}–${percentSign(d.score_high, 0)}`,
-    },
     { key: "win_rate", label: t("excludingTies"), className: "secondary", render: (d) => percentSign(d.win_rate) },
     {
       key: "champions",
