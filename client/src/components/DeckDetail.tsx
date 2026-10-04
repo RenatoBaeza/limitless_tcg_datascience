@@ -3,7 +3,8 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import type { DeckMatchup, DeckSummary, Period } from "../api";
 import { fetchDeckMatchups } from "../api";
-import { count, percentSign, record, spansEven } from "../format";
+import { spansEven } from "../format";
+import { useI18n } from "../i18n";
 import { reducedMotion, useCountUp } from "../fx/motion";
 import { useFlip } from "../fx/useFlip";
 import { DeckIcon } from "./DeckIcon";
@@ -50,7 +51,8 @@ export function DeckDetail({
   onSelect: (deckId: string) => void;
   onClose: () => void;
 }) {
-  const { data, isPending, isError, error, isPlaceholderData } = useQuery({
+  const { t, percentSign } = useI18n();
+  const { data, isPending, isError, isPlaceholderData } = useQuery({
     queryKey: ["deck-matchups", deck.deck_id, period, minMatches, includeOther],
     queryFn: () => fetchDeckMatchups(deck.deck_id, period, minMatches, includeOther),
     placeholderData: (previous) => previous,
@@ -102,7 +104,7 @@ export function DeckDetail({
       <div className="drawer-backdrop" onClick={close} />
       <aside className="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
         <DexBand />
-        <button ref={closeButton} type="button" className="drawer-close" onClick={close} aria-label="Close">
+        <button ref={closeButton} type="button" className="drawer-close" onClick={close} aria-label={t("close")}>
           <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
             <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
@@ -112,21 +114,21 @@ export function DeckDetail({
 
         <div className="drawer-body">
           <div className="drawer-section-head">
-            <h3>Against the field</h3>
+            <h3>{t("againstField")}</h3>
             <Segmented
               size="sm"
-              label="Order opponents by"
+              label={t("orderOpponents")}
               value={order}
               onChange={setOrder}
               options={[
-                { value: "matches", label: "Most played" },
-                { value: "best", label: "Best" },
-                { value: "worst", label: "Worst" },
+                { value: "matches", label: t("mostPlayed") },
+                { value: "best", label: t("best") },
+                { value: "worst", label: t("worst") },
               ]}
             />
           </div>
 
-          {isError && <p className="error">{(error as Error).message}</p>}
+          {isError && <p className="error">{t("loadError")}</p>}
           {isPending && <Skeleton rows={8} height={28} />}
 
           {data && (
@@ -148,7 +150,7 @@ export function DeckDetail({
                   <div className="ticks">
                     {TICKS.map((tick) => (
                       <span key={tick} style={{ left: `${position(tick)}%` }}>
-                        {Math.round(tick * 100)}%
+                        {percentSign(tick, 0)}
                       </span>
                     ))}
                   </div>
@@ -158,7 +160,7 @@ export function DeckDetail({
 
               {!data.length && (
                 <p className="notice">
-                  No opponent reached {minMatches} matches in this window. Lower the minimum or widen the range.
+                  {t("noOpponents", { count: minMatches })}
                 </p>
               )}
             </div>
@@ -171,6 +173,7 @@ export function DeckDetail({
 }
 
 function Hero({ deck }: { deck: DeckSummary }) {
+  const { t, count, percentSign, record } = useI18n();
   const score = useCountUp((deck.score_rate ?? 0) * 1000, 1200) / 1000;
   const inconclusive = spansEven(deck.score_low, deck.score_high);
 
@@ -181,25 +184,25 @@ function Hero({ deck }: { deck: DeckSummary }) {
       </div>
       <div className="hero-text">
         <span className="hero-rank">
-          No. {String(deck.rank).padStart(3, "0")} <span className="muted">· #{deck.rank} most played</span>
+          {t("rank", { number: String(deck.rank).padStart(3, "0"), rank: deck.rank })}
         </span>
         <h2 id="drawer-title">{deck.deck_name ?? deck.deck_id}</h2>
         <div className="hero-stats">
           <div className="hero-stat">
             <strong className={`num${inconclusive ? " muted" : ""}`}>{percentSign(score)}</strong>
-            <span>score rate</span>
+            <span>{t("scoreRate")}</span>
           </div>
           <div className="hero-stat">
             <strong className="num">{count(deck.matches)}</strong>
-            <span>matches</span>
+            <span>{t("matches", { count: deck.matches })}</span>
           </div>
           <div className="hero-stat">
             <strong className="num">{percentSign(deck.meta_share, 2)}</strong>
-            <span>of the field</span>
+            <span>{t("ofField")}</span>
           </div>
         </div>
         <div className="hero-record">
-          {record(deck.wins, deck.losses, deck.ties)} · 95% range {percentSign(deck.score_low, 0)}–
+          {record(deck.wins, deck.losses, deck.ties)} · {t("range")} {percentSign(deck.score_low, 0)}–
           {percentSign(deck.score_high, 0)}
         </div>
       </div>
@@ -224,6 +227,7 @@ function DexBand() {
 }
 
 function DotRow({ matchup, index, onOpen }: { matchup: DeckMatchup; index: number; onOpen?: () => void }) {
+  const { t, count, percentSign, record } = useI18n();
   const rate = matchup.score_rate ?? 0.5;
   const low = matchup.score_low ?? rate;
   const high = matchup.score_high ?? rate;
@@ -231,9 +235,11 @@ function DotRow({ matchup, index, onOpen }: { matchup: DeckMatchup; index: numbe
   const favoured = !inconclusive && rate > 0.5;
   const unfavoured = !inconclusive && rate < 0.5;
 
-  const label = `${matchup.deck_name ?? matchup.deck_b}: ${percentSign(rate)} over ${
-    matchup.matches
-  } matches, 95% range ${percentSign(low, 0)} to ${percentSign(high, 0)}`;
+  const label = t("matchupDescription", {
+    name: matchup.deck_name ?? matchup.deck_b, rate: percentSign(rate),
+    matches: t("matchCount", { count: matchup.matches }),
+    low: percentSign(low, 0), high: percentSign(high, 0),
+  });
 
   const name = (
     <>

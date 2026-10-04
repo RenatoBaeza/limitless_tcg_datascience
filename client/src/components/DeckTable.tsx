@@ -1,6 +1,6 @@
 import { memo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import type { DeckSummary } from "../api";
-import { count, percentSign, record } from "../format";
+import { useI18n } from "../i18n";
 import { useFlip } from "../fx/useFlip";
 import { DeckIcon } from "./DeckIcon";
 
@@ -13,53 +13,55 @@ type Column = {
   className?: string;
 };
 
-const COLUMNS: Column[] = [
-  {
-    key: "meta_share",
-    label: "Meta share",
-    className: "with-bar",
-    render: (d, { maxShare }) => (
-      <span className="bar-cell">
-        <span className="share-track" aria-hidden="true">
-          <span style={{ width: `${((d.meta_share ?? 0) / maxShare) * 100}%` }} />
+function columns({ t, count, percentSign, record }: ReturnType<typeof useI18n>): Column[] {
+  return [
+    {
+      key: "meta_share",
+      label: t("metaShare"),
+      className: "with-bar",
+      render: (d, { maxShare }) => (
+        <span className="bar-cell">
+          <span className="share-track" aria-hidden="true">
+            <span style={{ width: `${((d.meta_share ?? 0) / maxShare) * 100}%` }} />
+          </span>
+          {percentSign(d.meta_share, 2)}
         </span>
-        {percentSign(d.meta_share, 2)}
-      </span>
-    ),
-  },
-  { key: "entries", label: "Entries", render: (d) => count(d.entries) },
-  { key: "tournaments", label: "Events", render: (d) => count(d.tournaments) },
-  { key: "matches", label: "Matches", render: (d) => count(d.matches) },
-  { key: "wins", label: "W-L-T", render: (d) => record(d.wins, d.losses, d.ties) },
-  // No bar here: deck-level rates sit within a few points of 50%, and on the
-  // matrix's 25-75% domain that is a sliver. The matchup table draws one.
-  {
-    key: "score_rate",
-    label: "Score rate",
-    render: (d) => <strong>{percentSign(d.score_rate)}</strong>,
-  },
-  {
-    key: "score_low",
-    label: "95% range",
-    className: "muted",
-    render: (d) => `${percentSign(d.score_low, 0)}–${percentSign(d.score_high, 0)}`,
-  },
-  { key: "win_rate", label: "Excl. ties", className: "secondary", render: (d) => percentSign(d.win_rate) },
-  {
-    key: "champions",
-    label: "Wins",
-    render: (d) =>
-      d.champions > 0 ? (
-        <span className="trophy">
-          <TrophyIcon />
-          {count(d.champions)}
-        </span>
-      ) : (
-        <span className="muted">0</span>
       ),
-  },
-  { key: "top8", label: "Top 8", render: (d) => count(d.top8) },
-];
+    },
+    { key: "entries", label: t("entries"), render: (d) => count(d.entries) },
+    { key: "tournaments", label: t("events"), render: (d) => count(d.tournaments) },
+    { key: "matches", label: t("matchesTitle"), render: (d) => count(d.matches) },
+    { key: "wins", label: t("record"), render: (d) => record(d.wins, d.losses, d.ties) },
+    // No bar here: deck-level rates sit within a few points of 50%, and on the
+    // matrix's 25-75% domain that is a sliver. The matchup table draws one.
+    {
+      key: "score_rate",
+      label: t("scoreRate"),
+      render: (d) => <strong>{percentSign(d.score_rate)}</strong>,
+    },
+    {
+      key: "score_low",
+      label: t("range"),
+      className: "muted",
+      render: (d) => `${percentSign(d.score_low, 0)}–${percentSign(d.score_high, 0)}`,
+    },
+    { key: "win_rate", label: t("excludingTies"), className: "secondary", render: (d) => percentSign(d.win_rate) },
+    {
+      key: "champions",
+      label: t("wins"),
+      render: (d) =>
+        d.champions > 0 ? (
+          <span className="trophy">
+            <TrophyIcon />
+            {count(d.champions)}
+          </span>
+        ) : (
+          <span className="muted">0</span>
+        ),
+    },
+    { key: "top8", label: t("top8"), render: (d) => count(d.top8) },
+  ];
+}
 
 /**
  * The deck list. Sortable because the two orderings people want — most played
@@ -78,6 +80,9 @@ export const DeckTable = memo(function DeckTable({
   selected: string | null;
   onSelect: (deckId: string) => void;
 }) {
+  const i18n = useI18n();
+  const { t } = i18n;
+  const COLUMNS = columns(i18n);
   const [sort, setSort] = useState<keyof DeckSummary>("entries");
   const body = useRef<HTMLTableSectionElement>(null);
 
@@ -99,7 +104,7 @@ export const DeckTable = memo(function DeckTable({
       <table className="data">
         <thead>
           <tr>
-            <th scope="col">Deck</th>
+            <th scope="col">{t("deck")}</th>
             {COLUMNS.map((column) => (
               <th
                 key={column.key}

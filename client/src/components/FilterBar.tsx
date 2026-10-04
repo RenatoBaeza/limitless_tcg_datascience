@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Period } from "../api";
 import type { Filters, View } from "../filters";
 import { PRESETS } from "../filters";
+import { useI18n } from "../i18n";
 import { Segmented } from "./Segmented";
 
 /**
@@ -27,6 +28,7 @@ export function FilterBar({
   onViewChange: (view: View) => void;
   busy: boolean;
 }) {
+  const { t, count } = useI18n();
   const set = <K extends keyof Filters>(key: K, value: Filters[K]) =>
     onChange({ ...filters, [key]: value });
 
@@ -47,9 +49,9 @@ export function FilterBar({
     <>
       <div ref={sentinel} className="sticky-sentinel" aria-hidden="true" />
       <div className={`filters${stuck ? " is-stuck" : ""}${busy ? " is-busy" : ""}`}>
-        <div className="field">
+        <div className="field field-period">
           <span className="label" id="range-label">
-            Date range
+            {t("dateRange")}
           </span>
           <Segmented
             labelledBy="range-label"
@@ -57,13 +59,13 @@ export function FilterBar({
             onChange={(period) => set("period", period)}
             options={(Object.keys(PRESETS) as Period[]).map((period) => ({
               value: period,
-              label: PRESETS[period].label,
+              label: t(PRESETS[period].label),
             }))}
           />
         </div>
 
         <div className="field">
-          <label htmlFor="axis">Decks shown</label>
+          <label htmlFor="axis">{t("decksShown")}</label>
           <div className="select">
             <select
               id="axis"
@@ -72,7 +74,7 @@ export function FilterBar({
             >
               {[10, 15, 20, 25, 30, 40].map((n) => (
                 <option key={n} value={n}>
-                  Top {n}
+                  {t("top", { count: n })}
                 </option>
               ))}
             </select>
@@ -80,7 +82,7 @@ export function FilterBar({
         </div>
 
         <div className="field">
-          <label htmlFor="min-matches">Min. matches</label>
+          <label htmlFor="min-matches">{t("minMatches")}</label>
           <div className="select">
             <select
               id="min-matches"
@@ -89,7 +91,7 @@ export function FilterBar({
             >
               {[1, 5, 10, 20, 50, 100].map((n) => (
                 <option key={n} value={n}>
-                  {n === 1 ? "Any" : `${n}+`}
+                  {n === 1 ? t("any") : `${count(n)}+`}
                 </option>
               ))}
             </select>
@@ -106,22 +108,22 @@ export function FilterBar({
           <span className="switch-track" aria-hidden="true">
             <span className="switch-thumb" />
           </span>
-          Include &ldquo;Other&rdquo;
+          {t("includeOther")}
         </label>
 
         <div className="spacer" />
 
         <div className="field">
           <span className="label" id="view-label">
-            Matchups as
+            {t("matchupsAs")}
           </span>
           <Segmented
             labelledBy="view-label"
             value={view}
             onChange={onViewChange}
             options={[
-              { value: "matrix", label: "Matrix" },
-              { value: "table", label: "Table" },
+              { value: "matrix", label: t("matrix") },
+              { value: "table", label: t("table") },
             ]}
           />
         </div>

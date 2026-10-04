@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n";
 import type { ReactNode } from "react";
 import { useReveal } from "../fx/motion";
 
@@ -45,8 +46,9 @@ export function Panel({
 
 /** Placeholder blocks that shimmer while the first result is on its way. */
 export function Skeleton({ rows = 6, height = 36 }: { rows?: number; height?: number }) {
+  const { t } = useI18n();
   return (
-    <div className="skeleton-stack" aria-busy="true" aria-label="Loading">
+    <div className="skeleton-stack" aria-busy="true" aria-label={t("loading")}>
       {Array.from({ length: rows }, (_, i) => (
         <span
           key={i}

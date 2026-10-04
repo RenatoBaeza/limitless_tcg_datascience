@@ -63,6 +63,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  max-width: 100%;
 }
 
 .field > label,
@@ -92,6 +93,8 @@
   border: 2px solid var(--border-strong);
   border-radius: 11px;
   isolation: isolate;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .segmented-pill {
@@ -252,5 +255,18 @@ select option {
   }
   .spacer {
     display: none;
+  }
+}
+
+/* Keep every translated date preset visible on a narrow screen. */
+@media (max-width: 480px) {
+  .field-period {
+    width: 100%;
+  }
+  .field-period .segmented button {
+    flex: 1;
+    min-width: 0;
+    white-space: normal;
+    padding-inline: 8px;
   }
 }

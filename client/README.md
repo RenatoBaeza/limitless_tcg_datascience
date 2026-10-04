@@ -7,6 +7,7 @@ Vite + React + TypeScript. Reads the gold layer through the FastAPI service in
 npm install
 npm run dev        # http://localhost:5173
 npm run build      # tsc -b && vite build
+npm test           # i18n regression tests (Node 22.6+)
 ```
 
 `npm run dev` proxies `/api` to `http://127.0.0.1:8000`, so the browser stays on
@@ -23,6 +24,23 @@ the unclassified "Other" bucket) scoping three things below it: headline stat
 tiles, the matchup matrix, and the deck table. Clicking any deck opens its
 detail drawer — that deck against every opponent it faced, as a dot plot with
 confidence whiskers, sortable, with each opponent clickable through to its own.
+
+## Languages
+
+The header's language selector supports English and Spanish. It remembers an
+explicit choice in `localStorage` (`limitless-language`); otherwise the first
+supported browser language is used, with English as the fallback. If browser
+storage is blocked, switching still works for the current session.
+
+`src/locales/en.ts` and `src/locales/es.ts` contain typed message catalogs.
+Components use `useI18n()` for text, plurals, numbers, percentages, dates and
+relative times. Add new messages to both catalogs; `npm test` checks their keys,
+plural forms and interpolation placeholders. Dates use UTC so date-only event
+values do not shift to the previous day in a viewer's time zone.
+
+Switching language updates the document language and title, including text in
+memoized tables and portalled tooltips/drawers. It preserves filters, sorting,
+selection and cached API data. Deck names and API identifiers remain unchanged.
 
 ## Design notes
 

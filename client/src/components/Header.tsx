@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 import type { Coverage } from "../api";
-import { count, relativeTime } from "../format";
+import { useI18n } from "../i18n";
+import { isLanguage } from "../i18n-core";
 import { useCountUp } from "../fx/motion";
 import type { Mode } from "../scale";
 import type { Origin } from "../useTheme";
@@ -21,33 +22,50 @@ export function Header({
   mode: Mode;
   onMode: (mode: Mode, origin?: Origin) => void;
 }) {
+  const { t, language, setLanguage, date, relativeTime } = useI18n();
   return (
     <header className="header">
       <div className="brand">
         <PokeballLogo />
         <div className="brand-text">
-          <div className="kicker">Pokémon TCG · competitive metagame</div>
+          <div className="kicker">{t("kicker")}</div>
           <h1 className="title">
-            <span className="logo-text">Limitless</span> metagame
+            <span className="logo-text">Limitless</span> {t("metagame")}
           </h1>
         </div>
       </div>
 
-      <ThemeToggle mode={mode} onMode={onMode} />
+      <div className="header-actions">
+        <label className="language-select">
+          <span className="sr-only">{t("language")}</span>
+          <span className="select">
+            <select
+              value={language}
+              onChange={(event) => {
+                if (isLanguage(event.target.value)) setLanguage(event.target.value);
+              }}
+            >
+              <option value="en" lang="en">English</option>
+              <option value="es" lang="es">Español</option>
+            </select>
+          </span>
+        </label>
+        <ThemeToggle mode={mode} onMode={onMode} />
+      </div>
 
       <div className="coverage" aria-live="polite">
         {coverage ? (
           <>
-            <Chip value={coverage.tournaments} label="tournaments" delay={0} />
-            <Chip value={coverage.matches} label="matches" delay={1} />
-            <Chip value={coverage.decks} label="decks" delay={2} />
+            <Chip value={coverage.tournaments} label={t("tournaments", { count: coverage.tournaments })} delay={0} />
+            <Chip value={coverage.matches} label={t("matches", { count: coverage.matches })} delay={1} />
+            <Chip value={coverage.decks} label={t("decks", { count: coverage.decks })} delay={2} />
             <span className="chip chip-plain" style={{ "--i": 3 } as React.CSSProperties}>
               <CalendarIcon />
-              {coverage.first_event} → {coverage.last_event}
+              {date(coverage.first_event)} → {date(coverage.last_event)}
             </span>
             <span className="chip chip-plain" style={{ "--i": 4 } as React.CSSProperties}>
               <span className="pulse" aria-hidden="true" />
-              refreshed {relativeTime(coverage.refreshed_at)}
+              {t("refreshed", { time: relativeTime(coverage.refreshed_at) ?? t("never") })}
             </span>
           </>
         ) : (
@@ -63,6 +81,7 @@ export function Header({
 }
 
 function Chip({ value, label, delay }: { value: number; label: string; delay: number }) {
+  const { count } = useI18n();
   const shown = useCountUp(value, 1600);
   return (
     <span className="chip" style={{ "--i": delay } as React.CSSProperties}>
@@ -78,6 +97,7 @@ function ThemeToggle({
   mode: Mode;
   onMode: (mode: Mode, origin?: Origin) => void;
 }) {
+  const { t } = useI18n();
   const next = mode === "dark" ? "light" : "dark";
 
   const onClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -91,8 +111,8 @@ function ThemeToggle({
       className="theme-toggle"
       data-mode={mode}
       onClick={onClick}
-      aria-label={`Switch to ${next} theme`}
-      title={`Switch to ${next} theme`}
+      aria-label={t(next === "light" ? "lightTheme" : "darkTheme")}
+      title={t(next === "light" ? "lightTheme" : "darkTheme")}
     >
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
         <mask id="moon-mask">

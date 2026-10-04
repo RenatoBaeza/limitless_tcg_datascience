@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { percentSign } from "../format";
+import { useI18n } from "../i18n";
 
 export type Anchor = { x: number; y: number };
 
@@ -53,6 +53,7 @@ export function IntervalReadout({
   high: number | null;
   color: string;
 }) {
+  const { percentSign } = useI18n();
   const at = (v: number) => Math.max(0, Math.min(100, ((v - 0.25) / 0.5) * 100));
   const r = rate ?? 0.5;
   const lo = low ?? r;

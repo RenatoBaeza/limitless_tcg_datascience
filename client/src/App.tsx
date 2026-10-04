@@ -11,9 +11,11 @@ import { GridIcon, Panel, Skeleton, StackIcon } from "./components/Panel";
 import { StatTiles } from "./components/StatTiles";
 import { DEFAULT_FILTERS, type Filters, type View } from "./filters";
 import { Backdrop } from "./fx/Backdrop";
+import { useI18n } from "./i18n";
 import { useTheme } from "./useTheme";
 
 export default function App() {
+  const { t } = useI18n();
   const [mode, setMode] = useTheme();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [view, setView] = useState<View>("matrix");
@@ -65,15 +67,13 @@ export default function App() {
 
         {failure && (
           <p className="error">
-            {failure.message}. Is the API running? <code>uv run uvicorn app.main:app --reload</code> in{" "}
-            <code>server/</code>.
+            {t("loadError")}
           </p>
         )}
 
         {coverage.data?.matches === 0 && (
           <p className="notice">
-            The gold layer is empty. Apply <code>server/sql/012_gold_finished.sql</code>, then run{" "}
-            <code>uv run python scripts/refresh_gold.py</code> in <code>server/</code>.
+            {t("emptyData")}
           </p>
         )}
 
@@ -91,13 +91,8 @@ export default function App() {
 
         <Panel
           icon={<GridIcon />}
-          title="Matchups"
-          note={
-            <>
-              Each cell is the row deck&rsquo;s score rate against the column deck, counting a tie as half a win.
-              Cells under {filters.minMatches} matches are left blank. Click any deck to see it against the field.
-            </>
-          }
+          title={t("matchups")}
+          note={t("matchupNote", { count: filters.minMatches })}
         >
           <div className={fade}>
             {!decks.data || !matrix.data ? (
@@ -122,8 +117,8 @@ export default function App() {
 
         <Panel
           icon={<StackIcon />}
-          title="Decks"
-          note="Score rate counts a tie as half a win, so it and the excluding-ties column differ by a point or two. Both are over non-mirror matches only. Click a column to re-sort."
+          title={t("decksTitle")}
+          note={t("deckNote")}
         >
           <div className={fade}>
             {decks.data ? (
@@ -135,11 +130,11 @@ export default function App() {
         </Panel>
 
         <footer className="footer">
-          <span>Data from the Limitless TCG API</span>
+          <span>{t("dataSource")}</span>
           <span className="sep" />
-          <span>rebuilt every six hours</span>
+          <span>{t("refreshSchedule")}</span>
           <span className="sep" />
-          <span>score rates with 95% Wilson intervals</span>
+          <span>{t("intervalNote")}</span>
         </footer>
       </div>
 

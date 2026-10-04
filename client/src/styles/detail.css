@@ -258,6 +258,7 @@
 
 .drawer-section-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -403,6 +404,7 @@ button.dot-label:hover span {
 .dot-axis .ticks span {
   position: absolute;
   transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .dot-value {
@@ -435,5 +437,27 @@ button.dot-label:hover span {
   .dex-screen {
     width: 120px;
     height: 100px;
+  }
+}
+
+/* Localized percentage labels need a readable axis even on small phones. */
+@media (max-width: 480px) {
+  .dot-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+  }
+  .dot-track {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .dot-value {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .dot-axis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dot-axis > span {
+    display: none;
   }
 }

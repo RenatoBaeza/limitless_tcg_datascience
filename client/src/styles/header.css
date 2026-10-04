@@ -19,6 +19,17 @@
   min-width: 0;
 }
 
+.header-actions {
+  grid-area: toggle;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-select select {
+  height: 44px;
+}
+
 .kicker {
   font-family: var(--font-pixel);
   font-size: 13px;
@@ -301,6 +312,13 @@
 }
 
 @media (max-width: 560px) {
+  .header {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "brand" "toggle" "coverage";
+  }
+  .header-actions {
+    justify-self: end;
+  }
   .logo {
     width: 46px;
     height: 46px;

@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { DeckSummary, MatchupCell } from "../api";
-import { count, percentSign, record } from "../format";
+import { useI18n } from "../i18n";
 import { scoreColor, type Mode } from "../scale";
 import { DeckIcon } from "./DeckIcon";
 
@@ -21,11 +21,12 @@ export function MatchupTable({
   onSelect: (deckId: string) => void;
   mode: Mode;
 }) {
+  const { t, count, percentSign, record } = useI18n();
   const name = new Map(decks.map((deck) => [deck.deck_id, deck.deck_name ?? deck.deck_id]));
   const rows = [...cells].sort((a, b) => b.matches - a.matches);
 
   if (!rows.length) {
-    return <p className="notice">No matchups meet the current filters.</p>;
+    return <p className="notice">{t("noMatchups")}</p>;
   }
 
   return (
@@ -33,15 +34,15 @@ export function MatchupTable({
       <table className="data">
         <thead>
           <tr>
-            <th scope="col">Deck</th>
+            <th scope="col">{t("deck")}</th>
             <th scope="col" style={{ textAlign: "left" }}>
-              Opponent
+              {t("opponent")}
             </th>
-            <th scope="col">Matches</th>
-            <th scope="col">W-L-T</th>
-            <th scope="col">Score rate</th>
-            <th scope="col">95% range</th>
-            <th scope="col">Excl. ties</th>
+            <th scope="col">{t("matchesTitle")}</th>
+            <th scope="col">{t("record")}</th>
+            <th scope="col">{t("scoreRate")}</th>
+            <th scope="col">{t("range")}</th>
+            <th scope="col">{t("excludingTies")}</th>
           </tr>
         </thead>
         <tbody>
@@ -83,6 +84,7 @@ export function MatchupTable({
  * below - on the matrix's 25-75% domain and in the matrix's own colours.
  */
 function ScoreBar({ rate, mode }: { rate: number | null; mode: Mode }) {
+  const { percentSign } = useI18n();
   if (rate == null) return <>—</>;
   const offset = Math.max(-1, Math.min(1, (rate - 0.5) / 0.25)) * 50;
   const { background } = scoreColor(rate, mode);

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { percent } from "../format";
+import { useI18n } from "../i18n";
 import { SCALE_DOMAIN, scaleSwatches, scoreColor, type Mode } from "../scale";
 
 /**
@@ -12,6 +12,7 @@ import { SCALE_DOMAIN, scaleSwatches, scoreColor, type Mode } from "../scale";
  * tying the colour under the cursor back to the scale that produced it.
  */
 export function ScaleLegend({ mode, marker = null }: { mode: Mode; marker?: number | null }) {
+  const { t, percent, percentSign } = useI18n();
   const low = Math.round((0.5 - SCALE_DOMAIN) * 100);
   const high = Math.round((0.5 + SCALE_DOMAIN) * 100);
   const at =
@@ -19,7 +20,7 @@ export function ScaleLegend({ mode, marker = null }: { mode: Mode; marker?: numb
 
   return (
     <div className="legend">
-      <span className="legend-end">≤{low}%</span>
+      <span className="legend-end">≤{percentSign(low / 100, 0)}</span>
       <div className="legend-ramp" aria-hidden="true">
         {scaleSwatches(mode).map((swatch, i) => (
           <span key={swatch.rate} style={{ background: swatch.background, "--i": i } as CSSProperties} />
@@ -36,24 +37,24 @@ export function ScaleLegend({ mode, marker = null }: { mode: Mode; marker?: numb
           {marker != null && <b>{percent(marker)}</b>}
         </span>
       </div>
-      <span className="legend-end">≥{high}%</span>
-      <span className="muted">score rate</span>
+      <span className="legend-end">≥{percentSign(high / 100, 0)}</span>
+      <span className="muted">{t("scoreRate")}</span>
 
       <span className="legend-key">
         <Chip rate={0.62} mode={mode} />
-        clear of 50%
+        {t("clearOfEven")}
       </span>
       <span className="legend-key">
         <Chip rate={0.62} mode={mode} muted />
-        could still be even
+        {t("couldBeEven")}
       </span>
       <span className="legend-key">
         <span className="swatch mirror" />
-        mirror
+        {t("mirror")}
       </span>
       <span className="legend-key">
         <span className="swatch empty" />
-        too few matches
+        {t("tooFewMatches")}
       </span>
     </div>
   );
@@ -61,6 +62,7 @@ export function ScaleLegend({ mode, marker = null }: { mode: Mode; marker?: numb
 
 /** A miniature matrix cell, drawn exactly as the grid draws one. */
 function Chip({ rate, mode, muted = false }: { rate: number; mode: Mode; muted?: boolean }) {
+  const { percent } = useI18n();
   const { background, ink, edge } = scoreColor(rate, mode, muted);
   return (
     <span

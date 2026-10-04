@@ -1,4 +1,5 @@
 import type { Period } from "./api";
+import type { MessageKey } from "./locales/en";
 
 export type View = "matrix" | "table";
 
@@ -11,13 +12,13 @@ export type View = "matrix" | "table";
  * "the last 30 days" from today's date would quietly clip the most recent
  * weekend off the window.
  */
-export const PRESETS: Record<Period, { label: string }> = {
-  "30d": { label: "Last 30 days" },
-  "90d": { label: "Last 90 days" },
+export const PRESETS: Record<Period, { label: MessageKey }> = {
+  "30d": { label: "period30d" },
+  "90d": { label: "period90d" },
   // Everything in the retention window - six months (RETAIN_MONTHS). A
   // separate "last 180 days" preset was the same window give or take three
   // days, so it was dropped (sql/013_drop_180d_period.sql).
-  all: { label: "All time" },
+  all: { label: "periodAll" },
 };
 
 export type Filters = {

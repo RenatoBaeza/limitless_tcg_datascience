@@ -25,6 +25,7 @@ export function Segmented<T extends string>({
 }) {
   const group = useRef<HTMLDivElement>(null);
   const [pill, setPill] = useState<{ left: number; width: number } | null>(null);
+  const labels = options.map((option) => option.label).join("\u0000");
 
   useLayoutEffect(() => {
     const element = group.current;
@@ -40,7 +41,7 @@ export function Segmented<T extends string>({
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => observer.disconnect();
-  }, [value]);
+  }, [value, labels]);
 
   return (
     <div

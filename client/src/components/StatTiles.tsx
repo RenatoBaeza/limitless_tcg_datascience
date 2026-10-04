@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { DeckSummary, MatchupCell } from "../api";
-import { count, percentSign, spansEven } from "../format";
+import { spansEven } from "../format";
+import { useI18n } from "../i18n";
 import { useCountUp } from "../fx/motion";
 import { DeckIcon } from "./DeckIcon";
 
@@ -17,6 +18,7 @@ import { DeckIcon } from "./DeckIcon";
  * are printed cards, not toys: nothing tilts or shines under the cursor.
  */
 export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: MatchupCell[] }) {
+  const { t } = useI18n();
   const mostPlayed = decks.reduce<DeckSummary | null>(
     (best, deck) => (!best || deck.entries > best.entries ? deck : best),
     null,
@@ -43,11 +45,11 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
     <div className="tiles">
       <PokeCard
         index={0}
-        stage="Most played"
+        stage={t("mostPlayed")}
         name={mostPlayed?.deck_name ?? "—"}
-        unit="share"
+        unit={t("share")}
         value={mostPlayed?.meta_share ?? null}
-        sub={mostPlayed ? `${count(mostPlayed.entries)} entries` : "—"}
+        sub={mostPlayed ? t("entryCount", { count: mostPlayed.entries }) : "—"}
         art={mostPlayed && <DeckIcon deckId={mostPlayed.deck_id} alt="" />}
       >
         <ShareBar decks={top} />
@@ -55,11 +57,11 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
 
       <PokeCard
         index={1}
-        stage="Best score rate"
+        stage={t("bestScore")}
         name={bestPerforming?.deck_name ?? "—"}
-        unit="score"
+        unit={t("score")}
         value={bestPerforming?.score_rate ?? null}
-        sub={bestPerforming ? `${count(bestPerforming.matches)} matches` : "no deck clears 50% conclusively"}
+        sub={bestPerforming ? t("matchCount", { count: bestPerforming.matches }) : t("inconclusiveDecks")}
         art={bestPerforming && <DeckIcon deckId={bestPerforming.deck_id} alt="" />}
       >
         {bestPerforming && <IntervalBar rated={bestPerforming} />}
@@ -67,13 +69,13 @@ export function StatTiles({ decks, cells }: { decks: DeckSummary[]; cells: Match
 
       <PokeCard
         index={2}
-        stage="Most lopsided matchup"
+        stage={t("lopsided")}
         name={mostLopsided ? name.get(mostLopsided.deck_a) ?? mostLopsided.deck_a : "—"}
-        unit="score"
+        unit={t("score")}
         value={mostLopsided?.score_rate ?? null}
         sub={
           mostLopsided
-            ? `over ${name.get(mostLopsided.deck_b) ?? mostLopsided.deck_b} · ${count(mostLopsided.matches)} matches`
+            ? t("overOpponent", { opponent: name.get(mostLopsided.deck_b) ?? mostLopsided.deck_b, matches: t("matchCount", { count: mostLopsided.matches }) })
             : "—"
         }
         art={
@@ -118,6 +120,7 @@ function PokeCard({
   art: ReactNode;
   children?: ReactNode;
 }) {
+  const { percentSign } = useI18n();
   // Rolled in tenths of a percent so the last digit settles, not just jumps.
   const shown = useCountUp(value == null ? 0 : value * 1000, 1400) / 1000;
 
@@ -145,12 +148,13 @@ function PokeCard({
 /** The top decks' slices of the field, the leader in the card's colour. The
     track is the whole field, so the empty remainder is everyone else. */
 function ShareBar({ decks }: { decks: DeckSummary[] }) {
+  const { t, percentSign } = useI18n();
   const total = decks.reduce((sum, deck) => sum + (deck.meta_share ?? 0), 0);
   return (
     <div
       className="share-bar"
       role="img"
-      aria-label={`Top ${decks.length} decks take ${percentSign(total)} of the field`}
+      aria-label={t("topShare", { count: decks.length, share: percentSign(total) })}
     >
       {decks.map((deck, i) => (
         <span
@@ -160,13 +164,14 @@ function ShareBar({ decks }: { decks: DeckSummary[] }) {
           style={{ width: `${(deck.meta_share ?? 0) * 100}%`, "--i": i } as CSSProperties}
         />
       ))}
-      <em>top {decks.length} · {percentSign(total, 0)}</em>
+      <em>{t("top", { count: decks.length })} · {percentSign(total, 0)}</em>
     </div>
   );
 }
 
 /** The rate and its 95% interval on the same 25-75% axis the matrix uses. */
 function IntervalBar({ rated }: { rated: { score_rate: number | null; score_low: number | null; score_high: number | null } }) {
+  const { t, percentSign } = useI18n();
   const at = (v: number) => `${Math.max(0, Math.min(100, ((v - 0.25) / 0.5) * 100))}%`;
   const rate = rated.score_rate ?? 0.5;
   const low = rated.score_low ?? rate;
@@ -176,7 +181,7 @@ function IntervalBar({ rated }: { rated: { score_rate: number | null; score_low:
     <div
       className="interval-bar"
       role="img"
-      aria-label={`95% range ${percentSign(low, 0)} to ${percentSign(high, 0)}`}
+      aria-label={t("rangeDescription", { low: percentSign(low, 0), high: percentSign(high, 0) })}
     >
       <span className="even" style={{ left: "50%" }} />
       <span className="range" style={{ left: at(low), width: `calc(${at(high)} - ${at(low)})` }} />
