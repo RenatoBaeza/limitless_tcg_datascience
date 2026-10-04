@@ -153,14 +153,6 @@ export function scoreColor(rate: number, mode: Mode, muted = false): CellColor {
   return { background: labToHex(shown), ink, lightness: shown[0], edge };
 }
 
-/** Evenly spaced swatches from unfavourable to favourable, for the legend. */
-export function scaleSwatches(mode: Mode, steps = 9): Array<CellColor & { rate: number }> {
-  return Array.from({ length: steps }, (_, i) => {
-    const rate = 0.5 + SCALE_DOMAIN * ((2 * i) / (steps - 1) - 1);
-    return { rate, ...scoreColor(rate, mode) };
-  });
-}
-
 function interpolate(stops: Array<[number, number]>, t: number): [number, number] {
   const span = 1 / (stops.length - 1);
   const index = Math.min(Math.floor(t / span), stops.length - 2);

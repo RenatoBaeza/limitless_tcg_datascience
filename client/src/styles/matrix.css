@@ -225,8 +225,7 @@
 /* A settled cell catches a little light along its top edge - static, the
    same on every tile - which is what lifts it off the board as a solid chip.
    Muted cells stay flat, so the two read apart at a glance. */
-.cell button:not(.muted),
-.legend-chip:not(.muted) {
+.cell button:not(.muted) {
   background-image: linear-gradient(180deg, var(--cell-light), transparent 65%);
 }
 
@@ -301,124 +300,6 @@
   from {
     opacity: 0;
   }
-}
-
-/* ── legend ─────────────────────────────────────────────────────────────── */
-
-.legend {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  font-size: 12px;
-  color: var(--text-secondary);
-  padding: 2px 2px 0;
-}
-
-.legend-end {
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-}
-
-.legend-ramp {
-  position: relative;
-  display: flex;
-  gap: 2px;
-  padding: 3px;
-  border-radius: 7px;
-  background: var(--ghost);
-  border: 1px solid var(--border);
-}
-
-.legend-ramp > span:not(.legend-marker) {
-  width: 24px;
-  height: 12px;
-  border-radius: 3px;
-}
-
-.legend-ramp > span:first-child {
-  border-radius: 4px 2px 2px 4px;
-}
-
-.legend-marker {
-  position: absolute;
-  top: -9px;
-  bottom: -9px;
-  width: 3px;
-  margin-left: -1.5px;
-  border-radius: 2px;
-  background: var(--text-primary);
-  box-shadow: 0 0 0 2px var(--surface-solid);
-  opacity: 0;
-  transition:
-    left 120ms ease-out,
-    opacity 120ms;
-}
-
-.legend-marker.is-on {
-  opacity: 1;
-}
-
-.legend-marker b {
-  position: absolute;
-  top: -22px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 1px 6px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: var(--surface-solid);
-  background: var(--text-primary);
-  white-space: nowrap;
-}
-
-.legend-key {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-/* A miniature matrix cell, styled exactly as the grid's. */
-.legend-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 20px;
-  border-radius: 5px;
-  font-size: 11px;
-  font-weight: 650;
-  font-variant-numeric: tabular-nums;
-  box-shadow: inset 0 0 0 1px var(--cell-edge);
-}
-
-.legend-chip.muted {
-  font-weight: 500;
-  box-shadow: inset 0 0 0 1.5px var(--edge);
-}
-
-.legend-key .swatch {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 16px;
-  border-radius: 4px;
-}
-
-.legend-key .swatch.mirror {
-  background: var(--ghost);
-  border: 1px dashed var(--border-strong);
-}
-
-.legend-key .swatch.empty::before {
-  content: "";
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--border-strong);
 }
 
 .matrix-wrap {
