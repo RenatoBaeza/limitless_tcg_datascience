@@ -25,6 +25,20 @@ export type Coverage = {
   refreshed_at: string | null;
 };
 
+/** One window and the dates it resolved to on the last refresh. */
+export type PeriodInfo = {
+  period: Period;
+  days: number | null;
+  date_from: string | null;
+  date_to: string | null;
+  tournaments: number;
+  entries: number;
+  matches: number;
+  decks: number;
+  min_matches: number;
+  refreshed_at: string | null;
+};
+
 /** Shared by every rate the API returns. */
 type Rated = {
   matches: number;
@@ -83,6 +97,8 @@ async function get<T>(path: string, params: Record<string, Param> = {}): Promise
 }
 
 export const fetchCoverage = () => get<Coverage>("/coverage");
+
+export const fetchPeriods = () => get<PeriodInfo[]>("/periods");
 
 // The period is the only parameter. The server fixes the rest: the top 50
 // decks, every cell with at least one match, and never 'other'.

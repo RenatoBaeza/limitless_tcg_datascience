@@ -76,6 +76,33 @@
   color: var(--text-muted);
 }
 
+/* The dates the selected period resolved to, pinned to the right of the bar. */
+.field-range {
+  margin-left: auto;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.range-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  font-family: var(--font-body, Inter, sans-serif);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 720px) {
+  .field-range {
+    margin-left: 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
 /* ── segmented ──────────────────────────────────────────────────────────── */
 
 /* The selection is a yellow key that slides between options, pressed into a

@@ -13,6 +13,7 @@ export const en = {
   lightTheme: "Switch to light theme",
   darkTheme: "Switch to dark theme",
   dateRange: "Date range",
+  selectedDates: "Selected dates",
   period3d: "Last 3 days",
   period7d: "Last 7 days",
   period30d: "Last 30 days",

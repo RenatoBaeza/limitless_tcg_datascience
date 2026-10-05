@@ -1,4 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
+import { fetchPeriods } from "../api";
 import type { Period } from "../api";
 import { PRESETS } from "../filters";
 import { useI18n } from "../i18n";
@@ -23,7 +25,9 @@ export function FilterBar({
   onChange: (period: Period) => void;
   busy: boolean;
 }) {
-  const { t } = useI18n();
+  const { t, date } = useI18n();
+  const periods = useQuery({ queryKey: ["periods"], queryFn: fetchPeriods });
+  const info = periods.data?.find((row) => row.period === period);
 
   const sentinel = useRef<HTMLDivElement>(null);
   const [stuck, setStuck] = useState(false);
@@ -55,6 +59,19 @@ export function FilterBar({
               label: t(PRESETS[preset].label),
             }))}
           />
+        </div>
+
+        <div className="field field-range">
+          <span className="label">{t("selectedDates")}</span>
+          <span className="range-value" aria-live="polite">
+            {info?.date_from && info.date_to ? (
+              <>
+                {date(info.date_from)} → {date(info.date_to)}
+              </>
+            ) : (
+              "—"
+            )}
+          </span>
         </div>
 
         <span className="busy-bar" aria-hidden="true" />
