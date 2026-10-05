@@ -12,15 +12,11 @@ import type { Period } from "./api";
 import { DEFAULT_PERIOD } from "./filters";
 import { Backdrop } from "./fx/Backdrop";
 import { useI18n } from "./i18n";
-import { Insights } from "./insights/Insights";
-import { ViewTabs } from "./components/ViewTabs";
 import { useTheme } from "./useTheme";
-import { useView } from "./useView";
 
 export default function App() {
   const { t } = useI18n();
   const [mode, setMode] = useTheme();
-  const [view, setView] = useView();
   const [period, setPeriod] = useState<Period>(DEFAULT_PERIOD);
   const [selected, setSelected] = useState<string | null>(null);
 
@@ -59,11 +55,7 @@ export default function App() {
       <div className="app">
         <Header coverage={coverage.data} mode={mode} onMode={setMode} />
 
-        <ViewTabs view={view} onView={setView} />
-
-        {view === "insights" ? (
-          <Insights mode={mode} />
-        ) : (
+        {(
           <>
             <FilterBar period={period} onChange={setPeriod} busy={decks.isFetching || matrix.isFetching} />
 
@@ -130,7 +122,7 @@ export default function App() {
         </footer>
       </div>
 
-      {view === "metagame" && selectedDeck && (
+      {selectedDeck && (
         <DeckDetail
           deck={selectedDeck}
           period={period}
