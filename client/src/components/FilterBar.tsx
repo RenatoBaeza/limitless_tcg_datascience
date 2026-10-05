@@ -25,7 +25,21 @@ export function FilterBar({
   onChange: (period: Period) => void;
   busy: boolean;
 }) {
-  const { t, date } = useI18n();
+  const { t, language } = useI18n();
+  // "Sep 5 – Oct 4, 2026": the year is stated once, and only when it differs.
+  const range = (from: string, to: string) => {
+    const f = new Date(`${from}T00:00:00Z`);
+    const e = new Date(`${to}T00:00:00Z`);
+    const fmt = (d: Date, year: boolean) =>
+      new Intl.DateTimeFormat(language, {
+        day: "numeric",
+        month: "short",
+        ...(year ? { year: "numeric" } : {}),
+        timeZone: "UTC",
+      }).format(d);
+    const sameYear = f.getUTCFullYear() === e.getUTCFullYear();
+    return `${fmt(f, !sameYear)} – ${fmt(e, true)}`;
+  };
   const periods = useQuery({ queryKey: ["periods"], queryFn: fetchPeriods });
   const info = periods.data?.find((row) => row.period === period);
 
@@ -65,9 +79,7 @@ export function FilterBar({
           <span className="label">{t("selectedDates")}</span>
           <span className="range-value" aria-live="polite">
             {info?.date_from && info.date_to ? (
-              <>
-                {date(info.date_from)} → {date(info.date_to)}
-              </>
+              range(info.date_from, info.date_to)
             ) : (
               "—"
             )}

@@ -26,4 +26,4 @@ export const PRESETS: Record<Period, { label: MessageKey }> = {
   all: { label: "periodAll" },
 };
 
-export const DEFAULT_PERIOD: Period = "90d";
+export const DEFAULT_PERIOD: Period = "30d";
