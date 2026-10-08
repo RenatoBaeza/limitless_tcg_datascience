@@ -90,6 +90,49 @@
   animation-delay: calc(var(--d) * 25ms);
 }
 
+/* A column's icon sorts the rows against that deck. The caret sits above the
+   sprite: a faint hint on hover, solid on the sorted column. */
+.col-head button {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.col-head button:hover,
+.col-head button:focus-visible,
+.col-sorted button {
+  background: var(--ghost);
+}
+
+.col-head button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -2px;
+}
+
+.col-caret {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-muted);
+  opacity: 0;
+}
+
+.col-head button:hover .col-caret {
+  opacity: 0.5;
+}
+
+.col-sorted .col-caret {
+  opacity: 1 !important;
+  color: var(--accent-ink);
+}
+
 /* The hovered row and column are marked on their headers with a yellow bar -
    a mark, not a movement. */
 .col-head::after,

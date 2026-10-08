@@ -1,8 +1,9 @@
-import { memo, useCallback, useMemo, useState, type CSSProperties, type FocusEvent, type PointerEvent } from "react";
+import { memo, useCallback, useMemo, useRef, useState, type CSSProperties, type FocusEvent, type PointerEvent } from "react";
 import type { DeckSummary, MatchupCell } from "../api";
 import { spansEven } from "../format";
 import { useI18n } from "../i18n";
 import { useVersion } from "../fx/motion";
+import { useFlip } from "../fx/useFlip";
 import type { Mode } from "../scale";
 import { scoreColor } from "../scale";
 import { DeckIcon } from "./DeckIcon";
@@ -35,7 +36,15 @@ import { Tooltip, type Anchor } from "./Tooltip";
  * selector <style> rule written from the hovered indices, not a prop: the grid
  * itself is memoised and never re-renders on hover, which is what keeps the
  * 50 x 50 matrix smooth.
+ *
+ * Clicking a column's icon re-orders the rows by their score rate against that
+ * deck - best answers first, then worst first, then back to rank. Only the rows
+ * move: the columns stay in rank order, so the sorted column never jumps out
+ * from under the cursor. The deck's own row and every deck that never met it
+ * have no rate to sort on, so they sink to the bottom either way.
  */
+type Sort = { deckId: string; dir: "desc" | "asc" } | null;
+
 export function MatchupMatrix({
   decks,
   cells,
@@ -60,14 +69,40 @@ export function MatchupMatrix({
   const name = useMemo(() => new Map(decks.map((deck) => [deck.deck_id, deck.deck_name ?? deck.deck_id])), [decks]);
   const byPair = useMemo(() => new Map(cells.map((cell) => [`${cell.deck_a} ${cell.deck_b}`, cell])), [cells]);
 
+  const [sortState, setSort] = useState<Sort>(null);
+  // A sort on a deck that dropped out of the top 50 (a new period) is no sort.
+  const sort = sortState && decks.some((deck) => deck.deck_id === sortState.deckId) ? sortState : null;
+
+  const rows = useMemo(() => {
+    if (!sort) return decks;
+    const rate = (row: DeckSummary) =>
+      row.deck_id === sort.deckId ? null : byPair.get(`${row.deck_id} ${sort.deckId}`)?.score_rate ?? null;
+    const sign = sort.dir === "desc" ? -1 : 1;
+    return [...decks].sort((a, b) => {
+      const left = rate(a);
+      const right = rate(b);
+      if (left == null || right == null) return left == null ? (right == null ? a.rank - b.rank : 1) : -1;
+      return sign * (left - right) || a.rank - b.rank;
+    });
+  }, [decks, byPair, sort?.deckId, sort?.dir]);
+
+  // desc -> asc -> rank order. Functional, so the memoised grid keeps one handler.
+  const onSort = useCallback(
+    (deckId: string) =>
+      setSort((current) =>
+        current?.deckId !== deckId ? { deckId, dir: "desc" } : current.dir === "desc" ? { deckId, dir: "asc" } : null,
+      ),
+    [],
+  );
+
   const onHover = useCallback(
     (r: number, c: number, anchor: Anchor) => {
-      const row = decks[r];
+      const row = rows[r];
       const column = decks[c];
       const cell = row && column ? byPair.get(`${row.deck_id} ${column.deck_id}`) ?? null : null;
       setHovered({ r, c, cell, anchor });
     },
-    [decks, byPair],
+    [rows, decks, byPair],
   );
   const onLeave = useCallback(() => setHovered(null), []);
 
@@ -87,9 +122,12 @@ export function MatchupMatrix({
       <div className="matrix-scroll">
         <MatrixGrid
           key={version}
-          decks={decks}
+          rows={rows}
+          columns={decks}
           cells={cells}
           mode={mode}
+          sort={sort}
+          onSort={onSort}
           onHover={onHover}
           onLeave={onLeave}
           onSelect={onSelect}
@@ -106,16 +144,22 @@ export function MatchupMatrix({
 }
 
 const MatrixGrid = memo(function MatrixGrid({
-  decks,
+  rows,
+  columns,
   cells,
   mode,
+  sort,
+  onSort,
   onHover,
   onLeave,
   onSelect,
 }: {
-  decks: DeckSummary[];
+  rows: DeckSummary[];
+  columns: DeckSummary[];
   cells: MatchupCell[];
   mode: Mode;
+  sort: Sort;
+  onSort: (deckId: string) => void;
   onHover: (r: number, c: number, anchor: Anchor) => void;
   onLeave: () => void;
   onSelect: (deckId: string) => void;
@@ -123,6 +167,10 @@ const MatrixGrid = memo(function MatrixGrid({
   const { t, percent, percentSign } = useI18n();
   const byPair = new Map(cells.map((cell) => [`${cell.deck_a} ${cell.deck_b}`, cell]));
   const name = (deck: DeckSummary) => deck.deck_name ?? deck.deck_id;
+
+  // Rows glide to their new place on a re-sort, as in the deck table.
+  const body = useRef<HTMLTableSectionElement>(null);
+  useFlip(body, rows.map((deck) => deck.deck_id).join(" "));
 
   // One delegated listener for the whole grid rather than four per cell.
   const locate = (target: EventTarget) => {
@@ -147,7 +195,7 @@ const MatrixGrid = memo(function MatrixGrid({
   return (
     <table
       className="matrix"
-      style={{ "--n": decks.length } as CSSProperties}
+      style={{ "--n": columns.length } as CSSProperties}
       onPointerMove={onPointerMove}
       onPointerLeave={onLeave}
       onFocus={onFocus}
@@ -160,23 +208,35 @@ const MatrixGrid = memo(function MatrixGrid({
             <span>{t("deck")}</span>
             <span className="corner-arrow">vs. →</span>
           </th>
-          {decks.map((deck, c) => (
-            <th
-              key={deck.deck_id}
-              scope="col"
-              className="col-head"
-              data-c={c}
-              title={name(deck)}
-              style={{ "--d": c } as CSSProperties}
-            >
-              <DeckIcon deckId={deck.deck_id} alt={name(deck)} />
-            </th>
-          ))}
+          {columns.map((deck, c) => {
+            const sorted = sort?.deckId === deck.deck_id ? sort.dir : null;
+            return (
+              <th
+                key={deck.deck_id}
+                scope="col"
+                className={`col-head${sorted ? " col-sorted" : ""}`}
+                data-c={c}
+                aria-sort={sorted === "desc" ? "descending" : sorted === "asc" ? "ascending" : "none"}
+                style={{ "--d": c } as CSSProperties}
+              >
+                <button
+                  type="button"
+                  title={t("sortAgainst", { name: name(deck) })}
+                  onClick={() => onSort(deck.deck_id)}
+                >
+                  <DeckIcon deckId={deck.deck_id} alt={name(deck)} />
+                  <span className="col-caret" aria-hidden="true">
+                    {sorted === "asc" ? "↑" : "↓"}
+                  </span>
+                </button>
+              </th>
+            );
+          })}
         </tr>
       </thead>
-      <tbody>
-        {decks.map((row, r) => (
-          <tr key={row.deck_id}>
+      <tbody ref={body}>
+        {rows.map((row, r) => (
+          <tr key={row.deck_id} data-flip={row.deck_id}>
             <th scope="row" className="row-head" data-r={r} style={{ "--d": r } as CSSProperties}>
               <button type="button" onClick={() => onSelect(row.deck_id)}>
                 <span className="rank num">{row.rank}</span>
@@ -185,7 +245,7 @@ const MatrixGrid = memo(function MatrixGrid({
               </button>
             </th>
 
-            {decks.map((column, c) => {
+            {columns.map((column, c) => {
               const wave = { "--d": r + c } as CSSProperties;
 
               if (row.deck_id === column.deck_id) {
